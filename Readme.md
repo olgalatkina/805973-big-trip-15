@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
-* Студент: [Ольга Латкина](https://up.htmlacademy.ru/ecmascript/15/user/805973).
-* Наставник: `Неизвестно`.
+- Студент: [Ольга Латкина](https://up.htmlacademy.ru/ecmascript/15/user/805973).
+- Наставник: [Виктор Кан](https://htmlacademy.ru/profile/viktorkan).
 
 ---
 
