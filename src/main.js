@@ -2,7 +2,7 @@ import { createInfoTemplate } from './view/info';
 import { createInfoTitleTemplate } from './view/info-title';
 import { createInfoCostTemplate } from './view/info-cost';
 import { createControlsTemplate } from './view/controls';
-import { createMenuTemplate } from './view/site-menu';
+import { createMenuTemplate } from './view/menu';
 import { createFiltersTemplate } from './view/filters';
 import { createBtnTemplate } from './view/btn-new-event';
 import { createSortTemplate } from './view/sort';
