@@ -11,6 +11,14 @@ import { createEventTemplate } from './view/event';
 import { createEditEventTemplate } from './view/edit-event';
 // import { createNewEventTemplate } from './view/add-new-event';
 
+import { generateEvent } from './mock/event';
+
+const data = [];
+for (let i = 0; i < 20; i++) {
+  const event = generateEvent();
+  data.push(event);
+}
+
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
