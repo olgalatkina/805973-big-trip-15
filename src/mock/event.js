@@ -70,7 +70,7 @@ const generateOffers = () => {
   titles.forEach((title) => {
     options.push({
       title,
-      price: getRandomInteger(5, 500),
+      price: getRandomInteger(5, 100),
     });
   });
 
@@ -97,7 +97,7 @@ const getPointOffers = (type, offers) => {
 };
 
 const generateDateFrom = () => {
-  const maxDaysGap = 5;
+  const maxDaysGap = 15;
   const maxMinuteGap = 30;
   const maxHourGap = 12;
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
@@ -110,7 +110,7 @@ const generateDateFrom = () => {
 export const generateEvent = () => {
   const type = generateType(Types);
   const dateFrom = generateDateFrom();
-  const dateTo = dayjs(dateFrom).add(getRandomInteger(15, 1140), 'minute').toDate();
+  const dateTo = dayjs(dateFrom).add(getRandomInteger(15, 2280), 'minute').toDate();
 
   return {
     type,
@@ -118,7 +118,7 @@ export const generateEvent = () => {
     offers: getPointOffers(type, generateOffers()),
     dateFrom,
     dateTo,
-    basePrice: getRandomInteger(10, 5000),
+    basePrice: getRandomInteger(10, 500),
     isFavorite: Boolean(getRandomInteger(0, 1)),
     id: nanoid(),
   };

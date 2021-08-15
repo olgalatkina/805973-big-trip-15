@@ -21,8 +21,8 @@ export const shuffleArray = (array) => {
 
 // DAYJS
 export const getDate = (start) => dayjs(start).format('MMM DD');
-export const getStart = (start) => dayjs(start).format('hh:mm');
-export const getEnd = (end) => dayjs(end).format('hh:mm');
+export const getStart = (start) => dayjs(start).format('HH:mm');
+export const getEnd = (end) => dayjs(end).format('HH:mm');
 export const getGap = (start, end) => dayjs.duration(dayjs(end).diff(dayjs(start))).$d;
 
 const getZeroSubStr = (number) => (number < 10) ? `0${number}` : `${number}`;
@@ -38,3 +38,5 @@ export const gapToString = (diff) => {
     return `${getZeroSubStr(minutes)}M`;
   }
 };
+
+export const compareByStartTime = (eventA, eventB) => eventA.dateFrom - eventB.dateFrom;

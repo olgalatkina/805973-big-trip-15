@@ -1,6 +1,4 @@
 import { createInfoTemplate } from './view/info';
-import { createInfoTitleTemplate } from './view/info-title';
-import { createInfoCostTemplate } from './view/info-cost';
 import { createControlsTemplate } from './view/controls';
 import { createMenuTemplate } from './view/menu';
 import { createFiltersTemplate } from './view/filters';
@@ -12,9 +10,10 @@ import { createEditEventTemplate } from './view/edit-event';
 // import { createNewEventTemplate } from './view/add-new-event';
 
 import { generateEvent } from './mock/event';
+import { compareByStartTime } from './utils/utils';
 
-const EVENT_COUNT = 20;
-const data = new Array(EVENT_COUNT).fill().map(generateEvent);
+const EVENT_COUNT = 13;
+const data = new Array(EVENT_COUNT).fill().map(generateEvent).sort(compareByStartTime);
 // console.log(data);
 
 const render = (container, template, place) => {
@@ -25,11 +24,7 @@ const render = (container, template, place) => {
 const siteHeaderElement = document.querySelector('.page-header');
 const headerInfoElement = siteHeaderElement.querySelector('.trip-main');
 
-render(headerInfoElement, createInfoTemplate(), 'afterbegin');
-
-const eventInfo = headerInfoElement.querySelector('.trip-info');
-render(eventInfo, createInfoTitleTemplate(), 'afterbegin');
-render(eventInfo, createInfoCostTemplate(), 'beforeend');
+render(headerInfoElement, createInfoTemplate(data), 'afterbegin');
 
 render(headerInfoElement, createControlsTemplate(), 'beforeend');
 const controls = headerInfoElement.querySelector('.trip-controls');
@@ -47,7 +42,7 @@ render(content, createSortTemplate(), 'beforeend');
 render(content, createEventsListTemplate(), 'beforeend');
 const eventsList = content.querySelector('.trip-events__list');
 
-for (let i = 0; i <= 3; i++) {
+for (let i = 0; i <= data.length; i++) {
   i === 0 ? render(eventsList, createEditEventTemplate(), 'beforeend')
-    : render(eventsList, createEventTemplate(data[i]), 'beforeend');
+    : render(eventsList, createEventTemplate(data[i - 1]), 'beforeend');
 }
