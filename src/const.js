@@ -3,6 +3,7 @@ export const Types = {
   BUS: 'Bus',
   TRAIN: 'Train',
   SHIP: 'Ship',
+  TRANSPORT: 'Transport',
   DRIVE: 'Drive',
   FLIGHT: 'Flight',
   CHECK_IN: 'Check-in',

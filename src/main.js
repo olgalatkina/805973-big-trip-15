@@ -42,7 +42,7 @@ render(content, createSortTemplate(), 'beforeend');
 render(content, createEventsListTemplate(), 'beforeend');
 const eventsList = content.querySelector('.trip-events__list');
 
-for (let i = 0; i <= data.length; i++) {
-  i === 0 ? render(eventsList, createEditEventTemplate(), 'beforeend')
-    : render(eventsList, createEventTemplate(data[i - 1]), 'beforeend');
+for (let i = 0; i < data.length; i++) {
+  i === 0 ? render(eventsList, createEditEventTemplate(data[i]), 'beforeend')
+    : render(eventsList, createEventTemplate(data[i]), 'beforeend');
 }

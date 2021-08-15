@@ -71,6 +71,7 @@ const generateOffers = () => {
     options.push({
       title,
       price: getRandomInteger(5, 100),
+      isChecked: Boolean(getRandomInteger(0, 1)),
     });
   });
 
