@@ -9,3 +9,16 @@ export const Types = {
   SIGHTSEEING: 'Sightseeing',
   RESTAURANT: 'Restaurant',
 };
+
+export const Destinations = {
+  CHAMONIX: 'Chamonix',
+  AMSTERDAM: 'Amsterdam',
+  GENEVA: 'Geneva',
+  PARIS: 'Paris',
+  BERLIN: 'Berlin',
+  VERONA: 'Verona',
+  ROMA: 'Roma',
+  BARCELONA: 'Barcelona',
+  MILAN: 'Milan',
+  GRAZ: 'Graz',
+};

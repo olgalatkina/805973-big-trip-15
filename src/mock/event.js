@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import { Types } from '../const';
+import { Types, Destinations } from '../const';
 import { getRandomInteger, shuffleArray } from '../utils/utils';
 
 const generateType = (types) => {
@@ -10,7 +10,7 @@ const generateType = (types) => {
 };
 
 const generateName = () => {
-  const destinations = ['Chamonix', 'Amsterdam', 'Geneva', 'Paris', 'Berlin', 'Verona', 'Roma', 'Barcelona', 'Milan', 'Graz'];
+  const destinations = Object.values(Destinations);
   return destinations[getRandomInteger(0, destinations.length - 1)];
 };
 
@@ -52,12 +52,12 @@ const generatePointInfo = () => ({
 
 const generateOffers = () => {
   const titles = [
-    'Upgrade to a business class',
-    'Choose the radio station',
-    'Add luggage',
-    'Add meal',
-    'Choose seats',
-    'Travel by train',
+    // 'Upgrade to a business class',
+    // 'Choose the radio station',
+    // 'Add luggage',
+    // 'Add meal',
+    // 'Choose seats',
+    // 'Travel by train',
     'Rent a car',
     'Order Uber',
     'Add breakfast',
@@ -98,9 +98,13 @@ const getPointOffers = (type, offers) => {
 
 const generateDateFrom = () => {
   const maxDaysGap = 5;
+  const maxMinuteGap = 30;
+  const maxHourGap = 12;
   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+  const minuteGap = getRandomInteger(-maxMinuteGap, maxMinuteGap);
+  const hourGap = getRandomInteger(-maxHourGap, maxHourGap);
 
-  return dayjs().add(daysGap, 'day').toDate();
+  return dayjs().add(daysGap, 'day').add(hourGap, 'hour').add(minuteGap, 'minute').toDate();
 };
 
 export const generateEvent = () => {

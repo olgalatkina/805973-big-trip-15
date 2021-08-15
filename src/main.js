@@ -13,11 +13,9 @@ import { createEditEventTemplate } from './view/edit-event';
 
 import { generateEvent } from './mock/event';
 
-const data = [];
-for (let i = 0; i < 20; i++) {
-  const event = generateEvent();
-  data.push(event);
-}
+const EVENT_COUNT = 20;
+const data = new Array(EVENT_COUNT).fill().map(generateEvent);
+// console.log(data);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -51,5 +49,5 @@ const eventsList = content.querySelector('.trip-events__list');
 
 for (let i = 0; i <= 3; i++) {
   i === 0 ? render(eventsList, createEditEventTemplate(), 'beforeend')
-    : render(eventsList, createEventTemplate(), 'beforeend');
+    : render(eventsList, createEventTemplate(data[i]), 'beforeend');
 }

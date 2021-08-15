@@ -1,3 +1,7 @@
+import dayjs from 'dayjs';
+import * as duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
+
 export const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
@@ -13,4 +17,24 @@ export const shuffleArray = (array) => {
     array[j] = temp;
   }
   return array;
+};
+
+// DAYJS
+export const getDate = (start) => dayjs(start).format('MMM DD');
+export const getStart = (start) => dayjs(start).format('hh:mm');
+export const getEnd = (end) => dayjs(end).format('hh:mm');
+export const getGap = (start, end) => dayjs.duration(dayjs(end).diff(dayjs(start))).$d;
+
+const getZeroSubStr = (number) => (number < 10) ? `0${number}` : `${number}`;
+
+export const gapToString = (diff) => {
+  const {days, hours, minutes} = diff;
+
+  if (days > 0) {
+    return `${getZeroSubStr(days)}D ${getZeroSubStr(hours)}H ${getZeroSubStr(minutes)}M`;
+  } else if (hours > 0) {
+    return `${getZeroSubStr(hours)}H ${getZeroSubStr(minutes)}M`;
+  } else {
+    return `${getZeroSubStr(minutes)}M`;
+  }
 };
