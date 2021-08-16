@@ -1,10 +1,10 @@
-const createOfferTemplate = (offer) => (
+const createOfferTemplate = ({isChecked, title, price}) => (
   `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" ${offer.isChecked ? 'checked' : ''}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" ${isChecked ? 'checked' : ''}>
       <label class="event__offer-label" for="event-offer-comfort-1">
-        <span class="event__offer-title">${offer.title}</span>
+        <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
+        <span class="event__offer-price">${price}</span>
       </label>
     </div>`
 );

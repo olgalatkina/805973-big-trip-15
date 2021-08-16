@@ -14,8 +14,7 @@ const createOffersTemplate = (offers) => (
   </ul>`
 );
 
-export const createEventTemplate = (eventItem) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers, isFavorite} = eventItem;
+export const createEventTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers, isFavorite}) => {
   const gap = getGap(dateFrom, dateTo);
   const favoriteBtnClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'
