@@ -1,5 +1,7 @@
 import { formatDate } from '../utils/utils';
 import { Types, Destinations } from '../const';
+import { createPhotoContainerTemplate } from './pictures';
+import { createOffersContainerTemplate } from './offers';
 
 const createTypeItemTemplate = (eventType) => {
   const type = eventType.toLowerCase();
@@ -21,47 +23,15 @@ const createCheckedTypeItemTemplate = (eventType) => {
 
 const createOptionTemplate = (point) => `<option value="${point}"></option>`;
 
-const createPhotoTemplate = (photo) => `<img class="event__photo" src="${photo.src}" alt="Event photo">`;
-
-const createPhotoContainerTemplate = (point) => {
-  const pictures = point.pictures.map(createPhotoTemplate).join('');
-
-  return `<div class="event__photos-container">
-    <div class="event__photos-tape">
-      ${pictures}
-    </div>
-  </div>`;
-};
-
-const createOfferTemplate = (offer) => (
-  offer.isChecked ? `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" checked>
-      <label class="event__offer-label" for="event-offer-comfort-1">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </label>
-    </div>` : `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort">
-    <label class="event__offer-label" for="event-offer-comfort-1">
-      <span class="event__offer-title">${offer.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
-    </label>
-  </div>`
-);
-
-const createOffersContainerTemplate = (offers) => (
-  offers ? `<section class="event__section  event__section--offers">
-    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-    <div class="event__available-offers">
-      ${offers.map(createOfferTemplate).join('')}
-    </div>
-  </section>` : ''
-);
-
 export const createEditEventTemplate = (eventItem) => {
-  const {type, destination, dateFrom, dateTo, basePrice, offers} = eventItem;
+  const {
+    type = Types.FLIGHT,
+    destination = Destinations.BARCELONA,
+    dateFrom = formatDate(),
+    dateTo = formatDate(),
+    basePrice = 0,
+    offers = null,
+  } = eventItem;
 
   const submenu = Object.values(Types).map((eventType) => eventType !== type
     ? createTypeItemTemplate(eventType)
@@ -69,8 +39,6 @@ export const createEditEventTemplate = (eventItem) => {
 
   const destinations = Object.values(Destinations).map(createOptionTemplate).join('');
   // console.log(destinations);
-
-  const photos = createPhotoContainerTemplate(destination);
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -128,7 +96,7 @@ export const createEditEventTemplate = (eventItem) => {
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
           <p class="event__destination-description">${destination.description}</p>
-          ${photos}
+          ${createPhotoContainerTemplate(destination)}
         </section>
       </section>
     </form>

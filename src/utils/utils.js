@@ -20,7 +20,7 @@ export const shuffleArray = (array) => {
 };
 
 // DAYJS
-export const formatDate = (date) => dayjs(date).format('MM/DD/YY HH:mm');
+export const formatDate = (date) => date ? dayjs(date).format('MM/DD/YY HH:mm') : dayjs().format('MM/DD/YY HH:mm');
 export const getDate = (start) => dayjs(start).format('MMM DD');
 export const getStart = (start) => dayjs(start).format('HH:mm');
 export const getEnd = (end) => dayjs(end).format('HH:mm');

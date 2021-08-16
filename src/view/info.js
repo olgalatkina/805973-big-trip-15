@@ -20,7 +20,7 @@ const getTotalPrice = (data) => {
 
   data.forEach((point) => {
     totalPrice += point.basePrice;
-    point.offers ? totalPrice += point.offers.reduce((acc, offer) => acc += offer.price, 0) : totalPrice;
+    point.offers ? totalPrice += point.offers.reduce((acc, offer) => acc += offer.price, 0) : 0;
   });
 
   return totalPrice;
