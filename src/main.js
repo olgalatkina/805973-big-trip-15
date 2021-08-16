@@ -7,12 +7,11 @@ import { createSortTemplate } from './view/sort';
 import { createEventsListTemplate } from './view/events-list';
 import { createEventTemplate } from './view/event';
 import { createEditEventTemplate } from './view/edit-event';
-// import { createNewEventTemplate } from './view/add-new-event';
-
+// import { createEmptyListTemplate } from './view/list-empty';
 import { generateEvent } from './mock/event';
-import { compareByStartTime } from './utils/utils';
+import { compareByStartTime } from './utils/date';
 
-const EVENT_COUNT = 13;
+const EVENT_COUNT = 15;
 const data = new Array(EVENT_COUNT).fill().map(generateEvent).sort(compareByStartTime);
 // console.log(data);
 
@@ -42,7 +41,7 @@ render(content, createSortTemplate(), 'beforeend');
 render(content, createEventsListTemplate(), 'beforeend');
 const eventsList = content.querySelector('.trip-events__list');
 
-for (let i = 0; i < data.length; i++) {
-  i === 0 ? render(eventsList, createEditEventTemplate(data[i]), 'beforeend')
-    : render(eventsList, createEventTemplate(data[i]), 'beforeend');
-}
+
+data.forEach((point, index) => index === 0
+  ? render(eventsList, createEditEventTemplate(point), 'beforeend')
+  : render(eventsList, createEventTemplate(point), 'beforeend'));

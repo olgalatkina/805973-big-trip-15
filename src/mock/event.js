@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Types, Destinations } from '../const';
-import { getRandomInteger, shuffleArray } from '../utils/utils';
+import { getRandomInteger, shuffleArray } from '../utils/common';
 
 const generateType = (types) => {
   const keys = Object.keys(types);
@@ -52,12 +52,6 @@ const generatePointInfo = () => ({
 
 const generateOffers = () => {
   const titles = [
-    // 'Upgrade to a business class',
-    // 'Choose the radio station',
-    // 'Add luggage',
-    // 'Add meal',
-    // 'Choose seats',
-    // 'Travel by train',
     'Rent a car',
     'Order Uber',
     'Add breakfast',

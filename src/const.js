@@ -23,3 +23,5 @@ export const Destinations = {
   MILAN: 'Milan',
   GRAZ: 'Graz',
 };
+
+export const MAX_NUMBER_OF_CITIES = 3;
