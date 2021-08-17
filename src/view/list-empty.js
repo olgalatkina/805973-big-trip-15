@@ -1,8 +1,9 @@
-import {createElement} from '../utils/common';
+import { createElement } from '../utils/common';
+import { Messages } from '../const';
 
 const createEmptyListTemplate = () => (
   `<p class="trip-events__msg">
-    Click New Event to create your first point
+    ${Messages.EVERYTHING}
   </p>`
 );
 
