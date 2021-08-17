@@ -10,38 +10,35 @@ import { createEditEventTemplate } from './view/edit-event';
 // import { createEmptyListTemplate } from './view/list-empty';
 import { generateEvent } from './mock/event';
 import { compareByStartTime } from './utils/date';
+import {renderTemplate} from './utils/common';
 
 const EVENT_COUNT = 15;
 const data = new Array(EVENT_COUNT).fill().map(generateEvent).sort(compareByStartTime);
 // console.log(data);
 
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 // HEADER
 const siteHeaderElement = document.querySelector('.page-header');
 const headerInfoElement = siteHeaderElement.querySelector('.trip-main');
 
-render(headerInfoElement, createInfoTemplate(data), 'afterbegin');
+renderTemplate(headerInfoElement, createInfoTemplate(data), 'afterbegin');
 
-render(headerInfoElement, createControlsTemplate(), 'beforeend');
+renderTemplate(headerInfoElement, createControlsTemplate(), 'beforeend');
 const controls = headerInfoElement.querySelector('.trip-controls');
-render(controls, createMenuTemplate(), 'afterbegin');
-render(controls, createFiltersTemplate(), 'beforeend');
+renderTemplate(controls, createMenuTemplate(), 'afterbegin');
+renderTemplate(controls, createFiltersTemplate(), 'beforeend');
 
-render(headerInfoElement, createBtnTemplate(), 'beforeend');
+renderTemplate(headerInfoElement, createBtnTemplate(), 'beforeend');
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const content = siteMainElement.querySelector('.trip-events');
 
-render(content, createSortTemplate(), 'beforeend');
+renderTemplate(content, createSortTemplate(), 'beforeend');
 
-render(content, createEventsListTemplate(), 'beforeend');
+renderTemplate(content, createEventsListTemplate(), 'beforeend');
 const eventsList = content.querySelector('.trip-events__list');
 
 
 data.forEach((point, index) => index === 0
-  ? render(eventsList, createEditEventTemplate(point), 'beforeend')
-  : render(eventsList, createEventTemplate(point), 'beforeend'));
+  ? renderTemplate(eventsList, createEditEventTemplate(point), 'beforeend')
+  : renderTemplate(eventsList, createEventTemplate(point), 'beforeend'));
