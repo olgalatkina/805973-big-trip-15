@@ -2,7 +2,8 @@ import dayjs from 'dayjs';
 import * as duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
-export const formatDate = (date) => date ? dayjs(date).format('MM/DD/YY HH:mm') : dayjs().format('MM/DD/YY HH:mm');
+// export const formatDate = (date) => date ? dayjs(date).format('MM/DD/YY HH:mm') : dayjs().format('MM/DD/YY HH:mm');
+export const formatDate = (date) => dayjs(date).format('MM/DD/YY HH:mm');
 export const getDate = (date) => dayjs(date).format('MMM DD');
 export const getLastDay = (date) => dayjs(date).format('DD');
 export const getEndingDate = (points) => {
@@ -29,3 +30,5 @@ export const gapToString = (diff) => {
 };
 
 export const compareByStartTime = (eventA, eventB) => eventA.dateFrom - eventB.dateFrom;
+
+export const getActualDate = () => dayjs().toDate();

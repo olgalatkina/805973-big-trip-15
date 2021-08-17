@@ -1,3 +1,4 @@
+import { createElement } from '../utils/common';
 import { getDate, getStart, getEnd, getGap, gapToString } from '../utils/date';
 
 const createOfferTemplate = ({title, price}) => (
@@ -14,7 +15,7 @@ const createOffersTemplate = (offers) => (
   </ul>`
 );
 
-export const createEventTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers, isFavorite}) => {
+const createPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers, isFavorite}) => {
   const gap = getGap(dateFrom, dateTo);
   const favoriteBtnClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'
@@ -54,3 +55,26 @@ export const createEventTemplate = ({type, destination, dateFrom, dateTo, basePr
     </div>
   </li>`;
 };
+
+export default class Point {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
