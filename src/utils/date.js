@@ -3,7 +3,13 @@ import * as duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
 export const formatDate = (date) => date ? dayjs(date).format('MM/DD/YY HH:mm') : dayjs().format('MM/DD/YY HH:mm');
-export const getDate = (start) => dayjs(start).format('MMM DD');
+export const getDate = (date) => dayjs(date).format('MMM DD');
+export const getLastDay = (date) => dayjs(date).format('DD');
+export const getEndingDate = (points) => {
+  const beginning = points[0].dateFrom;
+  const ending = points[points.length - 1].dateTo;
+  return beginning.getMonth() === ending.getMonth() ? getLastDay(ending) : getDate(ending);
+};
 export const getStart = (start) => dayjs(start).format('HH:mm');
 export const getEnd = (end) => dayjs(end).format('HH:mm');
 export const getGap = (start, end) => dayjs.duration(dayjs(end).diff(dayjs(start))).$d;
