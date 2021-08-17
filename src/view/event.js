@@ -1,10 +1,10 @@
 import { getDate, getStart, getEnd, getGap, gapToString } from '../utils/date';
 
-const createOfferTemplate = (offer) => (
+const createOfferTemplate = ({title, price}) => (
   `<li class="event__offer">
-    <span class="event__offer-title">${offer.title}</span>
+    <span class="event__offer-title">${title}</span>
     &plus;&euro;&nbsp;
-    <span class="event__offer-price">${offer.price}</span>
+    <span class="event__offer-price">${price}</span>
   </li>`
 );
 

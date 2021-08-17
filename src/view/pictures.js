@@ -1,11 +1,11 @@
-const createPhotoTemplate = (photo) => `<img class="event__photo" src="${photo.src}" alt="Event photo">`;
+const createPhotoTemplate = ({src}) => `<img class="event__photo" src="${src}" alt="Event photo">`;
 
-export const createPhotoContainerTemplate = (point) => {
-  const pictures = point.pictures.map(createPhotoTemplate).join('');
+export const createPhotoContainerTemplate = ({pictures}) => {
+  const photos = pictures.map(createPhotoTemplate).join('');
 
   return `<div class="event__photos-container">
     <div class="event__photos-tape">
-      ${pictures}
+      ${photos}
     </div>
   </div>`;
 };
