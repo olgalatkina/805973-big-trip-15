@@ -1,16 +1,19 @@
-import { createElement } from '../utils/common';
+import {createElement} from '../utils/common';
 
-const createControlsTemplate = () => (
-  `<div class="trip-main__trip-controls  trip-controls">
-  </div>`
+const contentTemplate = () => (
+  `<section class="trip-events">
+    <h2 class="visually-hidden">Trip events</h2>
+
+  </section>`
 );
-export default class Controls {
+
+export default class Content {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createControlsTemplate();
+    return contentTemplate();
   }
 
   getElement() {

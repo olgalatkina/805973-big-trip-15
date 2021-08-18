@@ -1,7 +1,30 @@
-import { formatDate } from '../utils/date';
+import { nanoid } from 'nanoid';
+import { createElement } from '../utils/common';
+import { formatDate, getActualDate } from '../utils/date';
 import { Types, Destinations } from '../const';
-import { createPhotoContainerTemplate } from './pictures';
-import { createOffersContainerTemplate } from './offers';
+
+const BLANK_POINT = {
+  type: Types.FLIGHT,
+  destination: {
+    name: '',
+    description: '',
+    pictures: [],
+  },
+  offers: [{
+    title: 'Switch to comfort',
+    price: 200,
+    isChecked: false,
+  }, {
+    title: 'Add breakfast',
+    price: 20,
+    isChecked: false,
+  }],
+  dateFrom: getActualDate(),
+  dateTo: getActualDate(),
+  basePrice: 0,
+  isFavorite: false,
+  id: nanoid(),
+};
 
 const createTypeItemTemplate = (eventType) => {
   const type = eventType.toLowerCase();
@@ -23,16 +46,39 @@ const createCheckedTypeItemTemplate = (eventType) => {
 
 const createOptionTemplate = (point) => `<option value="${point}"></option>`;
 
-export const createEditEventTemplate = (eventItem) => {
-  const {
-    type = Types.FLIGHT,
-    destination = Destinations.BARCELONA,
-    dateFrom = formatDate(),
-    dateTo = formatDate(),
-    basePrice = 0,
-    offers = null,
-  } = eventItem;
+const createPhotoTemplate = ({src}) => `<img class="event__photo" src="${src}" alt="Event photo">`;
 
+const createOfferTemplate = ({isChecked, title, price}) => (
+  `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" ${isChecked ? 'checked' : ''}>
+      <label class="event__offer-label" for="event-offer-comfort-1">
+        <span class="event__offer-title">${title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${price}</span>
+      </label>
+    </div>`
+);
+
+const createOffersContainerTemplate = (offers) => (
+  offers ? `<section class="event__section  event__section--offers">
+    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+    <div class="event__available-offers">
+      ${offers.map(createOfferTemplate).join('')}
+    </div>
+  </section>` : ''
+);
+
+const createPhotoContainerTemplate = ({pictures}) => {
+  const photos = pictures.map(createPhotoTemplate).join('');
+
+  return `<div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${photos}
+    </div>
+  </div>`;
+};
+
+const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers}) => {
   const submenu = Object.values(Types).map((eventType) => eventType !== type
     ? createTypeItemTemplate(eventType)
     : createCheckedTypeItemTemplate(eventType)).join('');
@@ -101,3 +147,26 @@ export const createEditEventTemplate = (eventItem) => {
     </form>
   </li>`;
 };
+
+export default class EditPoint {
+  constructor(point = BLANK_POINT) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditPointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
