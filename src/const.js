@@ -25,9 +25,9 @@ export const Destinations = {
 };
 
 export const Messages = {
-  EVERYTHING: 'Everything – "Click New Event to create your first point"',
-  PAST: 'Past — "There are no past events now"',
-  FUTURE: 'Future — "There are no future events now"',
+  EVERYTHING: 'Click New Event to create your first point',
+  PAST: 'There are no past events now',
+  FUTURE: 'There are no future events now',
   LOADING: 'Loading...',
 };
 
