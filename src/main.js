@@ -19,15 +19,15 @@ const data = new Array(EVENT_COUNT).fill().map(generateEvent).sort(compareByStar
 // console.log(data);
 
 const renderPoint = (list, item) => {
-  const pointComponent = new PointView(item).getElement();
-  const editPointComponent = new EditPointView(item).getElement();
+  const pointComponent = new PointView(item);
+  const editPointComponent = new EditPointView(item);
 
   const replacePointToForm = () => {
-    list.replaceChild(editPointComponent, pointComponent);
+    list.replaceChild(editPointComponent.getElement(), pointComponent.getElement());
   };
 
   const replaceFormToPoint = () => {
-    list.replaceChild(pointComponent, editPointComponent);
+    list.replaceChild(pointComponent.getElement(), editPointComponent.getElement());
   };
 
   const onEscKeyDown = (evt) => {
@@ -38,23 +38,22 @@ const renderPoint = (list, item) => {
     }
   };
 
-  pointComponent.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  pointComponent.setRollUpClickHandler(() => {
     replacePointToForm();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  editPointComponent.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  editPointComponent.setRollUpClickHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown',onEscKeyDown);
   });
 
-  editPointComponent.querySelector('form').addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  editPointComponent.setSubmitClickHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown',onEscKeyDown);
   });
 
-  render(list, pointComponent, RenderPosition.BEFOREEND);
+  render(list, pointComponent.getElement(), RenderPosition.BEFOREEND);
 };
 
 // HEADER
