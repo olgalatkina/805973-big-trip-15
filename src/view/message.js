@@ -1,19 +1,21 @@
 import { createElement } from '../utils/common';
-import { Messages } from '../const';
+// import { Messages } from '../const';
 
-const createMessageTemplate = () => (
+//${Messages.EVERYTHING}
+const createMessageTemplate = (message) => (
   `<p class="trip-events__msg">
-    ${Messages.EVERYTHING}
+    ${message}
   </p>`
 );
 
 export default class Message {
-  constructor() {
+  constructor(message) {
+    this._message = message;
     this._element = null;
   }
 
   getTemplate() {
-    return createMessageTemplate();
+    return createMessageTemplate(this._message);
   }
 
   getElement() {

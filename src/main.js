@@ -12,8 +12,9 @@ import MessageView from './view/message';
 import { generateEvent } from './mock/event';
 import { compareByStartTime } from './utils/date';
 import { render, RenderPosition} from './utils/common';
+import { Messages } from './const';
 
-const EVENT_COUNT = 0;
+const EVENT_COUNT = 15;
 const data = new Array(EVENT_COUNT).fill().map(generateEvent).sort(compareByStartTime);
 // console.log(data);
 
@@ -59,7 +60,6 @@ const renderPoint = (list, item) => {
 // HEADER
 const siteHeaderElement = document.querySelector('.page-header');
 const headerMain = siteHeaderElement.querySelector('.trip-main');
-data.length ? render(headerMain, new InfoView(data).getElement(), RenderPosition.AFTERBEGIN) : '';
 const controls = new ControlsView().getElement();
 render(headerMain, controls, RenderPosition.BEFOREEND);
 render(controls, new MenuView().getElement(), RenderPosition.AFTERBEGIN);
@@ -72,11 +72,23 @@ const bodyContainer = siteMainElement.querySelector('.page-body__container');
 const content = new ContentView().getElement();
 render(bodyContainer, content, RenderPosition.BEFOREEND);
 
-if (data.length) {
+const renderData = () => {
+  render(headerMain, new InfoView(data).getElement(), RenderPosition.AFTERBEGIN);
   render(content, new SortView().getElement(), RenderPosition.BEFOREEND);
   const pointList = new PointListView().getElement();
   render(content, pointList, RenderPosition.BEFOREEND);
   data.forEach((point) => renderPoint(pointList, point));
-} else {
-  render(content, new MessageView().getElement(), RenderPosition.BEFOREEND);
-}
+};
+
+data.length ? renderData() : render(content, new MessageView(Messages.EVERYTHING).getElement(), RenderPosition.BEFOREEND);
+
+// if (data.length === 0) {
+//   render(content, new MessageView(Messages.EVERYTHING).getElement(), RenderPosition.BEFOREEND);
+//   return;
+// }
+
+// render(headerMain, new InfoView(data).getElement(), RenderPosition.AFTERBEGIN);
+// render(content, new SortView().getElement(), RenderPosition.BEFOREEND);
+// const pointList = new PointListView().getElement();
+// render(content, pointList, RenderPosition.BEFOREEND);
+// data.forEach((point) => renderPoint(pointList, point));
