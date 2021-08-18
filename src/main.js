@@ -11,7 +11,7 @@ import EditPointView from './view/edit-point';
 import MessageView from './view/message';
 import { generateEvent } from './mock/event';
 import { compareByStartTime } from './utils/date';
-import { render, RenderPosition} from './utils/common';
+import { render, RenderPosition, replace } from './utils/render';
 import { Messages } from './const';
 
 const EVENT_COUNT = 15;
@@ -23,11 +23,11 @@ const renderPoint = (list, item) => {
   const editPointComponent = new EditPointView(item);
 
   const replacePointToForm = () => {
-    list.replaceChild(editPointComponent.getElement(), pointComponent.getElement());
+    replace(editPointComponent, pointComponent);
   };
 
   const replaceFormToPoint = () => {
-    list.replaceChild(pointComponent.getElement(), editPointComponent.getElement());
+    replace(pointComponent, editPointComponent);
   };
 
   const onEscKeyDown = (evt) => {
@@ -53,41 +53,41 @@ const renderPoint = (list, item) => {
     document.removeEventListener('keydown',onEscKeyDown);
   });
 
-  render(list, pointComponent.getElement(), RenderPosition.BEFOREEND);
+  render(list, pointComponent, RenderPosition.BEFOREEND);
 };
 
 // HEADER
 const siteHeaderElement = document.querySelector('.page-header');
 const headerMain = siteHeaderElement.querySelector('.trip-main');
-const controls = new ControlsView().getElement();
+const controls = new ControlsView();
 render(headerMain, controls, RenderPosition.BEFOREEND);
-render(controls, new MenuView().getElement(), RenderPosition.AFTERBEGIN);
-render(controls, new FiltersView().getElement(), RenderPosition.BEFOREEND);
-render(headerMain, new ButtonNewEventView().getElement(), RenderPosition.BEFOREEND);
+render(controls, new MenuView(), RenderPosition.AFTERBEGIN);
+render(controls, new FiltersView(), RenderPosition.BEFOREEND);
+render(headerMain, new ButtonNewEventView(), RenderPosition.BEFOREEND);
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
-const content = new ContentView().getElement();
+const content = new ContentView();
 render(bodyContainer, content, RenderPosition.BEFOREEND);
 
 const renderData = () => {
-  render(headerMain, new InfoView(data).getElement(), RenderPosition.AFTERBEGIN);
-  render(content, new SortView().getElement(), RenderPosition.BEFOREEND);
-  const pointList = new PointListView().getElement();
+  render(headerMain, new InfoView(data), RenderPosition.AFTERBEGIN);
+  render(content, new SortView(), RenderPosition.BEFOREEND);
+  const pointList = new PointListView();
   render(content, pointList, RenderPosition.BEFOREEND);
   data.forEach((point) => renderPoint(pointList, point));
 };
 
-data.length ? renderData() : render(content, new MessageView(Messages.EVERYTHING).getElement(), RenderPosition.BEFOREEND);
+data.length ? renderData() : render(content, new MessageView(Messages.EVERYTHING), RenderPosition.BEFOREEND);
 
 // if (data.length === 0) {
-//   render(content, new MessageView(Messages.EVERYTHING).getElement(), RenderPosition.BEFOREEND);
+//   render(content, new MessageView(Messages.EVERYTHING), RenderPosition.BEFOREEND);
 //   return;
 // }
 
-// render(headerMain, new InfoView(data).getElement(), RenderPosition.AFTERBEGIN);
-// render(content, new SortView().getElement(), RenderPosition.BEFOREEND);
-// const pointList = new PointListView().getElement();
+// render(headerMain, new InfoView(data), RenderPosition.AFTERBEGIN);
+// render(content, new SortView(), RenderPosition.BEFOREEND);
+// const pointList = new PointListView();
 // render(content, pointList, RenderPosition.BEFOREEND);
 // data.forEach((point) => renderPoint(pointList, point));
