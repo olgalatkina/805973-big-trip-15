@@ -1,32 +1,18 @@
-import { createElement } from '../utils/common';
-// import { Messages } from '../const';
+import AbstractView from './abstract';
 
-//${Messages.EVERYTHING}
 const createMessageTemplate = (message) => (
   `<p class="trip-events__msg">
     ${message}
   </p>`
 );
 
-export default class Message {
+export default class Message extends AbstractView {
   constructor(message) {
+    super();
     this._message = message;
-    this._element = null;
   }
 
   getTemplate() {
     return createMessageTemplate(this._message);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

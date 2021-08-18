@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
-import { createElement } from '../utils/common';
 import { formatDate, getActualDate } from '../utils/date';
 import { Types, Destinations } from '../const';
+import AbstractView from './abstract';
 
 const BLANK_POINT = {
   type: Types.FLIGHT,
@@ -148,25 +148,13 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
   </li>`;
 };
 
-export default class EditPoint {
+export default class EditPoint extends AbstractView {
   constructor(point = BLANK_POINT) {
+    super();
     this._point = point;
-    this._element = null;
   }
 
   getTemplate() {
     return createEditPointTemplate(this._point);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
