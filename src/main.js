@@ -72,6 +72,10 @@ const content = new ContentView();
 render(bodyContainer, content, RenderPosition.BEFOREEND);
 
 const renderData = () => {
+  if (!data.length) {
+    render(content, new MessageView(Messages.EVERYTHING), RenderPosition.BEFOREEND);
+    return;
+  }
   render(headerMain, new InfoView(data), RenderPosition.AFTERBEGIN);
   render(content, new SortView(), RenderPosition.BEFOREEND);
   const pointList = new PointListView();
@@ -79,15 +83,4 @@ const renderData = () => {
   data.forEach((point) => renderPoint(pointList, point));
 };
 
-data.length ? renderData() : render(content, new MessageView(Messages.EVERYTHING), RenderPosition.BEFOREEND);
-
-// if (data.length === 0) {
-//   render(content, new MessageView(Messages.EVERYTHING), RenderPosition.BEFOREEND);
-//   return;
-// }
-
-// render(headerMain, new InfoView(data), RenderPosition.AFTERBEGIN);
-// render(content, new SortView(), RenderPosition.BEFOREEND);
-// const pointList = new PointListView();
-// render(content, pointList, RenderPosition.BEFOREEND);
-// data.forEach((point) => renderPoint(pointList, point));
+renderData();

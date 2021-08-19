@@ -31,3 +31,11 @@ export const getTotalPrice = (data) => {
   });
   return totalPrice;
 };
+
+export const getOffersByType = (type, offers) => {
+  for (const offer of offers) {
+    if (offer.type === type) {
+      return offer.offers.length ? offer.offers : null;
+    }
+  }
+};
