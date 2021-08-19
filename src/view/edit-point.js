@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
-import { createElement } from '../utils/common';
 import { formatDate, getActualDate } from '../utils/date';
 import { Types, Destinations } from '../const';
+import AbstractView from './abstract';
 
 const BLANK_POINT = {
   type: Types.FLIGHT,
@@ -148,25 +148,35 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
   </li>`;
 };
 
-export default class EditPoint {
+export default class EditPoint extends AbstractView {
   constructor(point = BLANK_POINT) {
+    super();
     this._point = point;
-    this._element = null;
+    this._rollupClickHandler = this._rollupClickHandler.bind(this);
+    this._submitClickHandler = this._submitClickHandler.bind(this);
   }
 
   getTemplate() {
     return createEditPointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _rollupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.rollUpClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setRollUpClickHandler(callback) {
+    this._callback.rollUpClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupClickHandler);
+  }
+
+  _submitClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.submitClick();
+  }
+
+  setSubmitClickHandler(callback) {
+    this._callback.submitClick = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
   }
 }

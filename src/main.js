@@ -11,22 +11,23 @@ import EditPointView from './view/edit-point';
 import MessageView from './view/message';
 import { generateEvent } from './mock/event';
 import { compareByStartTime } from './utils/date';
-import { render, RenderPosition} from './utils/common';
+import { render, RenderPosition, replace } from './utils/render';
+import { Messages } from './const';
 
-const EVENT_COUNT = 0;
+const EVENT_COUNT = 15;
 const data = new Array(EVENT_COUNT).fill().map(generateEvent).sort(compareByStartTime);
 // console.log(data);
 
 const renderPoint = (list, item) => {
-  const pointComponent = new PointView(item).getElement();
-  const editPointComponent = new EditPointView(item).getElement();
+  const pointComponent = new PointView(item);
+  const editPointComponent = new EditPointView(item);
 
   const replacePointToForm = () => {
-    list.replaceChild(editPointComponent, pointComponent);
+    replace(editPointComponent, pointComponent);
   };
 
   const replaceFormToPoint = () => {
-    list.replaceChild(pointComponent, editPointComponent);
+    replace(pointComponent, editPointComponent);
   };
 
   const onEscKeyDown = (evt) => {
@@ -37,18 +38,17 @@ const renderPoint = (list, item) => {
     }
   };
 
-  pointComponent.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  pointComponent.setRollUpClickHandler(() => {
     replacePointToForm();
     document.addEventListener('keydown', onEscKeyDown);
   });
 
-  editPointComponent.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  editPointComponent.setRollUpClickHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown',onEscKeyDown);
   });
 
-  editPointComponent.querySelector('form').addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  editPointComponent.setSubmitClickHandler(() => {
     replaceFormToPoint();
     document.removeEventListener('keydown',onEscKeyDown);
   });
@@ -59,24 +59,35 @@ const renderPoint = (list, item) => {
 // HEADER
 const siteHeaderElement = document.querySelector('.page-header');
 const headerMain = siteHeaderElement.querySelector('.trip-main');
-data.length ? render(headerMain, new InfoView(data).getElement(), RenderPosition.AFTERBEGIN) : '';
-const controls = new ControlsView().getElement();
+const controls = new ControlsView();
 render(headerMain, controls, RenderPosition.BEFOREEND);
-render(controls, new MenuView().getElement(), RenderPosition.AFTERBEGIN);
-render(controls, new FiltersView().getElement(), RenderPosition.BEFOREEND);
-render(headerMain, new ButtonNewEventView().getElement(), RenderPosition.BEFOREEND);
+render(controls, new MenuView(), RenderPosition.AFTERBEGIN);
+render(controls, new FiltersView(), RenderPosition.BEFOREEND);
+render(headerMain, new ButtonNewEventView(), RenderPosition.BEFOREEND);
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
-const content = new ContentView().getElement();
+const content = new ContentView();
 render(bodyContainer, content, RenderPosition.BEFOREEND);
 
-if (data.length) {
-  render(content, new SortView().getElement(), RenderPosition.BEFOREEND);
-  const pointList = new PointListView().getElement();
+const renderData = () => {
+  render(headerMain, new InfoView(data), RenderPosition.AFTERBEGIN);
+  render(content, new SortView(), RenderPosition.BEFOREEND);
+  const pointList = new PointListView();
   render(content, pointList, RenderPosition.BEFOREEND);
   data.forEach((point) => renderPoint(pointList, point));
-} else {
-  render(content, new MessageView().getElement(), RenderPosition.BEFOREEND);
-}
+};
+
+data.length ? renderData() : render(content, new MessageView(Messages.EVERYTHING), RenderPosition.BEFOREEND);
+
+// if (data.length === 0) {
+//   render(content, new MessageView(Messages.EVERYTHING), RenderPosition.BEFOREEND);
+//   return;
+// }
+
+// render(headerMain, new InfoView(data), RenderPosition.AFTERBEGIN);
+// render(content, new SortView(), RenderPosition.BEFOREEND);
+// const pointList = new PointListView();
+// render(content, pointList, RenderPosition.BEFOREEND);
+// data.forEach((point) => renderPoint(pointList, point));

@@ -1,4 +1,4 @@
-import { createElement } from '../utils/common';
+import AbstractView from './abstract';
 import { getDate, getStart, getEnd, getGap, gapToString } from '../utils/date';
 
 const createOfferTemplate = ({title, price}) => (
@@ -56,25 +56,24 @@ const createPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, of
   </li>`;
 };
 
-export default class Point {
+export default class Point extends AbstractView {
   constructor(point) {
+    super();
     this._point = point;
-    this._element = null;
+    this._rollupClickHandler = this._rollupClickHandler.bind(this);
   }
 
   getTemplate() {
     return createPointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _rollupClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.rollUpClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setRollUpClickHandler(callback) {
+    this._callback.rollUpClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupClickHandler);
   }
 }
