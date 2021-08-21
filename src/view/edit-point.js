@@ -20,22 +20,21 @@ const BLANK_POINT = {
   id: nanoid(),
 };
 
-const createTypeItemTemplate = (eventType) => {
-  const type = eventType.toLowerCase();
+const createIconList = (type, types) => {
+  let isChecked = false;
 
-  return `<div class="event__type-item">
-    <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-    <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${eventType}</label>
-  </div>`;
-};
+  const createTypeIconTemplate = (eventType) => {
+    const currentType = eventType.toLowerCase();
+    return `<div class="event__type-item">
+      <input id="event-type-${currentType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${currentType}" ${isChecked ? 'checked' : ''}>
+      <label class="event__type-label  event__type-label--${currentType}" for="event-type-${currentType}-1">${eventType}</label>
+    </div>`;
+  };
 
-const createCheckedTypeItemTemplate = (eventType) => {
-  const type = eventType.toLowerCase();
-
-  return `<div class="event__type-item">
-    <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" checked>
-    <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${eventType}</label>
-  </div>`;
+  return Object.values(types).map((eventType) => {
+    isChecked = (eventType.toLowerCase() === type);
+    return createTypeIconTemplate(eventType);
+  }).join('');
 };
 
 const createOptionTemplate = (point) => `<option value="${point}"></option>`;
@@ -81,10 +80,6 @@ const createPhotoContainerTemplate = ({pictures}) => (
 );
 
 const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers}) => {
-  const submenu = Object.values(Types).map((eventType) => eventType.toLowerCase() !== type
-    ? createTypeItemTemplate(eventType)
-    : createCheckedTypeItemTemplate(eventType)).join('');
-
   const destinations = Object.values(Destinations).map(createOptionTemplate).join('');
   const hasDestinationInfo = !(destination.description === '' && destination.pictures.length === 0);
 
@@ -101,7 +96,7 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-              ${submenu}
+              ${createIconList(type, Types)}
             </fieldset>
           </div>
         </div>
