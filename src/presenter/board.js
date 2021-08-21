@@ -2,9 +2,8 @@ import ContentView from '../view/content.js';
 import MessageView from '../view/message';
 import SortView from '../view/sort';
 import PointListView from '../view/point-list';
-import PointView from '../view/point';
-import EditPointView from '../view/edit-point';
-import { render, RenderPosition, replace } from '../utils/render.js';
+import PointPresenter from './point';
+import { render, RenderPosition } from '../utils/render.js';
 import { Messages } from '../const';
 
 export default class Board {
@@ -31,41 +30,8 @@ export default class Board {
   }
 
   _renderPoint(point) {
-    const pointComponent = new PointView(point);
-    const editPointComponent = new EditPointView(point);
-
-    const replacePointToForm = () => {
-      replace(editPointComponent, pointComponent);
-    };
-
-    const replaceFormToPoint = () => {
-      replace(pointComponent, editPointComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    pointComponent.setRollUpClickHandler(() => {
-      replacePointToForm();
-      document.addEventListener('keydown', onEscKeyDown);
-    });
-
-    editPointComponent.setRollUpClickHandler(() => {
-      replaceFormToPoint();
-      document.removeEventListener('keydown',onEscKeyDown);
-    });
-
-    editPointComponent.setSubmitClickHandler(() => {
-      replaceFormToPoint();
-      document.removeEventListener('keydown',onEscKeyDown);
-    });
-
-    render(this._pointListComponent, pointComponent, RenderPosition.BEFOREEND);
+    const pointPresenter = new PointPresenter(this._pointListComponent);
+    pointPresenter.init(point);
   }
 
   _renderPointList() {
