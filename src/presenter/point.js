@@ -1,29 +1,53 @@
 import PointView from '../view/point';
 import EditPointView from '../view/edit-point';
-import { render, RenderPosition, replace } from '../utils/render.js';
+import { remove, render, RenderPosition, replace } from '../utils/render.js';
 
 export default class Point {
-  constructor(pointList) {
+  constructor(pointList, changeData) {
     this._pointListContainer = pointList;
+    this._changeData = changeData;
+
     this._pointComponent = null;
     this._editPointComponent = null;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleRollDownClick = this._handleRollDownClick.bind(this);
     this._handleRollUpClick = this._handleRollUpClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleSubmitClick = this._handleSubmitClick.bind(this);
   }
 
   init(point) {
-    this.point = point;
+    this._point = point;
+
+    const prevPointComponent = this._pointComponent;
+    const prevEditPointComponent = this._pointComponent;
+
     this._pointComponent = new PointView(point);
     this._editPointComponent = new EditPointView(point);
 
     this._pointComponent.setRollDownClickHandler(this._handleRollDownClick);
+    this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._editPointComponent.setRollUpClickHandler(this._handleRollUpClick);
     this._editPointComponent.setSubmitClickHandler(this._handleSubmitClick);
 
-    render(this._pointListContainer, this._pointComponent, RenderPosition.BEFOREEND);
+    if (prevPointComponent === null || prevEditPointComponent === null) {
+      render(this._pointListContainer, this._pointComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._pointListContainer.getElement().contains(prevPointComponent.getElement())) {
+      replace(this._pointComponent, prevPointComponent);
+    }
+
+    if (this._pointListContainer.getElement().contains(prevEditPointComponent.getElement())) {
+      replace(this._editPointComponent, prevEditPointComponent);
+    }
+  }
+
+  destroy() {
+    remove(this._pointComponent);
+    remove(this._EditPointComponent);
   }
 
   _replacePointToForm() {
@@ -51,7 +75,20 @@ export default class Point {
     this._replaceFormToPoint();
   }
 
-  _handleSubmitClick() {
+  _handleFavoriteClick() {
+    this._changeData(
+      Object.assign(
+        {},
+        this._point,
+        {
+          isFavorite: !this._point.isFavorite,
+        },
+      ),
+    );
+  }
+
+  _handleSubmitClick(point) {
     this._replaceFormToPoint();
+    this._changeData(point);
   }
 }

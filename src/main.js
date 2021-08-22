@@ -3,7 +3,7 @@ import MenuView from './view/menu';
 import FiltersView from './view/filters';
 import ButtonNewEventView from './view/btn-new-point';
 import InfoView from './view/info';
-import BoardPresenter from './presenter/board';
+import TripPresenter from './presenter/trip';
 import { generateEvent } from './mock/event';
 import { compareByStartTime } from './utils/date';
 import { render, RenderPosition } from './utils/render';
@@ -25,5 +25,5 @@ data.length ? render(headerContainer, new InfoView(data), RenderPosition.AFTERBE
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
-const boardPresenter = new BoardPresenter(bodyContainer);
-boardPresenter.init(data);
+const tripPresenter = new TripPresenter(bodyContainer);
+tripPresenter.init(data);

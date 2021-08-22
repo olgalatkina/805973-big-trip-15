@@ -79,7 +79,7 @@ const createPhotoContainerTemplate = ({pictures}) => (
   </div>`
 );
 
-const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers}) => {
+const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers }) => {
   const destinations = Object.values(Destinations).map(createOptionTemplate).join('');
   const hasDestinationInfo = !(destination.description === '' && destination.pictures.length === 0);
 
@@ -170,7 +170,7 @@ export default class EditPoint extends AbstractView {
 
   _submitClickHandler(evt) {
     evt.preventDefault();
-    this._callback.submitClick();
+    this._callback.submitClick(this._point);
   }
 
   setSubmitClickHandler(callback) {
