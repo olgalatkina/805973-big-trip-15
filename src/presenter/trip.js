@@ -10,10 +10,11 @@ import { Messages } from '../const';
 export default class Trip {
   constructor(bodyContainer) {
     this._container = bodyContainer;
+    this._message = Messages.EVERYTHING;
     this._pointPresenters = new Map();
 
     this._tripComponent = new TripView();
-    this._messageComponent = new MessageView();
+    this._messageComponent = new MessageView(this._message);
     this._sortComponent = new SortView();
     this._pointListComponent = new PointListView();
 
@@ -23,25 +24,18 @@ export default class Trip {
 
   init(userData) {
     this._userData = [...userData];
+    console.log('userData: ' ,this._userData);
     render(this._container, this._tripComponent, RenderPosition.BEFOREEND);
-    this._renderBoard();
-  }
-
-  _handleModeChange() {
-    this._pointPresenters.forEach((presenter) => presenter.resetView());
-  }
-
-  _handlePointChange(updatedPoint) {
-    this._userData = updatePoint(this._userData, updatedPoint);
-    this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
+    this._renderTrip();
   }
 
   _renderMessage() {
-    render(this._tripComponent, new MessageView(Messages.EVERYTHING), RenderPosition.BEFOREEND);
+    render(this._tripComponent, this._messageComponent, RenderPosition.BEFOREEND);
   }
 
   _renderSort() {
-    render(this._tripComponent, new SortView(), RenderPosition.BEFOREEND);
+    console.log('render sort');
+    render(this._tripComponent, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(point) {
@@ -50,22 +44,33 @@ export default class Trip {
     this._pointPresenters.set(point.id, pointPresenter);
   }
 
-  _clearPointList() {
-    this._pointPresenters.forEach((presenter) => presenter.destroy());
-    this._pointPresenters.clear();
-  }
-
   _renderPointList() {
+    console.log('render point-list');
     render(this._tripComponent, this._pointListComponent, RenderPosition.BEFOREEND);
     this._userData.forEach((point) => this._renderPoint(point));
   }
 
-  _renderBoard() {
+  _clearPointList() {
+    console.log('clear point-list');
+    this._pointPresenters.forEach((presenter) => presenter.destroy());
+    this._pointPresenters.clear();
+  }
+
+  _renderTrip() {
     if (!this._userData.length) {
       this._renderMessage();
       return;
     }
     this._renderSort();
     this._renderPointList();
+  }
+
+  _handlePointChange(updatedPoint) {
+    this._userData = updatePoint(this._userData, updatedPoint);
+    this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  }
+
+  _handleModeChange() {
+    this._pointPresenters.forEach((presenter) => presenter.resetView());
   }
 }

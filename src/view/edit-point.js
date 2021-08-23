@@ -41,11 +41,11 @@ const createOptionTemplate = (point) => `<option value="${point}"></option>`;
 
 const createOffersContainerTemplate = (type, offers, proposals) => {
   const titles = offers.map((offer) => offer.title);
-  let isChecked = false;
+  let isSelected = false;
 
   const createOfferTemplate = ({title, price}) => (
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" ${isChecked ? 'checked' : ''}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" ${isSelected ? 'checked' : ''}>
       <label class="event__offer-label" for="event-offer-comfort-1">
         <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
@@ -54,10 +54,10 @@ const createOffersContainerTemplate = (type, offers, proposals) => {
     </div>`
   );
 
-  const allOffers = proposals.filter((proposal) => proposal.type === type).map((item) => item.offers).flat();
+  const allOffers = getOffersByType(type, proposals);
 
   const content = allOffers.map((offer) => {
-    isChecked = titles.includes(offer.title);
+    isSelected = titles.includes(offer.title);
     return createOfferTemplate(offer);
   }).join('');
 
