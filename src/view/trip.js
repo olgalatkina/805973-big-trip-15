@@ -1,14 +1,14 @@
 import AbstractView from './abstract';
 
-const contentTemplate = () => (
+const tripTemplate = () => (
   `<section class="trip-events">
     <h2 class="visually-hidden">Trip events</h2>
 
   </section>`
 );
 
-export default class Content extends AbstractView {
+export default class Trip extends AbstractView {
   getTemplate() {
-    return contentTemplate();
+    return tripTemplate();
   }
 }

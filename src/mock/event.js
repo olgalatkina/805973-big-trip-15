@@ -2,11 +2,12 @@ import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { Types, Destinations } from '../const';
 import { getRandomInteger, shuffleArray } from '../utils/common';
+import { DESTINATIONS } from './dest';
+import { OFFERS } from './offers';
 
 const generateType = (types) => {
-  const keys = Object.keys(types);
-  const key = keys[getRandomInteger(0, keys.length - 1)];
-  return types[key];
+  const values = Object.values(types).map((type) => type.toLowerCase());
+  return values[getRandomInteger(0, values.length - 1)];
 };
 
 const generateName = () => {
@@ -14,81 +15,23 @@ const generateName = () => {
   return destinations[getRandomInteger(0, destinations.length - 1)];
 };
 
-const generateDescription = () => {
-  const descriptions = [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    'Cras aliquet varius magna, non porta ligula feugiat eget.',
-    'Fusce tristique felis at fermentum pharetra.',
-    'Aliquam id orci ut lectus varius viverra.',
-    'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
-    'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
-    'Sed sed nisi sed augue convallis suscipit in sed felis.',
-    'Aliquam erat volutpat.',
-    'Nunc fermentum tortor ac porta dapibus.',
-    'In rutrum ac purus sit amet tempus.',
-  ];
-
-  const randomIndex = getRandomInteger(0, descriptions.length - 1);
-
-  return descriptions[randomIndex];
-};
-
-const generatePictures = () => {
-  const res = [];
-  for (let i = 0; i < getRandomInteger(0, 5); i++) {
-    res.push({
-      src: `http://picsum.photos/248/152?r=${getRandomInteger(0, 1000)}`,
-      description: 'temp',
-    });
-  }
-  return res;
-};
-
-const generatePointInfo = () => ({
-  name: generateName(),
-  description: generateDescription(),
-  pictures: generatePictures(),
-});
-
-const generateOffers = () => {
-  const titles = [
-    'Rent a car',
-    'Order Uber',
-    'Add breakfast',
-    'Lunch in city',
-    'Book tickets',
-  ];
-
-  const options = [];
-
-  titles.forEach((title) => {
-    options.push({
-      title,
-      price: getRandomInteger(5, 100),
-      isChecked: Boolean(getRandomInteger(0, 1)),
-    });
-  });
-
-  const res = [];
-  const types = Object.values(Types);
-
-  types.forEach((type) => {
-    res.push({
-      type: type.toLowerCase(),
-      offers: shuffleArray([...options]).slice(0, getRandomInteger(0, options.length - 1)),
-    });
-  });
-
-  return res;
-};
-
-const getPointOffers = (type, offers) => {
-  for (const offer of offers) {
-    if (offer.type === type.toLowerCase()) {
-      return offer.offers.length ? offer.offers : null;
+const generatePointInfo = (name, points) => {
+  for (const point of points) {
+    if (point.name === name) {
+      return point;
     }
   }
-  return null;
+};
+
+const generatePointOffers = (type, offers) => {
+  for (const offer of offers) {
+    if (offer.type === type) {
+      const localOffers = offer.offers;
+      return localOffers.length
+        ? shuffleArray([...localOffers]).slice(0, getRandomInteger(0, Math.min(localOffers.length - 1, 4)))
+        : [];
+    }
+  }
 };
 
 const generateDateFrom = () => {
@@ -105,15 +48,15 @@ const generateDateFrom = () => {
 export const generateEvent = () => {
   const type = generateType(Types);
   const dateFrom = generateDateFrom();
-  const dateTo = dayjs(dateFrom).add(getRandomInteger(15, 2280), 'minute').toDate();
+  const dateTo = dayjs(dateFrom).add(getRandomInteger(15, 1140), 'minute').toDate();
 
   return {
     type,
-    destination: generatePointInfo(),
-    offers: getPointOffers(type, generateOffers()),
+    destination: generatePointInfo(generateName(), DESTINATIONS),
+    offers: generatePointOffers(type, OFFERS),
     dateFrom,
     dateTo,
-    basePrice: getRandomInteger(10, 500),
+    basePrice: getRandomInteger(10, 100) * 10,
     isFavorite: Boolean(getRandomInteger(0, 1)),
     id: nanoid(),
   };

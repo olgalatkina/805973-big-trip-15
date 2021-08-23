@@ -1,5 +1,6 @@
 import AbstractView from './abstract';
 import { getDate, getStart, getEnd, getGap, gapToString } from '../utils/date';
+import { Types } from '../const';
 
 const createOfferTemplate = ({title, price}) => (
   `<li class="event__offer">
@@ -16,6 +17,7 @@ const createOffersTemplate = (offers) => (
 );
 
 const createPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers, isFavorite}) => {
+  const capitalizedType = Object.values(Types).filter((item) => item.toLowerCase() === type).join();
   const gap = getGap(dateFrom, dateTo);
   const favoriteBtnClassName = isFavorite
     ? 'event__favorite-btn event__favorite-btn--active'
@@ -27,9 +29,9 @@ const createPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, of
     <div class="event">
       <time class="event__date" datetime="2019-03-18">${getDate(dateFrom)}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${type} ${destination.name}</h3>
+      <h3 class="event__title">${capitalizedType} ${destination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="2019-03-18T10:30">${getStart(dateFrom)}</time>
@@ -60,20 +62,31 @@ export default class Point extends AbstractView {
   constructor(point) {
     super();
     this._point = point;
-    this._rollupClickHandler = this._rollupClickHandler.bind(this);
+    this._rollDownClickHandler = this._rollDownClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
     return createPointTemplate(this._point);
   }
 
-  _rollupClickHandler(evt) {
+  _rollDownClickHandler(evt) {
     evt.preventDefault();
-    this._callback.rollUpClick();
+    this._callback.rollDownClick();
   }
 
-  setRollUpClickHandler(callback) {
-    this._callback.rollUpClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupClickHandler);
+  setRollDownClickHandler(callback) {
+    this._callback.rollDownClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollDownClickHandler);
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.favoriteClick();
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector('.event__favorite-btn').addEventListener('click', this._favoriteClickHandler);
   }
 }

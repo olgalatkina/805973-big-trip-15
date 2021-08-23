@@ -1,6 +1,8 @@
 import { nanoid } from 'nanoid';
 import { formatDate, getActualDate } from '../utils/date';
 import { Types, Destinations } from '../const';
+import { OFFERS } from '../mock/offers';
+import { getOffersByType } from '../utils/common';
 import AbstractView from './abstract';
 
 const BLANK_POINT = {
@@ -10,15 +12,7 @@ const BLANK_POINT = {
     description: '',
     pictures: [],
   },
-  offers: [{
-    title: 'Switch to comfort',
-    price: 200,
-    isChecked: false,
-  }, {
-    title: 'Add breakfast',
-    price: 20,
-    isChecked: false,
-  }],
+  offers: getOffersByType('flight', OFFERS),
   dateFrom: getActualDate(),
   dateTo: getActualDate(),
   basePrice: 0,
@@ -26,30 +20,31 @@ const BLANK_POINT = {
   id: nanoid(),
 };
 
-const createTypeItemTemplate = (eventType) => {
-  const type = eventType.toLowerCase();
+const createIconList = (type, types) => {
+  let isChecked = false;
 
-  return `<div class="event__type-item">
-    <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-    <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${eventType}</label>
-  </div>`;
-};
+  const createTypeIconTemplate = (eventType) => {
+    const currentType = eventType.toLowerCase();
+    return `<div class="event__type-item">
+      <input id="event-type-${currentType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${currentType}" ${isChecked ? 'checked' : ''}>
+      <label class="event__type-label  event__type-label--${currentType}" for="event-type-${currentType}-1">${eventType}</label>
+    </div>`;
+  };
 
-const createCheckedTypeItemTemplate = (eventType) => {
-  const type = eventType.toLowerCase();
-
-  return `<div class="event__type-item">
-    <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" checked>
-    <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${eventType}</label>
-  </div>`;
+  return Object.values(types).map((eventType) => {
+    isChecked = (eventType.toLowerCase() === type);
+    return createTypeIconTemplate(eventType);
+  }).join('');
 };
 
 const createOptionTemplate = (point) => `<option value="${point}"></option>`;
 
-const createPhotoTemplate = ({src}) => `<img class="event__photo" src="${src}" alt="Event photo">`;
+const createOffersContainerTemplate = (type, offers, proposals) => {
+  const titles = offers.map((offer) => offer.title);
+  let isChecked = false;
 
-const createOfferTemplate = ({isChecked, title, price}) => (
-  `<div class="event__offer-selector">
+  const createOfferTemplate = ({title, price}) => (
+    `<div class="event__offer-selector">
       <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" ${isChecked ? 'checked' : ''}>
       <label class="event__offer-label" for="event-offer-comfort-1">
         <span class="event__offer-title">${title}</span>
@@ -57,33 +52,36 @@ const createOfferTemplate = ({isChecked, title, price}) => (
         <span class="event__offer-price">${price}</span>
       </label>
     </div>`
-);
+  );
 
-const createOffersContainerTemplate = (offers) => (
-  offers ? `<section class="event__section  event__section--offers">
-    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+  const allOffers = proposals.filter((proposal) => proposal.type === type).map((item) => item.offers).flat();
+
+  const content = allOffers.map((offer) => {
+    isChecked = titles.includes(offer.title);
+    return createOfferTemplate(offer);
+  }).join('');
+
+  return `<section class="event__section  event__section--offers">
+    <h3 class="event__section-title  event__section-title--offers">${allOffers.length ? 'Offers' : ''}</h3>
     <div class="event__available-offers">
-      ${offers.map(createOfferTemplate).join('')}
+      ${content}
     </div>
-  </section>` : ''
-);
-
-const createPhotoContainerTemplate = ({pictures}) => {
-  const photos = pictures.map(createPhotoTemplate).join('');
-
-  return `<div class="event__photos-container">
-    <div class="event__photos-tape">
-      ${photos}
-    </div>
-  </div>`;
+  </section>`;
 };
 
-const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers}) => {
-  const submenu = Object.values(Types).map((eventType) => eventType !== type
-    ? createTypeItemTemplate(eventType)
-    : createCheckedTypeItemTemplate(eventType)).join('');
+const createPhotoTemplate = ({src}) => `<img class="event__photo" src="${src}" alt="Event photo">`;
 
+const createPhotoContainerTemplate = ({pictures}) => (
+  `<div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${pictures.map(createPhotoTemplate).join('')}
+    </div>
+  </div>`
+);
+
+const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers }) => {
   const destinations = Object.values(Destinations).map(createOptionTemplate).join('');
+  const hasDestinationInfo = !(destination.description === '' && destination.pictures.length === 0);
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -91,14 +89,14 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event type icon">
+            <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
           </label>
           <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-              ${submenu}
+              ${createIconList(type, Types)}
             </fieldset>
           </div>
         </div>
@@ -136,12 +134,12 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
         </button>
       </header>
       <section class="event__details">
-        ${createOffersContainerTemplate(offers)}
+        ${createOffersContainerTemplate(type, offers, OFFERS)}
 
         <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+          <h3 class="event__section-title  event__section-title--destination">${hasDestinationInfo ? 'Destination' : ''}</h3>
           <p class="event__destination-description">${destination.description}</p>
-          ${createPhotoContainerTemplate(destination)}
+          ${destination.pictures.length ? createPhotoContainerTemplate(destination) : ''}
         </section>
       </section>
     </form>
@@ -152,7 +150,7 @@ export default class EditPoint extends AbstractView {
   constructor(point = BLANK_POINT) {
     super();
     this._point = point;
-    this._rollupClickHandler = this._rollupClickHandler.bind(this);
+    this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
   }
 
@@ -160,19 +158,19 @@ export default class EditPoint extends AbstractView {
     return createEditPointTemplate(this._point);
   }
 
-  _rollupClickHandler(evt) {
+  _rollUpClickHandler(evt) {
     evt.preventDefault();
     this._callback.rollUpClick();
   }
 
   setRollUpClickHandler(callback) {
     this._callback.rollUpClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollupClickHandler);
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollUpClickHandler);
   }
 
   _submitClickHandler(evt) {
     evt.preventDefault();
-    this._callback.submitClick();
+    this._callback.submitClick(this._point);
   }
 
   setSubmitClickHandler(callback) {

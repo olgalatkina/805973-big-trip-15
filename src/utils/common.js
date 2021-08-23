@@ -31,3 +31,25 @@ export const getTotalPrice = (data) => {
   });
   return totalPrice;
 };
+
+export const getOffersByType = (type, offers) => {
+  for (const offer of offers) {
+    if (offer.type === type) {
+      return offer.offers.length ? offer.offers : null;
+    }
+  }
+};
+
+export const updatePoint = (points, update) => {
+  const index = points.findIndex((point) => point.id === update.id);
+
+  if (index === -1) {
+    return points;
+  }
+
+  return [
+    ...points.slice(0, index),
+    update,
+    ...points.slice(index + 1),
+  ];
+};
