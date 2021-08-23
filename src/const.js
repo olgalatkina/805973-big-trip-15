@@ -36,4 +36,10 @@ export const Mode = {
   EDITING: 'EDITING',
 };
 
+export const SortType = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price',
+};
+
 export const MAX_NUMBER_OF_CITIES = 3;
