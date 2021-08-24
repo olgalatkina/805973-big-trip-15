@@ -47,7 +47,7 @@ export default class Trip {
   }
 
   _renderSort() {
-    console.log('render sort');
+    // console.log('render sort');
     render(this._tripComponent, this._sortComponent, RenderPosition.BEFOREEND);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
@@ -63,15 +63,15 @@ export default class Trip {
   // }
 
   _renderPointList() {
-    console.log('render point-list');
+    // console.log('render point-list');
     render(this._tripComponent, this._pointListComponent, RenderPosition.BEFOREEND);
     this._userData.forEach((point) => this._renderPoint(point));
   }
 
   _clearPointList() {
-    console.log('clear point-list-1');
+    // console.log('clear point-list-1');
     this._pointPresenters.forEach((presenter) => presenter.destroy());
-    console.log('clear point-list-2');
+    // console.log('clear point-list-2');
     this._pointPresenters.clear();
   }
 
