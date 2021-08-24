@@ -51,4 +51,3 @@ export default class Sort extends AbstractView {
     this.getElement().addEventListener('change', this._sortTypeChangeHandler);
   }
 }
-// this.getElement().querySelector('.trip-sort__input').addEventListener('change', this._sortTypeChangeHandler);

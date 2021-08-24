@@ -6,11 +6,11 @@ import InfoView from './view/info';
 import TripPresenter from './presenter/trip';
 import { generateEvent } from './mock/event';
 // import { compareByStartTime, compareByDuration } from './utils/date';
-import { compareByPrice } from './utils/common';
+// import { compareByPrice } from './utils/common';
 import { render, RenderPosition } from './utils/render';
 
 const EVENT_COUNT = 20;
-const data = new Array(EVENT_COUNT).fill().map(generateEvent).sort(compareByPrice);
+const data = new Array(EVENT_COUNT).fill().map(generateEvent);
 // console.log(data);
 
 // HEADER

@@ -4,14 +4,16 @@ import SortView from '../view/sort';
 import PointListView from '../view/point-list';
 import PointPresenter from './point';
 import { render, RenderPosition } from '../utils/render.js';
-import { updatePoint } from '../utils/common';
-import { Messages } from '../const';
+import { updatePoint, compareByPrice } from '../utils/common';
+import { compareByStartTime, compareByDuration } from '../utils/date.js';
+import { Messages, SortType } from '../const';
 
 export default class Trip {
   constructor(bodyContainer) {
     this._container = bodyContainer;
     this._message = Messages.EVERYTHING;
     this._pointPresenters = new Map();
+    this._currentSortType = SortType.DAY;
 
     this._tripComponent = new TripView();
     this._messageComponent = new MessageView(this._message);
@@ -25,9 +27,19 @@ export default class Trip {
 
   init(userData) {
     this._userData = [...userData];
-    console.log('userData: ' ,this._userData);
+    this._sortPoints(this._currentSortType);
+    // this._backupData = [...userData];
     render(this._container, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
+  }
+
+  _renderTrip() {
+    if (!this._userData.length) {
+      this._renderMessage();
+      return;
+    }
+    this._renderSort();
+    this._renderPointList();
   }
 
   _renderMessage() {
@@ -46,6 +58,10 @@ export default class Trip {
     this._pointPresenters.set(point.id, pointPresenter);
   }
 
+  // _renderPoints() {
+  //   this._userData.forEach((point) => this._renderPoint(point));
+  // }
+
   _renderPointList() {
     console.log('render point-list');
     render(this._tripComponent, this._pointListComponent, RenderPosition.BEFOREEND);
@@ -53,22 +69,33 @@ export default class Trip {
   }
 
   _clearPointList() {
-    console.log('clear point-list');
+    console.log('clear point-list-1');
     this._pointPresenters.forEach((presenter) => presenter.destroy());
+    console.log('clear point-list-2');
     this._pointPresenters.clear();
   }
 
-  _renderTrip() {
-    if (!this._userData.length) {
-      this._renderMessage();
-      return;
+  _sortPoints(sortType) {
+    switch (sortType) {
+      case SortType.DAY:
+        this._userData.sort(compareByStartTime);
+        break;
+      case SortType.TIME:
+        this._userData.sort(compareByDuration);
+        break;
+      case SortType.PRICE:
+        this._userData.sort(compareByPrice);
+        break;
+      // default:
+      //   this._userData = this._backupData.slice();
     }
-    this._renderSort();
-    this._renderPointList();
+
+    this._currentSortType = sortType;
   }
 
   _handlePointChange(updatedPoint) {
     this._userData = updatePoint(this._userData, updatedPoint);
+    // this._backupData = updatePoint(this._backupData, updatedPoint);
     this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
   }
 
@@ -77,8 +104,12 @@ export default class Trip {
   }
 
   _handleSortTypeChange(sortType) {
-    // - Сортируем задачи
-    // - Очищаем список
-    // - Рендерим список заново
+    if (this._currentSortType === sortType) {
+      return;
+    }
+
+    this._sortPoints(sortType);
+    this._clearPointList();
+    this._renderPointList();
   }
 }
