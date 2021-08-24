@@ -56,7 +56,7 @@ export default class Point {
 
   destroy() {
     remove(this._pointComponent);
-    remove(this._EditPointComponent);
+    remove(this._editPointComponent);
   }
 
   _replacePointToForm() {
