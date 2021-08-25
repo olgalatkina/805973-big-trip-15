@@ -23,23 +23,25 @@ const BLANK_POINT = {
 const createIconList = (type, types) => (
   Object.values(types).map((eventType, index) => {
     const currentType = eventType.toLowerCase();
-    const isChecked = currentType === type;
+    const isTypeChecked = currentType === type;
 
     return `<div class="event__type-item">
-        <input id="event-type-${currentType}-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${currentType}" ${isChecked ? 'checked' : ''}>
+        <input id="event-type-${currentType}-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${currentType}" ${isTypeChecked ? 'checked' : ''}>
         <label class="event__type-label  event__type-label--${currentType}" for="event-type-${currentType}-${index}">${eventType}</label>
       </div>`;
   }).join('')
 );
 
-const createOptionTemplate = (point) => `<option value="${point}"></option>`;
+const createOptionTemplate = (city) => `<option value="${city}"></option>`;
+const createDestinationsTemplate = () => Object.values(Destinations).map(createOptionTemplate).join('');
 
-const createOffersContainerTemplate = (type, offers, proposals) => {
-  const allOffers = getOffersByType(type, proposals);
+const createOffersContainerTemplate = (type, offers) => {
+  const allOffers = getOffersByType(type, OFFERS);
+  const isOffers = Boolean(allOffers.length);
 
   const createOfferTemplate = () => (
     allOffers.map((offer, idx) => {
-      const isSelected = offers.some((userOffer) => offer.title === userOffer.title);
+      const isOfferSelected = offers.some((userOffer) => offer.title === userOffer.title);
       return `
       <div class="event__offer-selector">
         <input
@@ -47,7 +49,7 @@ const createOffersContainerTemplate = (type, offers, proposals) => {
           id="event-offer-${idx}"
           type="checkbox"
           name="event-offer-${idx}"
-          ${isSelected ? 'checked' : ''}
+          ${isOfferSelected ? 'checked' : ''}
         >
         <label class="event__offer-label" for="event-offer-${idx}">
           <span class="event__offer-title">${offer.title}</span>
@@ -59,7 +61,7 @@ const createOffersContainerTemplate = (type, offers, proposals) => {
   );
 
   return `<section class="event__section  event__section--offers">
-    <h3 class="event__section-title  event__section-title--offers">${allOffers.length ? 'Offers' : ''}</h3>
+    <h3 class="event__section-title  event__section-title--offers ${isOffers ? '' : 'visually-hidden'}">Offers</h3>
     <div class="event__available-offers">
       ${createOfferTemplate()}
     </div>
@@ -77,8 +79,8 @@ const createPhotoContainerTemplate = ({pictures}) => (
 );
 
 const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers }) => {
-  const destinations = Object.values(Destinations).map(createOptionTemplate).join('');
-  const hasDestinationInfo = !(destination.description === '' && destination.pictures.length === 0);
+  const isDescription = Boolean(destination.description);
+  const isPictures = Boolean(destination.pictures.length);
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -104,7 +106,7 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
           <datalist id="destination-list-1">
-            ${destinations}
+            ${createDestinationsTemplate()}
           </datalist>
         </div>
 
@@ -131,12 +133,12 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
         </button>
       </header>
       <section class="event__details">
-        ${createOffersContainerTemplate(type, offers, OFFERS)}
+        ${createOffersContainerTemplate(type, offers)}
 
         <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">${hasDestinationInfo ? 'Destination' : ''}</h3>
+          <h3 class="event__section-title  event__section-title--destination ${isDescription || isPictures ? '' : 'visually-hidden'}">Destination</h3>
           <p class="event__destination-description">${destination.description}</p>
-          ${destination.pictures.length ? createPhotoContainerTemplate(destination) : ''}
+          ${isPictures ? createPhotoContainerTemplate(destination) : ''}
         </section>
       </section>
     </form>
@@ -173,5 +175,34 @@ export default class EditPoint extends AbstractView {
   setSubmitClickHandler(callback) {
     this._callback.submitClick = callback;
     this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
+  }
+
+  // static parsePointToState(point) {
+  //   return Object.assign(
+  //     {},
+  //     point,
+  //     {
+  //       isDescription: Boolean(point.destination.description),
+  //       isPictures: Boolean(point.destination.pictures.length),
+  //       isOffers: Boolean(getOffersByType(point.type, OFFERS).length),
+  //     });
+  // }
+
+  // static parseStateToPoint(state) {
+  //   state = Object.assign({}, state);
+  //   delete state.isDescription;
+  //   delete state.isPictures;
+  //   delete state.isOffers;
+
+  //   return state;
+  // }
+
+  static parsePointToState(point) {
+    return Object.assign({}, point);
+  }
+
+  static parseStateToPoint(state) {
+    state = Object.assign({}, state);
+    return state;
   }
 }
