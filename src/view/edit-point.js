@@ -150,6 +150,8 @@ export default class EditPoint extends AbstractView {
     this._submitClickHandler = this._submitClickHandler.bind(this);
 
     this._changeCityHandler = this._changeCityHandler.bind(this);
+    this._changeTypeHandler = this._changeTypeHandler.bind(this);
+    this._changePriceHandler =this._changePriceHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -194,11 +196,23 @@ export default class EditPoint extends AbstractView {
 
   _setInnerHandlers() {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._changeCityHandler);
+    this.getElement().querySelector('.event__type-group').addEventListener('change', this._changeTypeHandler);
+    this.getElement().querySelector('.event__input--price').addEventListener('input', this._changePriceHandler);
   }
 
   _changeCityHandler(evt) {
     evt.preventDefault();
     this.updateState({destination: getDestination(evt.target.value, DESTINATIONS)});
+  }
+
+  _changeTypeHandler(evt) {
+    evt.preventDefault();
+    this.updateState({type: evt.target.value, offers: []});
+  }
+
+  _changePriceHandler(evt) {
+    evt.preventDefault();
+    this.updateState({basePrice: evt.target.value}, true);
   }
 
   _rollUpClickHandler(evt) {
