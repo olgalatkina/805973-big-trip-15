@@ -2,7 +2,8 @@ import { nanoid } from 'nanoid';
 import { formatDate, getActualDate } from '../utils/date';
 import { Types, Destinations } from '../const';
 import { OFFERS } from '../mock/offers';
-import { getOffersByType } from '../utils/common';
+import { DESTINATIONS } from '../mock/dest';
+import { getDestination, getOffersByType } from '../utils/common';
 import AbstractView from './abstract';
 
 const BLANK_POINT = {
@@ -148,7 +149,9 @@ export default class EditPoint extends AbstractView {
     this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
 
-    // this._setInnerHandlers();
+    this._changeCityHandler = this._changeCityHandler.bind(this);
+
+    this._setInnerHandlers();
   }
 
   getTemplate() {
@@ -189,9 +192,14 @@ export default class EditPoint extends AbstractView {
     this.setRollUpClickHandler(this._callback.rollUpClick);
   }
 
-  // _setInnerHandlers() {
+  _setInnerHandlers() {
+    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._changeCityHandler);
+  }
 
-  // }
+  _changeCityHandler(evt) {
+    evt.preventDefault();
+    this.updateState({destination: getDestination(evt.target.value, DESTINATIONS)});
+  }
 
   _rollUpClickHandler(evt) {
     evt.preventDefault();
