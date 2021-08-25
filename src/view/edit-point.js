@@ -137,7 +137,7 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination ${isDescription || isPictures ? '' : 'visually-hidden'}">Destination</h3>
-          <p class="event__destination-description">${destination.description}</p>
+          <p class="event__destination-description">${isDescription ? destination.description : ''}</p>
           ${isPictures ? createPhotoContainerTemplate(destination) : ''}
         </section>
       </section>
@@ -148,13 +148,23 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
 export default class EditPoint extends AbstractView {
   constructor(point = BLANK_POINT) {
     super();
-    this._point = point;
+    this._state = EditPoint.parsePointToState(point);
     this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createEditPointTemplate(this._point);
+    return createEditPointTemplate(this._state);
+  }
+
+  updateElement() {
+    const prevElement = this.getElement();
+    const parent = prevElement.parentElement;
+    this.removeElement();
+
+    const newElement = this.getElement();
+
+    parent.replaceChild(newElement, prevElement);
   }
 
   _rollUpClickHandler(evt) {
@@ -169,7 +179,7 @@ export default class EditPoint extends AbstractView {
 
   _submitClickHandler(evt) {
     evt.preventDefault();
-    this._callback.submitClick(this._point);
+    this._callback.submitClick(EditPoint.parseStateToPoint(this._state));
   }
 
   setSubmitClickHandler(callback) {
