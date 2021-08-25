@@ -1,3 +1,5 @@
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { nanoid } from 'nanoid';
 import { formatDate, getActualDate } from '../utils/date';
 import { Types, Destinations } from '../const';
@@ -36,7 +38,7 @@ const createIconList = (type, types) => (
 const createOptionTemplate = (city) => `<option value="${city}"></option>`;
 const createDestinationsTemplate = () => Object.values(Destinations).map(createOptionTemplate).join('');
 
-const createOfferTemplates = (type, offers) => {
+const createOfferTemplate = (type, offers) => {
   const allOffers = getOffersByType(type, OFFERS);
 
   return allOffers.map((offer, idx) => {
@@ -128,7 +130,7 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers ${isOffers ? '' : 'visually-hidden'}">Offers</h3>
           <div class="event__available-offers">
-            ${createOfferTemplates(type, offers)}
+            ${createOfferTemplate(type, offers)}
           </div>
         </section>
 
