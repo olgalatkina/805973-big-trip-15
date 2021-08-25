@@ -28,7 +28,7 @@ export default class Trip {
   init(userData) {
     this._userData = [...userData];
     this._sortPoints(this._currentSortType);
-    console.log(this._userData);
+    // console.log(this._userData);
     this._backupData = [...userData]; // TODO: проверить позже изменяется ли значение
     render(this._container, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
