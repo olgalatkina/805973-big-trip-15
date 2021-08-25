@@ -147,22 +147,15 @@ export default class EditPoint extends AbstractView {
     this._state = EditPoint.parsePointToState(point);
     this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
+
+    // this._setInnerHandlers();
   }
 
   getTemplate() {
     return createEditPointTemplate(this._state);
   }
 
-  updateElement() {
-    const prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-    parent.replaceChild(newElement, prevElement);
-  }
-
-  updateState(update) {
+  updateState(update, justDataUpdating) {
     if (!update) {
       return;
     }
@@ -173,8 +166,32 @@ export default class EditPoint extends AbstractView {
       update,
     );
 
+    if (justDataUpdating) {
+      return;
+    }
+
     this.updateElement();
   }
+
+  updateElement() {
+    const prevElement = this.getElement();
+    const parent = prevElement.parentElement;
+    this.removeElement();
+
+    const newElement = this.getElement();
+    parent.replaceChild(newElement, prevElement);
+    this.restoreHandlers();
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this.setSubmitClickHandler(this._callback.submitClick);
+    this.setRollUpClickHandler(this._callback.rollUpClick);
+  }
+
+  // _setInnerHandlers() {
+
+  // }
 
   _rollUpClickHandler(evt) {
     evt.preventDefault();
@@ -221,7 +238,6 @@ export default class EditPoint extends AbstractView {
   }
 
   static parseStateToPoint(state) {
-    state = Object.assign({}, state);
-    return state;
+    return Object.assign({}, state);
   }
 }
