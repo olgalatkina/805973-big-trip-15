@@ -4,7 +4,7 @@ import { Types, Destinations } from '../const';
 import { OFFERS } from '../mock/offers';
 import { DESTINATIONS } from '../mock/dest';
 import { getDestination, getOffersByType } from '../utils/common';
-import AbstractView from './abstract';
+import SmartView from './smart';
 
 const BLANK_POINT = {
   type: Types.FLIGHT,
@@ -36,7 +36,7 @@ const createIconList = (type, types) => (
 const createOptionTemplate = (city) => `<option value="${city}"></option>`;
 const createDestinationsTemplate = () => Object.values(Destinations).map(createOptionTemplate).join('');
 
-const createOfferTemplate = (type, offers) => {
+const createOfferTemplates = (type, offers) => {
   const allOffers = getOffersByType(type, OFFERS);
 
   return allOffers.map((offer, idx) => {
@@ -128,7 +128,7 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers ${isOffers ? '' : 'visually-hidden'}">Offers</h3>
           <div class="event__available-offers">
-            ${createOfferTemplate(type, offers)}
+            ${createOfferTemplates(type, offers)}
           </div>
         </section>
 
@@ -142,7 +142,7 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
   </li>`;
 };
 
-export default class EditPoint extends AbstractView {
+export default class EditPoint extends SmartView {
   constructor(point = BLANK_POINT) {
     super();
     this._state = EditPoint.parsePointToState(point);
@@ -160,32 +160,10 @@ export default class EditPoint extends AbstractView {
     return createEditPointTemplate(this._state);
   }
 
-  updateState(update, justDataUpdating) {
-    if (!update) {
-      return;
-    }
-
-    this._state = Object.assign(
-      {},
-      this._state,
-      update,
+  reset(point) {
+    this.updateState(
+      EditPoint.parsePointToState(point),
     );
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    const prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-    parent.replaceChild(newElement, prevElement);
-    this.restoreHandlers();
   }
 
   restoreHandlers() {
