@@ -35,40 +35,30 @@ const createIconList = (type, types) => (
 const createOptionTemplate = (city) => `<option value="${city}"></option>`;
 const createDestinationsTemplate = () => Object.values(Destinations).map(createOptionTemplate).join('');
 
-const createOffersContainerTemplate = (type, offers) => {
+const createOfferTemplate = (type, offers) => {
   const allOffers = getOffersByType(type, OFFERS);
-  const isOffers = Boolean(allOffers.length);
 
-  const createOfferTemplate = () => (
-    allOffers.map((offer, idx) => {
-      const isOfferSelected = offers.some((userOffer) => offer.title === userOffer.title);
-      return `
-      <div class="event__offer-selector">
-        <input
-          class="event__offer-checkbox visually-hidden"
-          id="event-offer-${idx}"
-          type="checkbox"
-          name="event-offer-${idx}"
-          ${isOfferSelected ? 'checked' : ''}
-        >
-        <label class="event__offer-label" for="event-offer-${idx}">
-          <span class="event__offer-title">${offer.title}</span>
-          &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
-        </label>
-      </div>`;
-    }).join('')
-  );
-
-  return `<section class="event__section  event__section--offers">
-    <h3 class="event__section-title  event__section-title--offers ${isOffers ? '' : 'visually-hidden'}">Offers</h3>
-    <div class="event__available-offers">
-      ${createOfferTemplate()}
-    </div>
-  </section>`;
+  return allOffers.map((offer, idx) => {
+    const isOfferSelected = offers.some((userOffer) => offer.title === userOffer.title);
+    return `
+    <div class="event__offer-selector">
+      <input
+        class="event__offer-checkbox visually-hidden"
+        id="event-offer-${idx}"
+        type="checkbox"
+        name="event-offer-${idx}"
+        ${isOfferSelected ? 'checked' : ''}
+      >
+      <label class="event__offer-label" for="event-offer-${idx}">
+        <span class="event__offer-title">${offer.title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${offer.price}</span>
+      </label>
+    </div>`;
+  }).join('');
 };
 
-const createPhotoTemplate = ({src}) => `<img class="event__photo" src="${src}" alt="Event photo">`;
+const createPhotoTemplate = ({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`;
 
 const createPhotoContainerTemplate = ({pictures}) => (
   `<div class="event__photos-container">
@@ -81,6 +71,7 @@ const createPhotoContainerTemplate = ({pictures}) => (
 const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers }) => {
   const isDescription = Boolean(destination.description);
   const isPictures = Boolean(destination.pictures.length);
+  const isOffers = Boolean(getOffersByType(type, OFFERS).length);
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -133,7 +124,12 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
         </button>
       </header>
       <section class="event__details">
-        ${createOffersContainerTemplate(type, offers)}
+        <section class="event__section  event__section--offers">
+          <h3 class="event__section-title  event__section-title--offers ${isOffers ? '' : 'visually-hidden'}">Offers</h3>
+          <div class="event__available-offers">
+            ${createOfferTemplate(type, offers)}
+          </div>
+        </section>
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination ${isDescription || isPictures ? '' : 'visually-hidden'}">Destination</h3>
@@ -163,8 +159,21 @@ export default class EditPoint extends AbstractView {
     this.removeElement();
 
     const newElement = this.getElement();
-
     parent.replaceChild(newElement, prevElement);
+  }
+
+  updateState(update) {
+    if (!update) {
+      return;
+    }
+
+    this._state = Object.assign(
+      {},
+      this._state,
+      update,
+    );
+
+    this.updateElement();
   }
 
   _rollUpClickHandler(evt) {
