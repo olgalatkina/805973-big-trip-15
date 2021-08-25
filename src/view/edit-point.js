@@ -40,31 +40,33 @@ const createIconList = (type, types) => {
 const createOptionTemplate = (point) => `<option value="${point}"></option>`;
 
 const createOffersContainerTemplate = (type, offers, proposals) => {
-  const titles = offers.map((offer) => offer.title);
-  let isChecked = false;
+  const allOffers = getOffersByType(type, proposals);
 
-  const createOfferTemplate = ({title, price}) => (
-    `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-comfort-1" type="checkbox" name="event-offer-comfort" ${isChecked ? 'checked' : ''}>
-      <label class="event__offer-label" for="event-offer-comfort-1">
-        <span class="event__offer-title">${title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${price}</span>
-      </label>
-    </div>`
+  const createOfferTemplate = () => (
+    allOffers.map((offer, idx) => {
+      const isSelected = offers.some((userOffer) => offer.title === userOffer.title);
+      return `
+      <div class="event__offer-selector">
+        <input
+          class="event__offer-checkbox visually-hidden"
+          id="event-offer-${idx}"
+          type="checkbox"
+          name="event-offer-${idx}"
+          ${isSelected ? 'checked' : ''}
+        >
+        <label class="event__offer-label" for="event-offer-${idx}">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </label>
+      </div>`;
+    }).join('')
   );
-
-  const allOffers = proposals.filter((proposal) => proposal.type === type).map((item) => item.offers).flat();
-
-  const content = allOffers.map((offer) => {
-    isChecked = titles.includes(offer.title);
-    return createOfferTemplate(offer);
-  }).join('');
 
   return `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">${allOffers.length ? 'Offers' : ''}</h3>
     <div class="event__available-offers">
-      ${content}
+      ${createOfferTemplate()}
     </div>
   </section>`;
 };

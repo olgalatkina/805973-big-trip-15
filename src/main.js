@@ -5,11 +5,12 @@ import ButtonNewEventView from './view/btn-new-point';
 import InfoView from './view/info';
 import TripPresenter from './presenter/trip';
 import { generateEvent } from './mock/event';
-import { compareByStartTime } from './utils/date';
+// import { compareByStartTime, compareByDuration } from './utils/date';
+// import { compareByPrice } from './utils/common';
 import { render, RenderPosition } from './utils/render';
 
 const EVENT_COUNT = 20;
-const data = new Array(EVENT_COUNT).fill().map(generateEvent).sort(compareByStartTime);
+const data = new Array(EVENT_COUNT).fill().map(generateEvent);
 // console.log(data);
 
 // HEADER

@@ -33,11 +33,8 @@ export const getTotalPrice = (data) => {
 };
 
 export const getOffersByType = (type, offers) => {
-  for (const offer of offers) {
-    if (offer.type === type) {
-      return offer.offers.length ? offer.offers : null;
-    }
-  }
+  const currentOffers = offers.find((offer) => offer.type === type);
+  return currentOffers.offers.length ? currentOffers.offers : [];
 };
 
 export const updatePoint = (points, update) => {
@@ -53,3 +50,5 @@ export const updatePoint = (points, update) => {
     ...points.slice(index + 1),
   ];
 };
+
+export const compareByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;

@@ -31,4 +31,15 @@ export const Messages = {
   LOADING: 'Loading...',
 };
 
+export const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+export const SortType = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price',
+};
+
 export const MAX_NUMBER_OF_CITIES = 3;
