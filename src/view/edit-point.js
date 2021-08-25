@@ -20,22 +20,17 @@ const BLANK_POINT = {
   id: nanoid(),
 };
 
-const createIconList = (type, types) => {
-  let isChecked = false;
-
-  const createTypeIconTemplate = (eventType) => {
+const createIconList = (type, types) => (
+  Object.values(types).map((eventType, index) => {
     const currentType = eventType.toLowerCase();
-    return `<div class="event__type-item">
-      <input id="event-type-${currentType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${currentType}" ${isChecked ? 'checked' : ''}>
-      <label class="event__type-label  event__type-label--${currentType}" for="event-type-${currentType}-1">${eventType}</label>
-    </div>`;
-  };
+    const isChecked = currentType === type;
 
-  return Object.values(types).map((eventType) => {
-    isChecked = (eventType.toLowerCase() === type);
-    return createTypeIconTemplate(eventType);
-  }).join('');
-};
+    return `<div class="event__type-item">
+        <input id="event-type-${currentType}-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${currentType}" ${isChecked ? 'checked' : ''}>
+        <label class="event__type-label  event__type-label--${currentType}" for="event-type-${currentType}-${index}">${eventType}</label>
+      </div>`;
+  }).join('')
+);
 
 const createOptionTemplate = (point) => `<option value="${point}"></option>`;
 

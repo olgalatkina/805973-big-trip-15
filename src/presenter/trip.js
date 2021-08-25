@@ -28,7 +28,7 @@ export default class Trip {
   init(userData) {
     this._userData = [...userData];
     this._sortPoints(this._currentSortType);
-    // this._backupData = [...userData];
+    this._backupData = [...userData]; // TODO: проверить позже изменяется ли значение
     render(this._container, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
   }
@@ -78,8 +78,8 @@ export default class Trip {
       case SortType.PRICE:
         this._userData.sort(compareByPrice);
         break;
-      // default:
-      //   this._userData = this._backupData.slice();
+      default:
+        this._userData = this._backupData.slice();
     }
 
     this._currentSortType = sortType;
@@ -87,7 +87,7 @@ export default class Trip {
 
   _handlePointChange(updatedPoint) {
     this._userData = updatePoint(this._userData, updatedPoint);
-    // this._backupData = updatePoint(this._backupData, updatedPoint);
+    this._backupData = updatePoint(this._backupData, updatedPoint);
     this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
   }
 
