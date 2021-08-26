@@ -5,7 +5,7 @@ import { Types, Destinations } from '../const';
 import { OFFERS } from '../mock/offers';
 import { DESTINATIONS } from '../mock/dest';
 import { formatDate, getActualDate } from '../utils/date';
-import { getDestination, getOffersByType } from '../utils/common';
+import { getDestination, getOffersByType, getIsDescription, getIsPictures, getIsOffers } from '../utils/common';
 import SmartView from './smart';
 
 const BLANK_POINT = {
@@ -71,7 +71,17 @@ const createPhotoContainerTemplate = ({pictures}) => (
   </div>`
 );
 
-const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers, isDescription, isPictures, isOffers }) => (
+const createEditPointTemplate = ({
+  type,
+  destination,
+  dateFrom,
+  dateTo,
+  basePrice,
+  offers,
+  isDescription,
+  isPictures,
+  isOffers,
+}) => (
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -230,13 +240,13 @@ export default class EditPoint extends SmartView {
   _timeFromHandler([userDate]) {
     this.updateState({
       dateFrom: userDate,
-    });
+    }, true);
   }
 
   _timeToHandler([userDate]) {
     this.updateState({
       dateTo: userDate,
-    });
+    }, true);
   }
 
   _setInnerHandlers() {
@@ -248,12 +258,20 @@ export default class EditPoint extends SmartView {
 
   _changeCityHandler(evt) {
     evt.preventDefault();
-    this.updateState({destination: getDestination(evt.target.value, DESTINATIONS)});
+    this.updateState({
+      destination: getDestination(evt.target.value, DESTINATIONS),
+      isDescription: getIsDescription(evt.target.value, DESTINATIONS),
+      isPictures: getIsPictures(evt.target.value, DESTINATIONS),
+    });
   }
 
   _changeTypeHandler(evt) {
     evt.preventDefault();
-    this.updateState({type: evt.target.value, offers: []});
+    this.updateState({
+      type: evt.target.value,
+      offers: [],
+      isOffers: getIsOffers(evt.target.value, OFFERS),
+    });
   }
 
   _changePriceHandler(evt) {

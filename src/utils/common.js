@@ -39,6 +39,18 @@ export const getOffersByType = (type, offers) => {
 
 export const getDestination = (city, dest) => dest.find((item) => item.name === city);
 
+export const getIsDescription = (city, dest) => {
+  const temp = dest.find((item) => item.name === city);
+  return Boolean(temp.description);
+};
+
+export const getIsPictures = (city, dest) => {
+  const temp = dest.find((item) => item.name === city);
+  return Boolean(temp.pictures.length);
+};
+
+export const getIsOffers = (type, offers) => Boolean(getOffersByType(type, offers).length);
+
 export const updatePoint = (points, update) => {
   const index = points.findIndex((point) => point.id === update.id);
 
@@ -54,3 +66,5 @@ export const updatePoint = (points, update) => {
 };
 
 export const compareByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
+export const compareByStartTime = (eventA, eventB) => eventA.dateFrom - eventB.dateFrom;
+export const compareByDuration = (pointA, pointB) => (pointB.dateTo - pointB.dateFrom) - (pointA.dateTo - pointA.dateFrom);
