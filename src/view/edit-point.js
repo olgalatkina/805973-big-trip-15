@@ -71,12 +71,8 @@ const createPhotoContainerTemplate = ({pictures}) => (
   </div>`
 );
 
-const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers }) => {
-  const isDescription = Boolean(destination.description);
-  const isPictures = Boolean(destination.pictures.length);
-  const isOffers = Boolean(getOffersByType(type, OFFERS).length);
-
-  return `<li class="trip-events__item">
+const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers, isDescription, isPictures, isOffers }) => (
+  `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
@@ -141,8 +137,8 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
         </section>
       </section>
     </form>
-  </li>`;
-};
+  </li>`
+);
 
 export default class EditPoint extends SmartView {
   constructor(point = BLANK_POINT) {
@@ -276,31 +272,23 @@ export default class EditPoint extends SmartView {
     this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
   }
 
-  // static parsePointToState(point) {
-  //   return Object.assign(
-  //     {},
-  //     point,
-  //     {
-  //       isDescription: Boolean(point.destination.description),
-  //       isPictures: Boolean(point.destination.pictures.length),
-  //       isOffers: Boolean(getOffersByType(point.type, OFFERS).length),
-  //     });
-  // }
-
-  // static parseStateToPoint(state) {
-  //   state = Object.assign({}, state);
-  //   delete state.isDescription;
-  //   delete state.isPictures;
-  //   delete state.isOffers;
-
-  //   return state;
-  // }
-
   static parsePointToState(point) {
-    return Object.assign({}, point);
+    return Object.assign(
+      {},
+      point,
+      {
+        isDescription: Boolean(point.destination.description),
+        isPictures: Boolean(point.destination.pictures.length),
+        isOffers: Boolean(getOffersByType(point.type, OFFERS).length),
+      });
   }
 
   static parseStateToPoint(state) {
-    return Object.assign({}, state);
+    state = Object.assign({}, state);
+    delete state.isDescription;
+    delete state.isPictures;
+    delete state.isOffers;
+
+    return state;
   }
 }
