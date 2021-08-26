@@ -1,10 +1,10 @@
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { nanoid } from 'nanoid';
-import { formatDate, getActualDate } from '../utils/date';
 import { Types, Destinations } from '../const';
 import { OFFERS } from '../mock/offers';
 import { DESTINATIONS } from '../mock/dest';
+import { formatDate, getActualDate } from '../utils/date';
 import { getDestination, getOffersByType } from '../utils/common';
 import SmartView from './smart';
 
@@ -176,16 +176,16 @@ export default class EditPoint extends SmartView {
     this.setRollUpClickHandler(this._callback.rollUpClick);
   }
 
-  _resetDatepicker() {
-    if (this._datepicker1) {
-      this._datepicker1.destroy();
-      this._datepicker1 = null;
-    }
-    if (this._datepicker2) {
-      this._datepicker2.destroy();
-      this._datepicker2 = null;
-    }
-  }
+  // _resetDatePicker() {
+  //   if (this._datepicker1) {
+  //     this._datepicker1.destroy();
+  //     this._datepicker1 = null;
+  //   }
+  //   if (this._datepicker2) {
+  //     this._datepicker2.destroy();
+  //     this._datepicker2 = null;
+  //   }
+  // }
 
   _setDatePicker() {
     if (this._datepicker1) {
@@ -200,7 +200,9 @@ export default class EditPoint extends SmartView {
     this._datepicker1 = flatpickr(
       this.getElement().querySelector('[name = "event-start-time"]'),
       {
-        dateFormat: 'd/m/y H:i',
+        altInput: true,
+        altFormat: 'd/m/y H:i',
+        dateFormat: 'm/d/y H:i',
         enableTime: true,
         'time_24hr': true,
         onChange: this._timeFromHandler,
@@ -209,7 +211,9 @@ export default class EditPoint extends SmartView {
     this._datepicker2 = flatpickr(
       this.getElement().querySelector('[name = "event-end-time"]'),
       {
-        dateFormat: 'd/m/y H:i',
+        altInput: true,
+        altFormat: 'd/m/y H:i',
+        dateFormat: 'm/d/y H:i',
         enableTime: true,
         minDate: this._datepicker1.input.value,
         'time_24hr': true,
