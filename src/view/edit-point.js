@@ -148,12 +148,18 @@ export default class EditPoint extends SmartView {
   constructor(point = BLANK_POINT) {
     super();
     this._state = EditPoint.parsePointToState(point);
+    this._datepicker1 = null;
+    this._datepicker2 = null;
+
     this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
-
     this._changeCityHandler = this._changeCityHandler.bind(this);
     this._changeTypeHandler = this._changeTypeHandler.bind(this);
     this._changePriceHandler =this._changePriceHandler.bind(this);
+
+    this._timeFromHandler = this._timeFromHandler.bind(this);
+    this._timeToHandler = this._timeToHandler.bind(this);
+    this._setDatePicker = this._setDatePicker.bind(this);
 
     this._setInnerHandlers();
   }
@@ -174,10 +180,65 @@ export default class EditPoint extends SmartView {
     this.setRollUpClickHandler(this._callback.rollUpClick);
   }
 
+  _resetDatepicker() {
+    if (this._datepicker1) {
+      this._datepicker1.destroy();
+      this._datepicker1 = null;
+    }
+    if (this._datepicker2) {
+      this._datepicker2.destroy();
+      this._datepicker2 = null;
+    }
+  }
+
+  _setDatePicker() {
+    if (this._datepicker1) {
+      this._datepicker1.destroy();
+      this._datepicker1 = null;
+    }
+    if (this._datepicker2) {
+      this._datepicker2.destroy();
+      this._datepicker2 = null;
+    }
+
+    this._datepicker1 = flatpickr(
+      this.getElement().querySelector('[name = "event-start-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        onChange: this._timeFromHandler,
+      },
+    ),
+    this._datepicker2 = flatpickr(
+      this.getElement().querySelector('[name = "event-end-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        minDate: this._datepicker1.input.value,
+        'time_24hr': true,
+        onChange: this._timeToHandler,
+      },
+    );
+  }
+
+  _timeFromHandler([userDate]) {
+    this.updateState({
+      dateFrom: userDate,
+    });
+  }
+
+  _timeToHandler([userDate]) {
+    this.updateState({
+      dateTo: userDate,
+    });
+  }
+
   _setInnerHandlers() {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._changeCityHandler);
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._changeTypeHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._changePriceHandler);
+    this._setDatePicker();
   }
 
   _changeCityHandler(evt) {
