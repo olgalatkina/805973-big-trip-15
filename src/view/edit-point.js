@@ -176,16 +176,21 @@ export default class EditPoint extends SmartView {
     this.setRollUpClickHandler(this._callback.rollUpClick);
   }
 
-  // _resetDatePicker() {
-  //   if (this._datepicker1) {
-  //     this._datepicker1.destroy();
-  //     this._datepicker1 = null;
-  //   }
-  //   if (this._datepicker2) {
-  //     this._datepicker2.destroy();
-  //     this._datepicker2 = null;
-  //   }
-  // }
+  removeElement() {
+    super.removeElement();
+    this._resetDatePicker();
+  }
+
+  _resetDatePicker() {
+    if (this._datepicker1) {
+      this._datepicker1.destroy();
+      this._datepicker1 = null;
+    }
+    if (this._datepicker2) {
+      this._datepicker2.destroy();
+      this._datepicker2 = null;
+    }
+  }
 
   _setDatePicker() {
     if (this._datepicker1) {
