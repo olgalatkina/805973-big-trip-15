@@ -37,6 +37,8 @@ export const getOffersByType = (type, offers) => {
   return currentOffers.offers.length ? currentOffers.offers : [];
 };
 
+export const getDestination = (city, dest) => dest.find((item) => item.name === city);
+
 export const updatePoint = (points, update) => {
   const index = points.findIndex((point) => point.id === update.id);
 
