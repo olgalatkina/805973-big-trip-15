@@ -43,3 +43,11 @@ export const SortType = {
 };
 
 export const MAX_NUMBER_OF_CITIES = 3;
+
+export const CALENDAR_SETTINGS = {
+  altInput: true,
+  altFormat: 'd/m/y H:i',
+  dateFormat: 'm/d/y H:i',
+  enableTime: true,
+  'time_24hr': true,
+};

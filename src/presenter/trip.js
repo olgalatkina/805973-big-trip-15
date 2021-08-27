@@ -1,12 +1,11 @@
+import { Messages, SortType } from '../const';
+import { render, RenderPosition } from '../utils/render.js';
+import { updatePoint, compareByPrice, compareByStartTime, compareByDuration } from '../utils/common';
 import TripView from '../view/trip.js';
 import MessageView from '../view/message';
 import SortView from '../view/sort';
 import PointListView from '../view/point-list';
 import PointPresenter from './point';
-import { render, RenderPosition } from '../utils/render.js';
-import { updatePoint, compareByPrice } from '../utils/common';
-import { compareByStartTime, compareByDuration } from '../utils/date.js';
-import { Messages, SortType } from '../const';
 
 export default class Trip {
   constructor(bodyContainer) {

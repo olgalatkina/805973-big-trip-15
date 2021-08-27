@@ -1,9 +1,11 @@
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { nanoid } from 'nanoid';
-import { formatDate, getActualDate } from '../utils/date';
-import { Types, Destinations } from '../const';
+import { Types, Destinations, CALENDAR_SETTINGS } from '../const';
 import { OFFERS } from '../mock/offers';
 import { DESTINATIONS } from '../mock/dest';
-import { getDestination, getOffersByType } from '../utils/common';
+import { formatDate, getActualDate } from '../utils/date';
+import { getDestination, getOffersByType, getIsDescription, getIsPictures, getIsOffers } from '../utils/common';
 import SmartView from './smart';
 
 const BLANK_POINT = {
@@ -36,7 +38,7 @@ const createIconList = (type, types) => (
 const createOptionTemplate = (city) => `<option value="${city}"></option>`;
 const createDestinationsTemplate = () => Object.values(Destinations).map(createOptionTemplate).join('');
 
-const createOfferTemplates = (type, offers) => {
+const createOfferTemplate = (type, offers) => {
   const allOffers = getOffersByType(type, OFFERS);
 
   return allOffers.map((offer, idx) => {
@@ -69,12 +71,18 @@ const createPhotoContainerTemplate = ({pictures}) => (
   </div>`
 );
 
-const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice, offers }) => {
-  const isDescription = Boolean(destination.description);
-  const isPictures = Boolean(destination.pictures.length);
-  const isOffers = Boolean(getOffersByType(type, OFFERS).length);
-
-  return `<li class="trip-events__item">
+const createEditPointTemplate = ({
+  type,
+  destination,
+  dateFrom,
+  dateTo,
+  basePrice,
+  offers,
+  isDescription,
+  isPictures,
+  isOffers,
+}) => (
+  `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
@@ -128,7 +136,7 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers ${isOffers ? '' : 'visually-hidden'}">Offers</h3>
           <div class="event__available-offers">
-            ${createOfferTemplates(type, offers)}
+            ${createOfferTemplate(type, offers)}
           </div>
         </section>
 
@@ -139,19 +147,25 @@ const createEditPointTemplate = ({type, destination, dateFrom, dateTo, basePrice
         </section>
       </section>
     </form>
-  </li>`;
-};
+  </li>`
+);
 
 export default class EditPoint extends SmartView {
   constructor(point = BLANK_POINT) {
     super();
     this._state = EditPoint.parsePointToState(point);
+    this._datepickerStart = null;
+    this._datepickerEnd = null;
+
     this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
-
     this._changeCityHandler = this._changeCityHandler.bind(this);
     this._changeTypeHandler = this._changeTypeHandler.bind(this);
     this._changePriceHandler =this._changePriceHandler.bind(this);
+
+    this._timeFromHandler = this._timeFromHandler.bind(this);
+    this._timeToHandler = this._timeToHandler.bind(this);
+    this._setDatePicker = this._setDatePicker.bind(this);
 
     this._setInnerHandlers();
   }
@@ -172,20 +186,81 @@ export default class EditPoint extends SmartView {
     this.setRollUpClickHandler(this._callback.rollUpClick);
   }
 
+  removeElement() {
+    super.removeElement();
+    this._resetDatePicker();
+  }
+
+  _resetDatePicker() {
+    if (this._datepickerStart) {
+      this._datepickerStart.destroy();
+      this._datepickerStart = null;
+    }
+    if (this._datepickerEnd) {
+      this._datepickerEnd.destroy();
+      this._datepickerEnd = null;
+    }
+  }
+
+  _setDatePicker() {
+    this._resetDatePicker();
+
+    this._datepickerStart = flatpickr(
+      this.getElement().querySelector('[name = "event-start-time"]'),
+      Object.assign(
+        {},
+        CALENDAR_SETTINGS,
+        {
+          onChange: this._timeFromHandler,
+        }),
+    ),
+    this._datepickerEnd = flatpickr(
+      this.getElement().querySelector('[name = "event-end-time"]'),
+      Object.assign(
+        {},
+        CALENDAR_SETTINGS,
+        {
+          minDate: this._datepickerStart.input.value,
+          onChange: this._timeToHandler,
+        }),
+    );
+  }
+
+  _timeFromHandler([userDate]) {
+    this.updateState({
+      dateFrom: userDate,
+    });
+  }
+
+  _timeToHandler([userDate]) {
+    this.updateState({
+      dateTo: userDate,
+    });
+  }
+
   _setInnerHandlers() {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._changeCityHandler);
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._changeTypeHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._changePriceHandler);
+    this._setDatePicker();
   }
 
   _changeCityHandler(evt) {
     evt.preventDefault();
-    this.updateState({destination: getDestination(evt.target.value, DESTINATIONS)});
+    this.updateState({
+      destination: getDestination(evt.target.value, DESTINATIONS),
+      isDescription: getIsDescription(evt.target.value, DESTINATIONS),
+      isPictures: getIsPictures(evt.target.value, DESTINATIONS),
+    });
   }
 
   _changeTypeHandler(evt) {
     evt.preventDefault();
-    this.updateState({type: evt.target.value, offers: []});
+    this.updateState({
+      type: evt.target.value,
+      offers: [],
+      isOffers: getIsOffers(evt.target.value, OFFERS),
+    });
   }
 
   _changePriceHandler(evt) {
@@ -213,31 +288,23 @@ export default class EditPoint extends SmartView {
     this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
   }
 
-  // static parsePointToState(point) {
-  //   return Object.assign(
-  //     {},
-  //     point,
-  //     {
-  //       isDescription: Boolean(point.destination.description),
-  //       isPictures: Boolean(point.destination.pictures.length),
-  //       isOffers: Boolean(getOffersByType(point.type, OFFERS).length),
-  //     });
-  // }
-
-  // static parseStateToPoint(state) {
-  //   state = Object.assign({}, state);
-  //   delete state.isDescription;
-  //   delete state.isPictures;
-  //   delete state.isOffers;
-
-  //   return state;
-  // }
-
   static parsePointToState(point) {
-    return Object.assign({}, point);
+    return Object.assign(
+      {},
+      point,
+      {
+        isDescription: Boolean(point.destination.description),
+        isPictures: Boolean(point.destination.pictures.length),
+        isOffers: Boolean(getOffersByType(point.type, OFFERS).length),
+      });
   }
 
   static parseStateToPoint(state) {
-    return Object.assign({}, state);
+    state = Object.assign({}, state);
+    delete state.isDescription;
+    delete state.isPictures;
+    delete state.isOffers;
+
+    return state;
   }
 }

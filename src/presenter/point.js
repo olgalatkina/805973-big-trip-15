@@ -85,6 +85,7 @@ export default class Point {
   }
 
   _handleRollUpClick() {
+    this._editPointComponent.reset(this._point);
     this._replaceFormToPoint();
   }
 
