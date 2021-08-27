@@ -207,22 +207,18 @@ export default class EditPoint extends SmartView {
 
     this._datepickerStart = flatpickr(
       this.getElement().querySelector('[name = "event-start-time"]'),
-      Object.assign(
-        {},
-        CALENDAR_SETTINGS,
-        {
-          onChange: this._timeFromHandler,
-        }),
+      {
+        ...CALENDAR_SETTINGS,
+        onChange: this._timeFromHandler,
+      },
     ),
     this._datepickerEnd = flatpickr(
       this.getElement().querySelector('[name = "event-end-time"]'),
-      Object.assign(
-        {},
-        CALENDAR_SETTINGS,
-        {
-          minDate: this._datepickerStart.input.value,
-          onChange: this._timeToHandler,
-        }),
+      {
+        ...CALENDAR_SETTINGS,
+        minDate: this._datepickerStart.input.value,
+        onChange: this._timeToHandler,
+      },
     );
   }
 
@@ -265,7 +261,8 @@ export default class EditPoint extends SmartView {
 
   _changePriceHandler(evt) {
     evt.preventDefault();
-    this.updateState({basePrice: evt.target.value}, true);
+    // TODO: проверка is number
+    this.updateState({basePrice: evt.target.value});
   }
 
   _rollUpClickHandler(evt) {
@@ -289,18 +286,16 @@ export default class EditPoint extends SmartView {
   }
 
   static parsePointToState(point) {
-    return Object.assign(
-      {},
-      point,
-      {
-        isDescription: Boolean(point.destination.description),
-        isPictures: Boolean(point.destination.pictures.length),
-        isOffers: Boolean(getOffersByType(point.type, OFFERS).length),
-      });
+    return {
+      ...point,
+      isDescription: Boolean(point.destination.description),
+      isPictures: Boolean(point.destination.pictures.length),
+      isOffers: Boolean(getOffersByType(point.type, OFFERS).length),
+    };
   }
 
   static parseStateToPoint(state) {
-    state = Object.assign({}, state);
+    state = {...state};
     delete state.isDescription;
     delete state.isPictures;
     delete state.isOffers;

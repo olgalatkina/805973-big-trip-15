@@ -90,15 +90,7 @@ export default class Point {
   }
 
   _handleFavoriteClick() {
-    this._changeData(
-      Object.assign(
-        {},
-        this._point,
-        {
-          isFavorite: !this._point.isFavorite,
-        },
-      ),
-    );
+    this._changeData({...this._point, isFavorite: !this._point.isFavorite});
   }
 
   _handleSubmitClick(point) {
