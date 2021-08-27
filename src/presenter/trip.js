@@ -1,4 +1,4 @@
-import { Messages, SortType } from '../const';
+import { Messages, SortType, UserAction, UpdateType } from '../const';
 import { render, RenderPosition } from '../utils/render.js';
 import { compareByPrice, compareByStartTime, compareByDuration } from '../utils/common';
 import TripView from '../view/trip.js';
@@ -20,9 +20,12 @@ export default class Trip {
     this._sortComponent = new SortView();
     this._pointListComponent = new PointListView();
 
+    this._handleViewAction = this._handleViewAction.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
-    this._handlePointChange = this._handlePointChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+
+    this._pointsModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -62,7 +65,7 @@ export default class Trip {
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._pointListComponent, this._handlePointChange, this._handleModeChange);
+    const pointPresenter = new PointPresenter(this._pointListComponent, this._handleViewAction, this._handleModeChange);
     pointPresenter.init(point); // есть ли id в данных с сервера?
     this._pointPresenters.set(point.id, pointPresenter);
   }
@@ -77,9 +80,34 @@ export default class Trip {
     this._pointPresenters.clear();
   }
 
-  _handlePointChange(updatedPoint) {
-    // обновление модели
-    this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  _handleViewAction(actionType, updateType, update) {
+    // console.log(actionType, updateType, update);
+    switch(actionType) {
+      case UserAction.UPDATE_POINT:
+        this._pointsModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_POINT:
+        this._pointsModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_POINT:
+        this._pointsModel.deletePoint(updateType, update);
+        break;
+    }
+  }
+
+  _handleModelEvent(updateType, data) {
+    // console.log(updateType, data);
+    switch(updateType) {
+      case UpdateType.PATCH:
+        this._pointPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        // ...
+        break;
+      case UpdateType.MAJOR:
+        // ...
+        break;
+    }
   }
 
   _handleModeChange() {

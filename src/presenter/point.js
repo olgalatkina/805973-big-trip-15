@@ -1,7 +1,7 @@
 import PointView from '../view/point';
 import EditPointView from '../view/edit-point';
 import { remove, render, RenderPosition, replace } from '../utils/render.js';
-import { Mode } from '../const';
+import { Mode, UserAction, UpdateType } from '../const';
 
 export default class Point {
   constructor(pointList, changeData, changeMode) {
@@ -90,11 +90,19 @@ export default class Point {
   }
 
   _handleFavoriteClick() {
-    this._changeData({...this._point, isFavorite: !this._point.isFavorite});
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      {...this._point, isFavorite: !this._point.isFavorite},
+    );
   }
 
   _handleSubmitClick(point) {
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
     this._replaceFormToPoint();
-    this._changeData(point);
   }
 }
