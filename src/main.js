@@ -1,14 +1,20 @@
+
+import { generateEvent } from './mock/event';
+import { render, RenderPosition } from './utils/render';
 import ControlsView from './view/controls';
 import MenuView from './view/menu';
 import FiltersView from './view/filters';
 import ButtonNewEventView from './view/btn-new-point';
 import InfoView from './view/info';
 import TripPresenter from './presenter/trip';
-import { generateEvent } from './mock/event';
-import { render, RenderPosition } from './utils/render';
+import PointsModel from './model/points';
+
 
 const EVENT_COUNT = 20;
 const data = new Array(EVENT_COUNT).fill().map(generateEvent);
+
+const pointsModel = new PointsModel();
+pointsModel.setPoints(data);
 
 // HEADER
 const siteHeaderElement = document.querySelector('.page-header');
@@ -23,5 +29,5 @@ data.length ? render(headerContainer, new InfoView(data), RenderPosition.AFTERBE
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
-const tripPresenter = new TripPresenter(bodyContainer);
+const tripPresenter = new TripPresenter(bodyContainer, pointsModel);
 tripPresenter.init(data);

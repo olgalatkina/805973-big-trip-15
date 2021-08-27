@@ -8,8 +8,9 @@ import PointListView from '../view/point-list';
 import PointPresenter from './point';
 
 export default class Trip {
-  constructor(bodyContainer) {
+  constructor(bodyContainer, pointsModel) {
     this._container = bodyContainer;
+    this._pointsModel = pointsModel;
     this._message = Messages.EVERYTHING;
     this._pointPresenters = new Map();
     this._currentSortType = SortType.DAY;
@@ -31,6 +32,10 @@ export default class Trip {
     this._backupData = [...userData]; // TODO: проверить позже изменяется ли значение
     render(this._container, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
+  }
+
+  _getPoints() {
+    this._pointsModel.getPoints();
   }
 
   _renderTrip() {
