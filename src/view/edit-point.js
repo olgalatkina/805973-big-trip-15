@@ -1,9 +1,9 @@
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { nanoid } from 'nanoid';
-import { Types, Destinations, CALENDAR_SETTINGS } from '../const';
+import { Types, CALENDAR_SETTINGS } from '../const';
 import { OFFERS } from '../mock/offers';
-import { DESTINATIONS } from '../mock/dest';
+import { DESTINATIONS, Destinations } from '../mock/dest';
 import { formatDate, getActualDate } from '../utils/date';
 import { getDestination, getOffersByType, getIsDescription, getIsPictures, getIsOffers } from '../utils/common';
 import SmartView from './smart';
