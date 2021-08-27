@@ -1,7 +1,7 @@
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { nanoid } from 'nanoid';
-import { Types, Destinations } from '../const';
+import { Types, Destinations, CALENDAR_SETTINGS } from '../const';
 import { OFFERS } from '../mock/offers';
 import { DESTINATIONS } from '../mock/dest';
 import { formatDate, getActualDate } from '../utils/date';
@@ -154,8 +154,8 @@ export default class EditPoint extends SmartView {
   constructor(point = BLANK_POINT) {
     super();
     this._state = EditPoint.parsePointToState(point);
-    this._datepicker1 = null;
-    this._datepicker2 = null;
+    this._datepickerStart = null;
+    this._datepickerEnd = null;
 
     this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
@@ -192,61 +192,50 @@ export default class EditPoint extends SmartView {
   }
 
   _resetDatePicker() {
-    if (this._datepicker1) {
-      this._datepicker1.destroy();
-      this._datepicker1 = null;
+    if (this._datepickerStart) {
+      this._datepickerStart.destroy();
+      this._datepickerStart = null;
     }
-    if (this._datepicker2) {
-      this._datepicker2.destroy();
-      this._datepicker2 = null;
+    if (this._datepickerEnd) {
+      this._datepickerEnd.destroy();
+      this._datepickerEnd = null;
     }
   }
 
   _setDatePicker() {
-    if (this._datepicker1) {
-      this._datepicker1.destroy();
-      this._datepicker1 = null;
-    }
-    if (this._datepicker2) {
-      this._datepicker2.destroy();
-      this._datepicker2 = null;
-    }
+    this._resetDatePicker();
 
-    this._datepicker1 = flatpickr(
+    this._datepickerStart = flatpickr(
       this.getElement().querySelector('[name = "event-start-time"]'),
-      {
-        altInput: true,
-        altFormat: 'd/m/y H:i',
-        dateFormat: 'm/d/y H:i',
-        enableTime: true,
-        'time_24hr': true,
-        onChange: this._timeFromHandler,
-      },
+      Object.assign(
+        {},
+        CALENDAR_SETTINGS,
+        {
+          onChange: this._timeFromHandler,
+        }),
     ),
-    this._datepicker2 = flatpickr(
+    this._datepickerEnd = flatpickr(
       this.getElement().querySelector('[name = "event-end-time"]'),
-      {
-        altInput: true,
-        altFormat: 'd/m/y H:i',
-        dateFormat: 'm/d/y H:i',
-        enableTime: true,
-        minDate: this._datepicker1.input.value,
-        'time_24hr': true,
-        onChange: this._timeToHandler,
-      },
+      Object.assign(
+        {},
+        CALENDAR_SETTINGS,
+        {
+          minDate: this._datepickerStart.input.value,
+          onChange: this._timeToHandler,
+        }),
     );
   }
 
   _timeFromHandler([userDate]) {
     this.updateState({
       dateFrom: userDate,
-    }, true);
+    });
   }
 
   _timeToHandler([userDate]) {
     this.updateState({
       dateTo: userDate,
-    }, true);
+    });
   }
 
   _setInnerHandlers() {
