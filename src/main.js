@@ -30,4 +30,4 @@ data.length ? render(headerContainer, new InfoView(data), RenderPosition.AFTERBE
 const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
 const tripPresenter = new TripPresenter(bodyContainer, pointsModel);
-tripPresenter.init(data);
+tripPresenter.init();

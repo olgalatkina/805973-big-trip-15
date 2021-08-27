@@ -1,6 +1,6 @@
 import { Messages, SortType } from '../const';
 import { render, RenderPosition } from '../utils/render.js';
-import { updatePoint, compareByPrice, compareByStartTime, compareByDuration } from '../utils/common';
+import { compareByPrice, compareByStartTime, compareByDuration } from '../utils/common';
 import TripView from '../view/trip.js';
 import MessageView from '../view/message';
 import SortView from '../view/sort';
@@ -25,21 +25,26 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
-  init(userData) {
-    this._userData = [...userData];
-    this._sortPoints(this._currentSortType);
-    // console.log(this._userData);
-    this._backupData = [...userData]; // TODO: проверить позже изменяется ли значение
+  init() {
     render(this._container, this._tripComponent, RenderPosition.BEFOREEND);
     this._renderTrip();
   }
 
   _getPoints() {
-    this._pointsModel.getPoints();
+    switch (this._currentSortType) {
+      case SortType.DAY:
+        return this._pointsModel.getPoints().slice().sort(compareByStartTime);
+      case SortType.TIME:
+        return this._pointsModel.getPoints().slice().sort(compareByDuration);
+      case SortType.PRICE:
+        return this._pointsModel.getPoints().slice().sort(compareByPrice);
+    }
+
+    return this._pointsModel.getPoints();
   }
 
   _renderTrip() {
-    if (!this._userData.length) {
+    if (!this._getPoints().length) {
       this._renderMessage();
       return;
     }
@@ -58,13 +63,13 @@ export default class Trip {
 
   _renderPoint(point) {
     const pointPresenter = new PointPresenter(this._pointListComponent, this._handlePointChange, this._handleModeChange);
-    pointPresenter.init(point);
+    pointPresenter.init(point); // есть ли id в данных с сервера?
     this._pointPresenters.set(point.id, pointPresenter);
   }
 
   _renderPointList() {
     render(this._tripComponent, this._pointListComponent, RenderPosition.BEFOREEND);
-    this._userData.forEach((point) => this._renderPoint(point));
+    this._getPoints().forEach((point) => this._renderPoint(point));
   }
 
   _clearPointList() {
@@ -72,27 +77,8 @@ export default class Trip {
     this._pointPresenters.clear();
   }
 
-  _sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.DAY:
-        this._userData.sort(compareByStartTime);
-        break;
-      case SortType.TIME:
-        this._userData.sort(compareByDuration);
-        break;
-      case SortType.PRICE:
-        this._userData.sort(compareByPrice);
-        break;
-      default:
-        this._userData = this._backupData.slice();
-    }
-
-    this._currentSortType = sortType;
-  }
-
   _handlePointChange(updatedPoint) {
-    this._userData = updatePoint(this._userData, updatedPoint);
-    this._backupData = updatePoint(this._backupData, updatedPoint);
+    // обновление модели
     this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
   }
 
@@ -105,7 +91,7 @@ export default class Trip {
       return;
     }
 
-    this._sortPoints(sortType);
+    this._currentSortType = sortType;
     this._clearPointList();
     this._renderPointList();
   }
