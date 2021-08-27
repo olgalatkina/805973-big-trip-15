@@ -1,5 +1,5 @@
 import { Messages, SortType, UserAction, UpdateType } from '../const';
-import { render, RenderPosition } from '../utils/render.js';
+import { render, RenderPosition, remove } from '../utils/render.js';
 import { compareByPrice, compareByStartTime, compareByDuration } from '../utils/common';
 import TripView from '../view/trip.js';
 import MessageView from '../view/message';
@@ -17,7 +17,7 @@ export default class Trip {
 
     this._tripComponent = new TripView();
     this._messageComponent = new MessageView(this._message);
-    this._sortComponent = new SortView();
+    this._sortComponent = null;
     this._pointListComponent = new PointListView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
@@ -60,8 +60,12 @@ export default class Trip {
   }
 
   _renderSort() {
-    render(this._tripComponent, this._sortComponent, RenderPosition.BEFOREEND);
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
+    }
+    this._sortComponent = new SortView(this._currentSortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    render(this._tripComponent, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(point) {
@@ -78,6 +82,16 @@ export default class Trip {
   _clearPointList() {
     this._pointPresenters.forEach((presenter) => presenter.destroy());
     this._pointPresenters.clear();
+  }
+
+  _clearTrip({resetSortType = false} = {}) {
+    this._clearPointList();
+    remove(this._sortComponent);
+    remove(this._messageComponent);
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DAY;
+    }
   }
 
   _handleViewAction(actionType, updateType, update) {
@@ -102,10 +116,12 @@ export default class Trip {
         this._pointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        // ...
+        this._clearPointList();
+        this._renderPointList();
         break;
       case UpdateType.MAJOR:
-        // ...
+        this._clearTrip({resetSortType: true});
+        this._renderTrip();
         break;
     }
   }

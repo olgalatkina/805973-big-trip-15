@@ -1,6 +1,6 @@
 import PointView from '../view/point';
 import EditPointView from '../view/edit-point';
-import { remove, render, RenderPosition, replace } from '../utils/render.js';
+import { remove, render, RenderPosition, replace } from '../utils/render';
 import { Mode, UserAction, UpdateType } from '../const';
 
 export default class Point {
