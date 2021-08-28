@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import * as duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
+import { FilterType } from '../const';
 
 export const formatDate = (date) => dayjs(date).format('MM/DD/YY HH:mm');
 export const getDate = (date) => dayjs(date).format('MMM DD');
@@ -29,3 +30,13 @@ export const gapToString = (diff) => {
 };
 
 export const getActualDate = () => dayjs().toDate();
+
+const getMootPoints = (points) => points.filter((point) => point.dateFrom < getActualDate() && point.dateTo > getActualDate());
+const getFuturePoints = (points) => points.filter((point) => point.dateFrom >= getActualDate());
+const getPastPoints = (points) => points.filter((point) => point.dateTo < getActualDate());
+
+export const filter = {
+  [FilterType.EVERYTHING]: (points) => points,
+  [FilterType.FUTURE]: (points) => [...getMootPoints(points), ...getFuturePoints(points)],
+  [FilterType.PAST]: (points) => [...getPastPoints(points), ...getMootPoints(points)],
+};

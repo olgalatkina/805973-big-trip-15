@@ -1,16 +1,18 @@
 import { Messages, SortType, UserAction, UpdateType } from '../const';
-import { render, RenderPosition, remove } from '../utils/render.js';
+import { render, RenderPosition, remove } from '../utils/render';
 import { compareByPrice, compareByStartTime, compareByDuration } from '../utils/common';
-import TripView from '../view/trip.js';
+import { filter } from '../utils/date';
+import TripView from '../view/trip';
 import MessageView from '../view/message';
 import SortView from '../view/sort';
 import PointListView from '../view/point-list';
 import PointPresenter from './point';
 
 export default class Trip {
-  constructor(bodyContainer, pointsModel) {
+  constructor(bodyContainer, pointsModel, filterModel) {
     this._container = bodyContainer;
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
     this._message = Messages.EVERYTHING;
     this._currentSortType = SortType.DAY;
     this._pointPresenters = new Map();
@@ -27,6 +29,7 @@ export default class Trip {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
     this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -35,16 +38,20 @@ export default class Trip {
   }
 
   _getPoints() {
+    const filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filteredPoints = filter[filterType](points);
+
     switch (this._currentSortType) {
       case SortType.DAY:
-        return this._pointsModel.getPoints().slice().sort(compareByStartTime);
+        return filteredPoints.sort(compareByStartTime);
       case SortType.TIME:
-        return this._pointsModel.getPoints().slice().sort(compareByDuration);
+        return filteredPoints.sort(compareByDuration);
       case SortType.PRICE:
-        return this._pointsModel.getPoints().slice().sort(compareByPrice);
+        return filteredPoints.sort(compareByPrice);
     }
 
-    return this._pointsModel.getPoints();
+    return filteredPoints;
   }
 
   _renderTrip() {

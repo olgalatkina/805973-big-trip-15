@@ -40,6 +40,12 @@ export const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
+export const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
+};
+
 export const MAX_NUMBER_OF_CITIES = 3;
 
 export const CALENDAR_SETTINGS = {
