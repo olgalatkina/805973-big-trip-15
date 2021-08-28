@@ -1,18 +1,28 @@
 import AbstractView from './abstract';
+import { FilterType } from '../const';
 
-const createMessageTemplate = (message) => (
-  `<p class="trip-events__msg">
-    ${message}
-  </p>`
-);
+const NoPointsTextType = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.PAST]: 'There are no past events now',
+  [FilterType.FUTURE]: 'There are no future events now',
+};
+
+const createMessageTemplate = (filterType) => {
+  const noPointTextValue = NoPointsTextType[filterType];
+
+  return (
+    `<p class="trip-events__msg">
+      ${noPointTextValue}
+    </p>`);
+};
 
 export default class Message extends AbstractView {
-  constructor(message) {
+  constructor(data) {
     super();
-    this._message = message;
+    this._data = data;
   }
 
   getTemplate() {
-    return createMessageTemplate(this._message);
+    return createMessageTemplate(this._data);
   }
 }

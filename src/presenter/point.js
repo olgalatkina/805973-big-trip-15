@@ -102,7 +102,7 @@ export default class Point {
   _handleDeleteClick(point) {
     this._changeData(
       UserAction.DELETE_POINT,
-      UpdateType.MINOR,
+      UpdateType.MAJOR,
       point,
     );
   }

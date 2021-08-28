@@ -10,7 +10,7 @@ import FilterPresenter from './presenter/filter';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 
-const EVENT_COUNT = 20;
+const EVENT_COUNT = 7;
 const data = new Array(EVENT_COUNT).fill().map(generateEvent);
 
 const pointsModel = new PointsModel();

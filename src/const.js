@@ -10,12 +10,12 @@ export const Types = {
   RESTAURANT: 'Restaurant',
 };
 
-export const Messages = {
-  EVERYTHING: 'Click New Event to create your first point',
-  PAST: 'There are no past events now',
-  FUTURE: 'There are no future events now',
-  LOADING: 'Loading...',
-};
+// export const Messages = {
+//   EVERYTHING: 'Click New Event to create your first point',
+//   PAST: 'There are no past events now',
+//   FUTURE: 'There are no future events now',
+//   LOADING: 'Loading...',
+// };
 
 export const Mode = {
   DEFAULT: 'DEFAULT',
