@@ -18,6 +18,7 @@ export default class Point {
     this._handleRollUpClick = this._handleRollUpClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleSubmitClick = this._handleSubmitClick.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   init(point) {
@@ -33,6 +34,7 @@ export default class Point {
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._editPointComponent.setRollUpClickHandler(this._handleRollUpClick);
     this._editPointComponent.setSubmitClickHandler(this._handleSubmitClick);
+    this._editPointComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
       render(this._pointListContainer, this._pointComponent, RenderPosition.BEFOREEND);
@@ -92,12 +94,21 @@ export default class Point {
   _handleFavoriteClick() {
     this._changeData(
       UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       {...this._point, isFavorite: !this._point.isFavorite},
     );
   }
 
+  _handleDeleteClick(point) {
+    this._changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  }
+
   _handleSubmitClick(point) {
+    // TODO: если newPoint -> UpdateType.MAJOR
     this._changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,

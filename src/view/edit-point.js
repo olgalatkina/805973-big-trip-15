@@ -159,9 +159,11 @@ export default class EditPoint extends SmartView {
 
     this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
+    this._focusCitySelectionHandler = this._focusCitySelectionHandler.bind(this); // focus
     this._changeCityHandler = this._changeCityHandler.bind(this);
     this._changeTypeHandler = this._changeTypeHandler.bind(this);
-    this._changePriceHandler =this._changePriceHandler.bind(this);
+    this._changePriceHandler = this._changePriceHandler.bind(this);
 
     this._timeFromHandler = this._timeFromHandler.bind(this);
     this._timeToHandler = this._timeToHandler.bind(this);
@@ -184,6 +186,7 @@ export default class EditPoint extends SmartView {
     this._setInnerHandlers();
     this.setSubmitClickHandler(this._callback.submitClick);
     this.setRollUpClickHandler(this._callback.rollUpClick);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   removeElement() {
@@ -238,7 +241,14 @@ export default class EditPoint extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._changeCityHandler);
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._changeTypeHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._changePriceHandler);
+    this.getElement().querySelector('.event__input--destination').addEventListener('focus', this._focusCitySelectionHandler); // focus
     this._setDatePicker();
+  }
+
+  _focusCitySelectionHandler(evt) {
+    evt.preventDefault();
+    evt.target.value = '';
+    this.getElement().querySelector('.event__section--destination').innerHTML = '';
   }
 
   _changeCityHandler(evt) {
@@ -283,6 +293,16 @@ export default class EditPoint extends SmartView {
   setSubmitClickHandler(callback) {
     this._callback.submitClick = callback;
     this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
+  }
+
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EditPoint.parseStateToPoint(this._state));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler);
   }
 
   static parsePointToState(point) {

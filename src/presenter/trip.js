@@ -12,8 +12,9 @@ export default class Trip {
     this._container = bodyContainer;
     this._pointsModel = pointsModel;
     this._message = Messages.EVERYTHING;
-    this._pointPresenters = new Map();
     this._currentSortType = SortType.DAY;
+    this._pointPresenters = new Map();
+
 
     this._tripComponent = new TripView();
     this._messageComponent = new MessageView(this._message);
