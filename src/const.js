@@ -10,13 +10,6 @@ export const Types = {
   RESTAURANT: 'Restaurant',
 };
 
-// export const Messages = {
-//   EVERYTHING: 'Click New Event to create your first point',
-//   PAST: 'There are no past events now',
-//   FUTURE: 'There are no future events now',
-//   LOADING: 'Loading...',
-// };
-
 export const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
@@ -46,6 +39,11 @@ export const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PAST: 'past',
+};
+
+export const MenuItem = {
+  TABLE: 'Table',
+  STATS: 'Stats',
 };
 
 export const MAX_NUMBER_OF_CITIES = 3;

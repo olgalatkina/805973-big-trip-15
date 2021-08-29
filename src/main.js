@@ -1,6 +1,7 @@
 
 import { generateEvent } from './mock/event';
 import { render, RenderPosition } from './utils/render';
+import { MenuItem } from './const';
 import ControlsView from './view/controls';
 import MenuView from './view/menu';
 import ButtonNewEventView from './view/btn-new-point';
@@ -23,7 +24,9 @@ const siteHeaderElement = document.querySelector('.page-header');
 const headerContainer = siteHeaderElement.querySelector('.trip-main');
 const controls = new ControlsView();
 render(headerContainer, controls, RenderPosition.BEFOREEND);
-render(controls, new MenuView(), RenderPosition.AFTERBEGIN);
+
+const menuComponent = new MenuView();
+render(controls, menuComponent, RenderPosition.AFTERBEGIN);
 
 const filterPresenter = new FilterPresenter(controls, filterModel, pointsModel);
 filterPresenter.init();
@@ -42,3 +45,17 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   // console.log(evt.target.innerText);
   tripPresenter.createPoint();
 });
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      tripPresenter.init();
+      // Скрыть статистику
+      break;
+    case MenuItem.STATS:
+      tripPresenter.destroy();
+      // Показать статистику
+      break;
+  }
+};
+menuComponent.setMenuClickHandler(handleSiteMenuClick);
