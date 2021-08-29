@@ -17,7 +17,7 @@ export default class Filter {
   }
 
   init() {
-    const filters = this._getFilters();
+    const filters = this._getFiltersType();
     const prevFilterComponent = this._filterComponent;
 
     this._filterComponent = new FilterView(filters, this._filterModel.getFilter());
@@ -32,7 +32,7 @@ export default class Filter {
     remove(prevFilterComponent);
   }
 
-  _getFilters() {
+  _getFiltersType() {
     return Object.values(FilterType);
   }
 
