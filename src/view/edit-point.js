@@ -1,3 +1,4 @@
+import he from 'he';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { nanoid } from 'nanoid';
@@ -71,6 +72,9 @@ const createPhotoContainerTemplate = ({pictures}) => (
   </div>`
 );
 
+// const reg = /\d*/;
+// type="text" pattern="${reg}"
+
 const createEditPointTemplate = ({
   type,
   destination,
@@ -104,7 +108,7 @@ const createEditPointTemplate = ({
           <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination.name)}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${createDestinationsTemplate()}
           </datalist>
@@ -123,7 +127,7 @@ const createEditPointTemplate = ({
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" min="0" step="10" name="event-price" value="${basePrice}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -272,6 +276,7 @@ export default class EditPoint extends SmartView {
   _changePriceHandler(evt) {
     evt.preventDefault();
     // TODO: проверка is number
+    // evt.target.value = evt.target.value.replace(/[^0-9]/g, '');
     this.updateState({basePrice: evt.target.value});
   }
 
