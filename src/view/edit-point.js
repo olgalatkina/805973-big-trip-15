@@ -9,13 +9,13 @@ import { getDestination, getOffersByType, getIsDescription, getIsPictures, getIs
 import SmartView from './smart';
 
 const BLANK_POINT = {
-  type: Types.FLIGHT,
+  type: Types.FLIGHT.toLowerCase(),
   destination: {
     name: '',
     description: '',
     pictures: [],
   },
-  offers: getOffersByType('flight', OFFERS),
+  offers: [],
   dateFrom: getActualDate(),
   dateTo: getActualDate(),
   basePrice: 0,
@@ -160,7 +160,7 @@ export default class EditPoint extends SmartView {
     this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
-    this._focusCitySelectionHandler = this._focusCitySelectionHandler.bind(this); // focus
+    this._focusCitySelectionHandler = this._focusCitySelectionHandler.bind(this);
     this._changeCityHandler = this._changeCityHandler.bind(this);
     this._changeTypeHandler = this._changeTypeHandler.bind(this);
     this._changePriceHandler = this._changePriceHandler.bind(this);
@@ -241,7 +241,7 @@ export default class EditPoint extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._changeCityHandler);
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._changeTypeHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._changePriceHandler);
-    this.getElement().querySelector('.event__input--destination').addEventListener('focus', this._focusCitySelectionHandler); // focus
+    this.getElement().querySelector('.event__input--destination').addEventListener('focus', this._focusCitySelectionHandler);
     this._setDatePicker();
   }
 

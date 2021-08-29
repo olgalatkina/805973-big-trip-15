@@ -36,3 +36,9 @@ const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
 const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel);
 tripPresenter.init();
+
+document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
+  evt.preventDefault();
+  // console.log(evt.target.innerText);
+  tripPresenter.createPoint();
+});
