@@ -72,9 +72,6 @@ const createPhotoContainerTemplate = ({pictures}) => (
   </div>`
 );
 
-// const reg = /\d*/;
-// type="text" pattern="${reg}"
-
 const createEditPointTemplate = ({
   type,
   destination,
@@ -85,7 +82,7 @@ const createEditPointTemplate = ({
   isDescription,
   isPictures,
   isOffers,
-}) => (
+}, isEdit) => (
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -131,10 +128,10 @@ const createEditPointTemplate = ({
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
-        <button class="event__rollup-btn" type="button">
+        <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cancel'}</button>
+        ${isEdit ? `<button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
-        </button>
+        </button>` : ''}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
@@ -155,9 +152,10 @@ const createEditPointTemplate = ({
 );
 
 export default class EditPoint extends SmartView {
-  constructor(point = BLANK_POINT) {
+  constructor(point = BLANK_POINT, isEdit = false) {
     super();
     this._state = EditPoint.parsePointToState(point);
+    this._isEdit = isEdit;
     this._datepickerStart = null;
     this._datepickerEnd = null;
 
@@ -177,7 +175,7 @@ export default class EditPoint extends SmartView {
   }
 
   getTemplate() {
-    return createEditPointTemplate(this._state);
+    return createEditPointTemplate(this._state, this._isEdit);
   }
 
   reset(point) {
@@ -275,9 +273,7 @@ export default class EditPoint extends SmartView {
 
   _changePriceHandler(evt) {
     evt.preventDefault();
-    // TODO: проверка is number
-    // evt.target.value = evt.target.value.replace(/[^0-9]/g, '');
-    this.updateState({basePrice: evt.target.value});
+    this.updateState({basePrice: evt.target.value}, true);
   }
 
   _rollUpClickHandler(evt) {

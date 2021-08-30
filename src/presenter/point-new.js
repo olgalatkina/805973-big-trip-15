@@ -11,7 +11,6 @@ export default class PointNew {
     this._editPointComponent = null;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
-    this._handleRollUpClick = this._handleRollUpClick.bind(this);
     this._handleSubmitClick = this._handleSubmitClick.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
@@ -22,7 +21,6 @@ export default class PointNew {
     }
 
     this._editPointComponent = new EditPointView();
-    this._editPointComponent.setRollUpClickHandler(this._handleRollUpClick);
     this._editPointComponent.setSubmitClickHandler(this._handleSubmitClick);
     this._editPointComponent.setDeleteClickHandler(this._handleDeleteClick);
 
@@ -59,10 +57,6 @@ export default class PointNew {
   }
 
   _handleDeleteClick() {
-    this.destroy();
-  }
-
-  _handleRollUpClick() {
     this.destroy();
   }
 }

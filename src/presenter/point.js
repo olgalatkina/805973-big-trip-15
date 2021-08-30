@@ -28,7 +28,7 @@ export default class Point {
     const prevEditPointComponent = this._pointComponent;
 
     this._pointComponent = new PointView(point);
-    this._editPointComponent = new EditPointView(point);
+    this._editPointComponent = new EditPointView(point, true);
 
     this._pointComponent.setRollDownClickHandler(this._handleRollDownClick);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
