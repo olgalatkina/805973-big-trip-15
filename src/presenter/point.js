@@ -1,7 +1,7 @@
 import PointView from '../view/point';
 import EditPointView from '../view/edit-point';
-import { remove, render, RenderPosition, replace } from '../utils/render.js';
-import { Mode } from '../const';
+import { remove, render, RenderPosition, replace } from '../utils/render';
+import { Mode, UserAction, UpdateType } from '../const';
 
 export default class Point {
   constructor(pointList, changeData, changeMode) {
@@ -18,6 +18,7 @@ export default class Point {
     this._handleRollUpClick = this._handleRollUpClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleSubmitClick = this._handleSubmitClick.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
   init(point) {
@@ -33,6 +34,7 @@ export default class Point {
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._editPointComponent.setRollUpClickHandler(this._handleRollUpClick);
     this._editPointComponent.setSubmitClickHandler(this._handleSubmitClick);
+    this._editPointComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevEditPointComponent === null) {
       render(this._pointListContainer, this._pointComponent, RenderPosition.BEFOREEND);
@@ -91,18 +93,27 @@ export default class Point {
 
   _handleFavoriteClick() {
     this._changeData(
-      Object.assign(
-        {},
-        this._point,
-        {
-          isFavorite: !this._point.isFavorite,
-        },
-      ),
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
+      {...this._point, isFavorite: !this._point.isFavorite},
+    );
+  }
+
+  _handleDeleteClick(point) {
+    this._changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MAJOR,
+      point,
     );
   }
 
   _handleSubmitClick(point) {
+    // TODO: если newPoint -> UpdateType.MAJOR
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
     this._replaceFormToPoint();
-    this._changeData(point);
   }
 }

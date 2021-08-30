@@ -1,21 +1,22 @@
+import he from 'he';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { nanoid } from 'nanoid';
-import { Types, Destinations, CALENDAR_SETTINGS } from '../const';
+import { Types, CALENDAR_SETTINGS } from '../const';
 import { OFFERS } from '../mock/offers';
-import { DESTINATIONS } from '../mock/dest';
+import { DESTINATIONS, Destinations } from '../mock/dest';
 import { formatDate, getActualDate } from '../utils/date';
 import { getDestination, getOffersByType, getIsDescription, getIsPictures, getIsOffers } from '../utils/common';
 import SmartView from './smart';
 
 const BLANK_POINT = {
-  type: Types.FLIGHT,
+  type: Types.FLIGHT.toLowerCase(),
   destination: {
     name: '',
     description: '',
     pictures: [],
   },
-  offers: getOffersByType('flight', OFFERS),
+  offers: [],
   dateFrom: getActualDate(),
   dateTo: getActualDate(),
   basePrice: 0,
@@ -71,6 +72,9 @@ const createPhotoContainerTemplate = ({pictures}) => (
   </div>`
 );
 
+// const reg = /\d*/;
+// type="text" pattern="${reg}"
+
 const createEditPointTemplate = ({
   type,
   destination,
@@ -104,7 +108,7 @@ const createEditPointTemplate = ({
           <label class="event__label  event__type-output" for="event-destination-1">
           ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination.name)}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${createDestinationsTemplate()}
           </datalist>
@@ -123,7 +127,7 @@ const createEditPointTemplate = ({
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" min="0" step="10" name="event-price" value="${basePrice}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -159,9 +163,11 @@ export default class EditPoint extends SmartView {
 
     this._rollUpClickHandler = this._rollUpClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
+    this._focusCitySelectionHandler = this._focusCitySelectionHandler.bind(this);
     this._changeCityHandler = this._changeCityHandler.bind(this);
     this._changeTypeHandler = this._changeTypeHandler.bind(this);
-    this._changePriceHandler =this._changePriceHandler.bind(this);
+    this._changePriceHandler = this._changePriceHandler.bind(this);
 
     this._timeFromHandler = this._timeFromHandler.bind(this);
     this._timeToHandler = this._timeToHandler.bind(this);
@@ -184,6 +190,7 @@ export default class EditPoint extends SmartView {
     this._setInnerHandlers();
     this.setSubmitClickHandler(this._callback.submitClick);
     this.setRollUpClickHandler(this._callback.rollUpClick);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   removeElement() {
@@ -207,22 +214,18 @@ export default class EditPoint extends SmartView {
 
     this._datepickerStart = flatpickr(
       this.getElement().querySelector('[name = "event-start-time"]'),
-      Object.assign(
-        {},
-        CALENDAR_SETTINGS,
-        {
-          onChange: this._timeFromHandler,
-        }),
+      {
+        ...CALENDAR_SETTINGS,
+        onChange: this._timeFromHandler,
+      },
     ),
     this._datepickerEnd = flatpickr(
       this.getElement().querySelector('[name = "event-end-time"]'),
-      Object.assign(
-        {},
-        CALENDAR_SETTINGS,
-        {
-          minDate: this._datepickerStart.input.value,
-          onChange: this._timeToHandler,
-        }),
+      {
+        ...CALENDAR_SETTINGS,
+        minDate: this._datepickerStart.input.value,
+        onChange: this._timeToHandler,
+      },
     );
   }
 
@@ -242,7 +245,14 @@ export default class EditPoint extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._changeCityHandler);
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._changeTypeHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._changePriceHandler);
+    this.getElement().querySelector('.event__input--destination').addEventListener('focus', this._focusCitySelectionHandler);
     this._setDatePicker();
+  }
+
+  _focusCitySelectionHandler(evt) {
+    evt.preventDefault();
+    evt.target.value = '';
+    this.getElement().querySelector('.event__section--destination').innerHTML = '';
   }
 
   _changeCityHandler(evt) {
@@ -265,7 +275,9 @@ export default class EditPoint extends SmartView {
 
   _changePriceHandler(evt) {
     evt.preventDefault();
-    this.updateState({basePrice: evt.target.value}, true);
+    // TODO: проверка is number
+    // evt.target.value = evt.target.value.replace(/[^0-9]/g, '');
+    this.updateState({basePrice: evt.target.value});
   }
 
   _rollUpClickHandler(evt) {
@@ -288,19 +300,27 @@ export default class EditPoint extends SmartView {
     this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
   }
 
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EditPoint.parseStateToPoint(this._state));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler);
+  }
+
   static parsePointToState(point) {
-    return Object.assign(
-      {},
-      point,
-      {
-        isDescription: Boolean(point.destination.description),
-        isPictures: Boolean(point.destination.pictures.length),
-        isOffers: Boolean(getOffersByType(point.type, OFFERS).length),
-      });
+    return {
+      ...point,
+      isDescription: Boolean(point.destination.description),
+      isPictures: Boolean(point.destination.pictures.length),
+      isOffers: Boolean(getOffersByType(point.type, OFFERS).length),
+    };
   }
 
   static parseStateToPoint(state) {
-    state = Object.assign({}, state);
+    state = {...state};
     delete state.isDescription;
     delete state.isPictures;
     delete state.isOffers;

@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
-import { Types, Destinations } from '../const';
+import { Types } from '../const';
 import { getRandomInteger, shuffleArray } from '../utils/common';
-import { DESTINATIONS } from './dest';
+import { DESTINATIONS, Destinations } from './dest';
 import { OFFERS } from './offers';
 
 const generateType = (types) => {

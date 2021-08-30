@@ -3,7 +3,6 @@ export const Types = {
   BUS: 'Bus',
   TRAIN: 'Train',
   SHIP: 'Ship',
-  TRANSPORT: 'Transport',
   DRIVE: 'Drive',
   FLIGHT: 'Flight',
   CHECK_IN: 'Check-in',
@@ -11,25 +10,12 @@ export const Types = {
   RESTAURANT: 'Restaurant',
 };
 
-export const Destinations = {
-  CHAMONIX: 'Chamonix',
-  AMSTERDAM: 'Amsterdam',
-  GENEVA: 'Geneva',
-  PARIS: 'Paris',
-  BERLIN: 'Berlin',
-  VERONA: 'Verona',
-  ROMA: 'Roma',
-  BARCELONA: 'Barcelona',
-  MILAN: 'Milan',
-  GRAZ: 'Graz',
-};
-
-export const Messages = {
-  EVERYTHING: 'Click New Event to create your first point',
-  PAST: 'There are no past events now',
-  FUTURE: 'There are no future events now',
-  LOADING: 'Loading...',
-};
+// export const Messages = {
+//   EVERYTHING: 'Click New Event to create your first point',
+//   PAST: 'There are no past events now',
+//   FUTURE: 'There are no future events now',
+//   LOADING: 'Loading...',
+// };
 
 export const Mode = {
   DEFAULT: 'DEFAULT',
@@ -38,8 +24,28 @@ export const Mode = {
 
 export const SortType = {
   DAY: 'day',
+  EVENT: 'event',
   TIME: 'time',
   PRICE: 'price',
+  OFFERS: 'offers',
+};
+
+export const UserAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export const FilterType = {
+  EVERYTHING: 'everything',
+  FUTURE: 'future',
+  PAST: 'past',
 };
 
 export const MAX_NUMBER_OF_CITIES = 3;
