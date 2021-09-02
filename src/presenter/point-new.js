@@ -9,13 +9,16 @@ export default class PointNew {
     this._changeData = changeData;
 
     this._editPointComponent = null;
+    this._destroyCallback = null;
 
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleSubmitClick = this._handleSubmitClick.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
-  init() {
+  init(callback) {
+    this._destroyCallback = callback;
+
     if (this._editPointComponent !== null) {
       return;
     }
@@ -31,6 +34,10 @@ export default class PointNew {
   destroy() {
     if (this._editPointComponent === null) {
       return;
+    }
+
+    if (this._destroyCallback !== null) {
+      this._destroyCallback();
     }
 
     remove(this._editPointComponent);
@@ -50,7 +57,7 @@ export default class PointNew {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {...point, id: nanoid()},
+      {id: nanoid(),...point},
     );
 
     this.destroy();

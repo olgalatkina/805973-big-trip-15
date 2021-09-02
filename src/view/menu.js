@@ -35,7 +35,7 @@ export default class SiteMenu extends AbstractView {
     // console.log(activeItem);
     const items = this.getElement().querySelectorAll('.trip-tabs__btn');
     items.array.forEach((item) => item.classList.remove('trip-tabs__btn--active'));
-    // console.log(items);
+    // console.log(items); проверить toggle
     activeItem.classList.add('trip-tabs__btn--active');
   }
 }

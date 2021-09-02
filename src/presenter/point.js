@@ -108,7 +108,6 @@ export default class Point {
   }
 
   _handleSubmitClick(point) {
-    // TODO: если newPoint -> UpdateType.MAJOR
     this._changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,

@@ -186,8 +186,10 @@ export default class EditPoint extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    if (this._isEdit) {
+      this.setRollUpClickHandler(this._callback.rollUpClick);
+    }
     this.setSubmitClickHandler(this._callback.submitClick);
-    this.setRollUpClickHandler(this._callback.rollUpClick);
     this.setDeleteClickHandler(this._callback.deleteClick);
   }
 

@@ -11,7 +11,7 @@ import FilterPresenter from './presenter/filter';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 
-const EVENT_COUNT = 7;
+const EVENT_COUNT = 10;
 const data = new Array(EVENT_COUNT).fill().map(generateEvent);
 
 const pointsModel = new PointsModel();
@@ -31,7 +31,8 @@ render(controls, menuComponent, RenderPosition.AFTERBEGIN);
 const filterPresenter = new FilterPresenter(controls, filterModel, pointsModel);
 filterPresenter.init();
 
-render(headerContainer, new ButtonNewEventView(), RenderPosition.BEFOREEND);
+const btnNewEventComponent = new ButtonNewEventView();
+render(headerContainer, btnNewEventComponent, RenderPosition.BEFOREEND);
 data.length ? render(headerContainer, new InfoView(data), RenderPosition.AFTERBEGIN) : '';
 
 //MAIN
@@ -42,8 +43,8 @@ tripPresenter.init();
 
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
   evt.preventDefault();
-  // console.log(evt.target.innerText);
   tripPresenter.createPoint();
+  btnNewEventComponent.getElement().disabled = true;
 });
 
 const handleSiteMenuClick = (menuItem) => {
