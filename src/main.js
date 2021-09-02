@@ -1,6 +1,6 @@
 
 import { generateEvent } from './mock/event';
-import { render, RenderPosition } from './utils/render';
+import { render, RenderPosition, remove } from './utils/render';
 import { MenuItem } from './const';
 import ControlsView from './view/controls';
 import MenuView from './view/menu';
@@ -47,7 +47,6 @@ const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
 const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel);
 tripPresenter.init();
-render(siteMainElement, new StatisticsView(pointsModel.getPoints()), RenderPosition.BEFOREEND);
 
 const handleEventNewFormClose = () => {
   btnNewEventComponent.getElement().disabled = false;
@@ -59,18 +58,21 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   btnNewEventComponent.getElement().disabled = true;
 });
 
+let statisticsComponent = null;
+
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
-      // tripPresenter.destroy();
+      tripPresenter.destroy(); // иначе размножается сортировка
       tripPresenter.init();
-      // Скрыть статистику
+      remove(statisticsComponent);
       menuComponent.setMenuItem(menuItem);
       btnNewEventComponent.getElement().disabled = false;
       break;
     case MenuItem.STATS:
       tripPresenter.destroy();
-      // Показать статистику
+      statisticsComponent = new StatisticsView(pointsModel.getPoints());
+      render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
       menuComponent.setMenuItem(menuItem);
       btnNewEventComponent.getElement().disabled = true;
       break;
