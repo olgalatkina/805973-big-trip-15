@@ -6,13 +6,20 @@ import ControlsView from './view/controls';
 import MenuView from './view/menu';
 import ButtonNewEventView from './view/btn-new-point';
 import InfoView from './view/info';
+import StatisticsView from './view/stats';
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 
-const EVENT_COUNT = 3;
+// import { calculateMoney, calculateType, calculateTime } from './utils/stats';
+
+const EVENT_COUNT = 13;
 const data = new Array(EVENT_COUNT).fill().map(generateEvent);
+// console.log(data);
+// console.log(calculateMoney(data));
+// console.log(calculateType(data));
+// console.log(calculateTime(data));
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(data);
@@ -40,6 +47,7 @@ const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
 const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel);
 tripPresenter.init();
+render(siteMainElement, new StatisticsView(pointsModel.getPoints()), RenderPosition.BEFOREEND);
 
 const handleEventNewFormClose = () => {
   btnNewEventComponent.getElement().disabled = false;
