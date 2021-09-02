@@ -5,16 +5,16 @@ import { MenuItem } from './const';
 import ControlsView from './view/controls';
 import MenuView from './view/menu';
 import ButtonNewEventView from './view/btn-new-point';
-import InfoView from './view/info';
 import StatisticsView from './view/stats';
 import TripPresenter from './presenter/trip';
 import FilterPresenter from './presenter/filter';
+import InfoPresenter from './presenter/info';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 
 // import { calculateMoney, calculateType, calculateTime } from './utils/stats';
 
-const EVENT_COUNT = 13;
+const EVENT_COUNT = 10;
 const data = new Array(EVENT_COUNT).fill().map(generateEvent);
 // console.log(data);
 // console.log(calculateMoney(data));
@@ -40,7 +40,9 @@ filterPresenter.init();
 
 const btnNewEventComponent = new ButtonNewEventView();
 render(headerContainer, btnNewEventComponent, RenderPosition.BEFOREEND);
-data.length ? render(headerContainer, new InfoView(data), RenderPosition.AFTERBEGIN) : '';
+
+const infoPresenter = new InfoPresenter(headerContainer, pointsModel);
+infoPresenter.init();
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');

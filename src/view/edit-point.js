@@ -275,6 +275,7 @@ export default class EditPoint extends SmartView {
 
   _changePriceHandler(evt) {
     evt.preventDefault();
+    // console.log(evt.target.value);
     this.updateState({basePrice: evt.target.value}, true);
   }
 
