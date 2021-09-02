@@ -68,14 +68,12 @@ const handleSiteMenuClick = (menuItem) => {
       tripPresenter.destroy(); // иначе размножается сортировка
       tripPresenter.init();
       remove(statisticsComponent);
-      menuComponent.setMenuItem(menuItem);
       btnNewEventComponent.getElement().disabled = false;
       break;
     case MenuItem.STATS:
       tripPresenter.destroy();
       statisticsComponent = new StatisticsView(pointsModel.getPoints());
       render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
-      menuComponent.setMenuItem(menuItem);
       btnNewEventComponent.getElement().disabled = true;
       break;
   }
