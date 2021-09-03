@@ -52,6 +52,8 @@ const createOfferTemplate = (type, offers) => {
         type="checkbox"
         name="event-offer-${idx}"
         ${isOfferSelected ? 'checked' : ''}
+        data-title = "${offer.title}"
+        data-price = "${offer.price}"
       >
       <label class="event__offer-label" for="event-offer-${idx}">
         <span class="event__offer-title">${offer.title}</span>
@@ -166,6 +168,7 @@ export default class EditPoint extends SmartView {
     this._changeCityHandler = this._changeCityHandler.bind(this);
     this._changeTypeHandler = this._changeTypeHandler.bind(this);
     this._changePriceHandler = this._changePriceHandler.bind(this);
+    this._changeOffersHandler = this._changeOffersHandler.bind(this);
 
     this._timeFromHandler = this._timeFromHandler.bind(this);
     this._timeToHandler = this._timeToHandler.bind(this);
@@ -246,6 +249,7 @@ export default class EditPoint extends SmartView {
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._changeTypeHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._changePriceHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('focus', this._focusCitySelectionHandler);
+    this.getElement().querySelector('.event__section--offers').addEventListener('change', this._changeOffersHandler);
     this._setDatePicker();
   }
 
@@ -276,6 +280,15 @@ export default class EditPoint extends SmartView {
   _changePriceHandler(evt) {
     evt.preventDefault();
     this.updateState({basePrice: Number(evt.target.value)}, true);
+  }
+
+  _changeOffersHandler(evt) {
+    const { price, title } = evt.target.dataset;
+    this.updateState({
+      offers: evt.target.checked
+        ? [...this._state.offers, {title, price: Number(price)}]
+        : [...this._state.offers.filter((offer) => offer.title !== title)],
+    });
   }
 
   _rollUpClickHandler(evt) {
