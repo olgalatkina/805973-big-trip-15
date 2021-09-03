@@ -27,7 +27,7 @@ export const gapToString = ({days, hours, minutes}) => {
   }
 };
 
-export const getDiff = (start, end) =>  dayjs(dayjs(end).diff(dayjs(start)));
+export const getDiff = (start, end) => dayjs(end).diff(dayjs(start));
 export const diffToString = (diff) => gapToString(dayjs.duration(diff).$d);
 
 export const getActualDate = () => dayjs().toDate();

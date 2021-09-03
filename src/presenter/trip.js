@@ -102,7 +102,7 @@ export default class Trip {
 
   _renderPoint(point) {
     const pointPresenter = new PointPresenter(this._pointListComponent, this._handleViewAction, this._handleModeChange);
-    pointPresenter.init(point); // есть ли id в данных с сервера?
+    pointPresenter.init(point);
     this._pointPresenters.set(point.id, pointPresenter);
   }
 

@@ -33,7 +33,6 @@ export default class Sort extends AbstractView {
   }
 
   _sortTypeChangeHandler(evt) {
-    // evt.preventDefault();
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   }
 

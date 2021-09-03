@@ -12,14 +12,8 @@ import InfoPresenter from './presenter/info';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 
-// import { calculateMoney, calculateType, calculateTime } from './utils/stats';
-
 const EVENT_COUNT = 10;
 const data = new Array(EVENT_COUNT).fill().map(generateEvent);
-// console.log(data);
-// console.log(calculateMoney(data));
-// console.log(calculateType(data));
-// console.log(calculateTime(data));
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(data);
@@ -65,7 +59,7 @@ let statisticsComponent = null;
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
-      tripPresenter.destroy(); // иначе размножается сортировка
+      tripPresenter.destroy();
       tripPresenter.init();
       remove(statisticsComponent);
       filterPresenter.removeDisabled();
