@@ -3,6 +3,7 @@ import { render, RenderPosition, remove } from '../utils/render';
 import { compareByPrice, compareByStartTime, compareByDuration } from '../utils/common';
 import { filter } from '../utils/date';
 import TripView from '../view/trip';
+import LoadingView from '../view/loading';
 import MessageView from '../view/message';
 import SortView from '../view/sort';
 import PointListView from '../view/point-list';
@@ -17,12 +18,13 @@ export default class Trip {
     this._filterType = FilterType.EVERYTHING;
     this._currentSortType = SortType.DAY;
     this._pointPresenters = new Map();
-
+    this._isLoading = true;
 
     this._tripComponent = new TripView();
+    this._pointListComponent = new PointListView();
+    this._loadingComponent = new LoadingView();
     this._messageComponent = null;
     this._sortComponent = null;
-    this._pointListComponent = new PointListView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -76,10 +78,16 @@ export default class Trip {
   }
 
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     if (!this._getPoints().length) {
       this._renderMessage();
       return;
     }
+
     this._renderSort();
     this._renderPointList();
   }
@@ -110,12 +118,17 @@ export default class Trip {
     this._getPoints().forEach((point) => this._renderPoint(point));
   }
 
+  _renderLoading() {
+    render(this._tripComponent, this._loadingComponent, RenderPosition.BEFOREEND);
+  }
+
   _clearTrip({resetSortType = false} = {}) {
     this._pointNewPresenter.destroy();
     this._pointPresenters.forEach((presenter) => presenter.destroy());
     this._pointPresenters.clear();
 
     remove(this._sortComponent);
+    remove(this._loadingComponent);
 
     if (this._messageComponent) {
       remove(this._messageComponent);
@@ -151,6 +164,11 @@ export default class Trip {
         break;
       case UpdateType.MAJOR:
         this._clearTrip({resetSortType: true});
+        this._renderTrip();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
         this._renderTrip();
         break;
     }

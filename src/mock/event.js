@@ -54,7 +54,7 @@ export const POINTS = [
     'type':'taxi',
     'id':'36',
     'offers':[
-      {'title':'Choose the radio station','price':30}
+      {'title':'Choose the radio station','price':30},
     ],
     'destination':{
       'description':'Chamonix, for those who value comfort and coziness, with an embankment of a mighty river as a centre of attraction, full of of cozy canteens where you can try the best coffee in the Middle East.',
@@ -67,6 +67,50 @@ export const POINTS = [
         {'src':'http://picsum.photos/300/200?r=0.232413129206684','description':'Chamonix parliament building'},
       ],
     },
+  },{
+    'type': 'taxi',
+    'offers': [
+      {
+        'title': 'Choose the radio station',
+        'price': 30,
+      },
+      {
+        'title': 'Drive slowly',
+        'price': 110,
+      },
+    ],
+    'destination': {
+      'name': 'Chamonix',
+      'description': 'Chamonix, for those who value comfort and coziness, with an embankment of a mighty river as a centre of attraction, full of of cozy canteens where you can try the best coffee in the Middle East.',
+      'pictures': [
+        {
+          'src': 'http://picsum.photos/300/200?r=0.45476391526901105',
+          'description': 'Chamonix embankment',
+        },
+        {
+          'src': 'http://picsum.photos/300/200?r=0.566758784955685',
+          'description': 'Chamonix city centre',
+        },
+        {
+          'src': 'http://picsum.photos/300/200?r=0.3594335201582288',
+          'description': 'Chamonix city centre',
+        },
+        {
+          'src': 'http://picsum.photos/300/200?r=0.015965298341432232',
+          'description': 'Chamonix kindergarten',
+        },
+        {
+          'src': 'http://picsum.photos/300/200?r=0.232413129206684',
+          'description': 'Chamonix parliament building',
+        },
+      ],
+    },
+    'hasCityName': true,
+    'id': '37',
+    'basePrice': 55,
+    'dateFrom': '2021-09-03T18:07:05.740Z',
+    'dateTo': '2021-09-03T18:07:05.740Z',
+    'isFavorite': false,
   },
 ];
 
