@@ -1,8 +1,6 @@
-
-import { generateEvent } from './mock/event';
 import Api from './api.js';
 import { render, RenderPosition, remove } from './utils/render';
-import { MenuItem } from './const';
+import { MenuItem, UpdateType } from './const';
 import ControlsView from './view/controls';
 import MenuView from './view/menu';
 import ButtonNewEventView from './view/btn-new-point';
@@ -13,21 +11,11 @@ import InfoPresenter from './presenter/info';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 
-const EVENT_COUNT = 10;
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
 
-const data = new Array(EVENT_COUNT).fill().map(generateEvent);
-console.log(data);
 const api = new Api(END_POINT, AUTHORIZATION);
-
-api.getPoints().then((points) => {
-  console.log(points);
-});
-
 const pointsModel = new PointsModel();
-pointsModel.setPoints(data);
-
 const filterModel = new FilterModel();
 
 // HEADER
@@ -35,24 +23,17 @@ const siteHeaderElement = document.querySelector('.page-header');
 const headerContainer = siteHeaderElement.querySelector('.trip-main');
 const controls = new ControlsView();
 render(headerContainer, controls, RenderPosition.BEFOREEND);
-
 const menuComponent = new MenuView();
 render(controls, menuComponent, RenderPosition.AFTERBEGIN);
-
 const filterPresenter = new FilterPresenter(controls, filterModel, pointsModel);
-filterPresenter.init();
-
 const btnNewEventComponent = new ButtonNewEventView();
 render(headerContainer, btnNewEventComponent, RenderPosition.BEFOREEND);
-
 const infoPresenter = new InfoPresenter(headerContainer, pointsModel);
-infoPresenter.init();
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
 const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel);
-tripPresenter.init();
 
 const handleEventNewFormClose = () => {
   btnNewEventComponent.getElement().disabled = false;
@@ -86,3 +67,16 @@ const handleSiteMenuClick = (menuItem) => {
 };
 
 menuComponent.setMenuClickHandler(handleSiteMenuClick);
+
+filterPresenter.init();
+infoPresenter.init();
+tripPresenter.init();
+
+api.getPoints()
+  .then((points) => {
+    pointsModel.setPoints(UpdateType.INIT, points);
+    console.log(points);
+  })
+  .catch(() => {
+    pointsModel.setPoints(UpdateType.INIT, []);
+  });

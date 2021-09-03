@@ -42,7 +42,7 @@ export default class Api {
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(Api.checkStatus)
-      .then(Api.catchError);
+      .catch(Api.catchError);
   }
 
   static checkStatus(response) {
