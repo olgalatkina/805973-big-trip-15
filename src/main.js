@@ -1,5 +1,6 @@
 
 import { generateEvent } from './mock/event';
+import Api from './api.js';
 import { render, RenderPosition, remove } from './utils/render';
 import { MenuItem } from './const';
 import ControlsView from './view/controls';
@@ -13,7 +14,19 @@ import PointsModel from './model/points';
 import FilterModel from './model/filter';
 
 const EVENT_COUNT = 10;
+const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
+const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
+
 const data = new Array(EVENT_COUNT).fill().map(generateEvent);
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getPoints().then((points) => {
+  console.log(points);
+  // Есть проблема: cтруктура объекта похожа, но некоторые ключи называются иначе,
+  // а ещё на сервере используется snake_case, а у нас camelCase.
+  // Можно, конечно, переписать часть нашего клиентского приложения, но зачем?
+  // Есть вариант получше - паттерн "Адаптер"
+});
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(data);

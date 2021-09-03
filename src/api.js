@@ -8,9 +8,6 @@ const Method = {
 //   MAX: 299,
 // };
 
-// const END_POINT = 'https://15.ecmascript.pages.academy/big-trip/';
-// const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
-
 export default class Api {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
