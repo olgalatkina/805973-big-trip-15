@@ -24,7 +24,7 @@ const headerContainer = siteHeaderElement.querySelector('.trip-main');
 const controls = new ControlsView();
 render(headerContainer, controls, RenderPosition.BEFOREEND);
 const menuComponent = new MenuView();
-render(controls, menuComponent, RenderPosition.AFTERBEGIN);
+// render(controls, menuComponent, RenderPosition.AFTERBEGIN);
 const filterPresenter = new FilterPresenter(controls, filterModel, pointsModel);
 const btnNewEventComponent = new ButtonNewEventView();
 render(headerContainer, btnNewEventComponent, RenderPosition.BEFOREEND);
@@ -66,7 +66,7 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-menuComponent.setMenuClickHandler(handleSiteMenuClick);
+// menuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
 infoPresenter.init();
@@ -75,8 +75,13 @@ tripPresenter.init();
 api.getPoints()
   .then((points) => {
     pointsModel.setPoints(UpdateType.INIT, points);
-    console.log(points);
+    // console.log(points);
+
+    render(controls, menuComponent, RenderPosition.AFTERBEGIN);
+    menuComponent.setMenuClickHandler(handleSiteMenuClick);
   })
   .catch(() => {
     pointsModel.setPoints(UpdateType.INIT, []);
+    render(controls, menuComponent, RenderPosition.AFTERBEGIN);
+    menuComponent.setMenuClickHandler(handleSiteMenuClick);
   });
