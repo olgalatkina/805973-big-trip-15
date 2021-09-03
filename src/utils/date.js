@@ -17,9 +17,7 @@ export const getGap = (start, end) => dayjs.duration(dayjs(end).diff(dayjs(start
 
 const getZeroSubStr = (number) => (number < 10) ? `0${number}` : `${number}`;
 
-export const gapToString = (diff) => {
-  const {days, hours, minutes} = diff;
-
+export const gapToString = ({days, hours, minutes}) => {
   if (days > 0) {
     return `${getZeroSubStr(days)}D ${getZeroSubStr(hours)}H ${getZeroSubStr(minutes)}M`;
   } else if (hours > 0) {
@@ -28,6 +26,9 @@ export const gapToString = (diff) => {
     return `${getZeroSubStr(minutes)}M`;
   }
 };
+
+export const getDiff = (start, end) =>  dayjs(dayjs(end).diff(dayjs(start)));
+export const diffToString = (diff) => gapToString(dayjs.duration(diff).$d);
 
 export const getActualDate = () => dayjs().toDate();
 

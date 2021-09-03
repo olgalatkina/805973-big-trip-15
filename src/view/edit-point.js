@@ -52,6 +52,8 @@ const createOfferTemplate = (type, offers) => {
         type="checkbox"
         name="event-offer-${idx}"
         ${isOfferSelected ? 'checked' : ''}
+        data-title = "${offer.title}"
+        data-price = "${offer.price}"
       >
       <label class="event__offer-label" for="event-offer-${idx}">
         <span class="event__offer-title">${offer.title}</span>
@@ -72,9 +74,6 @@ const createPhotoContainerTemplate = ({pictures}) => (
   </div>`
 );
 
-// const reg = /\d*/;
-// type="text" pattern="${reg}"
-
 const createEditPointTemplate = ({
   type,
   destination,
@@ -85,7 +84,7 @@ const createEditPointTemplate = ({
   isDescription,
   isPictures,
   isOffers,
-}) => (
+}, isEdit) => (
   `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
       <header class="event__header">
@@ -131,10 +130,10 @@ const createEditPointTemplate = ({
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
-        <button class="event__rollup-btn" type="button">
+        <button class="event__reset-btn" type="reset">${isEdit ? 'Delete' : 'Cancel'}</button>
+        ${isEdit ? `<button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
-        </button>
+        </button>` : ''}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">
@@ -155,9 +154,10 @@ const createEditPointTemplate = ({
 );
 
 export default class EditPoint extends SmartView {
-  constructor(point = BLANK_POINT) {
+  constructor(point = BLANK_POINT, isEdit = false) {
     super();
     this._state = EditPoint.parsePointToState(point);
+    this._isEdit = isEdit;
     this._datepickerStart = null;
     this._datepickerEnd = null;
 
@@ -168,6 +168,7 @@ export default class EditPoint extends SmartView {
     this._changeCityHandler = this._changeCityHandler.bind(this);
     this._changeTypeHandler = this._changeTypeHandler.bind(this);
     this._changePriceHandler = this._changePriceHandler.bind(this);
+    this._changeOffersHandler = this._changeOffersHandler.bind(this);
 
     this._timeFromHandler = this._timeFromHandler.bind(this);
     this._timeToHandler = this._timeToHandler.bind(this);
@@ -177,7 +178,7 @@ export default class EditPoint extends SmartView {
   }
 
   getTemplate() {
-    return createEditPointTemplate(this._state);
+    return createEditPointTemplate(this._state, this._isEdit);
   }
 
   reset(point) {
@@ -188,8 +189,10 @@ export default class EditPoint extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
+    if (this._isEdit) {
+      this.setRollUpClickHandler(this._callback.rollUpClick);
+    }
     this.setSubmitClickHandler(this._callback.submitClick);
-    this.setRollUpClickHandler(this._callback.rollUpClick);
     this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
@@ -246,6 +249,7 @@ export default class EditPoint extends SmartView {
     this.getElement().querySelector('.event__type-group').addEventListener('change', this._changeTypeHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._changePriceHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('focus', this._focusCitySelectionHandler);
+    this.getElement().querySelector('.event__section--offers').addEventListener('change', this._changeOffersHandler);
     this._setDatePicker();
   }
 
@@ -275,9 +279,16 @@ export default class EditPoint extends SmartView {
 
   _changePriceHandler(evt) {
     evt.preventDefault();
-    // TODO: проверка is number
-    // evt.target.value = evt.target.value.replace(/[^0-9]/g, '');
-    this.updateState({basePrice: evt.target.value});
+    this.updateState({basePrice: Number(evt.target.value)}, true);
+  }
+
+  _changeOffersHandler(evt) {
+    const { price, title } = evt.target.dataset;
+    this.updateState({
+      offers: evt.target.checked
+        ? [...this._state.offers, {title, price: Number(price)}]
+        : [...this._state.offers.filter((offer) => offer.title !== title)],
+    });
   }
 
   _rollUpClickHandler(evt) {

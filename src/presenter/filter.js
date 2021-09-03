@@ -47,4 +47,14 @@ export default class Filter {
 
     this._filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
+
+  setDisabled() {
+    const filters = document.querySelectorAll('.trip-filters__filter-input');
+    filters.forEach((filter) => filter.setAttribute('disabled', 'disabled'));
+  }
+
+  removeDisabled() {
+    const filters = document.querySelectorAll('.trip-filters__filter-input');
+    filters.forEach((filter) => filter.removeAttribute('disabled'));
+  }
 }
