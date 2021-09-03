@@ -24,7 +24,6 @@ const headerContainer = siteHeaderElement.querySelector('.trip-main');
 const controls = new ControlsView();
 render(headerContainer, controls, RenderPosition.BEFOREEND);
 const menuComponent = new MenuView();
-// render(controls, menuComponent, RenderPosition.AFTERBEGIN);
 const filterPresenter = new FilterPresenter(controls, filterModel, pointsModel);
 const btnNewEventComponent = new ButtonNewEventView();
 render(headerContainer, btnNewEventComponent, RenderPosition.BEFOREEND);
@@ -33,7 +32,7 @@ const infoPresenter = new InfoPresenter(headerContainer, pointsModel);
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
-const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel);
+const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel, api);
 
 const handleEventNewFormClose = () => {
   btnNewEventComponent.getElement().disabled = false;
@@ -66,9 +65,6 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-// menuComponent.setMenuClickHandler(handleSiteMenuClick);
-
-filterPresenter.init();
 infoPresenter.init();
 tripPresenter.init();
 
@@ -76,12 +72,13 @@ api.getPoints()
   .then((points) => {
     pointsModel.setPoints(UpdateType.INIT, points);
     // console.log(points);
-
+    filterPresenter.init();
     render(controls, menuComponent, RenderPosition.AFTERBEGIN);
     menuComponent.setMenuClickHandler(handleSiteMenuClick);
   })
   .catch(() => {
     pointsModel.setPoints(UpdateType.INIT, []);
+    filterPresenter.init();
     render(controls, menuComponent, RenderPosition.AFTERBEGIN);
     menuComponent.setMenuClickHandler(handleSiteMenuClick);
   });

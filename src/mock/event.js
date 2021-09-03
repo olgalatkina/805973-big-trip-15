@@ -70,39 +70,18 @@ export const POINTS = [
   },{
     'type': 'taxi',
     'offers': [
-      {
-        'title': 'Choose the radio station',
-        'price': 30,
-      },
-      {
-        'title': 'Drive slowly',
-        'price': 110,
-      },
+      {'title': 'Choose the radio station','price': 30},
+      {'title': 'Drive slowly','price': 110},
     ],
     'destination': {
       'name': 'Chamonix',
       'description': 'Chamonix, for those who value comfort and coziness, with an embankment of a mighty river as a centre of attraction, full of of cozy canteens where you can try the best coffee in the Middle East.',
       'pictures': [
-        {
-          'src': 'http://picsum.photos/300/200?r=0.45476391526901105',
-          'description': 'Chamonix embankment',
-        },
-        {
-          'src': 'http://picsum.photos/300/200?r=0.566758784955685',
-          'description': 'Chamonix city centre',
-        },
-        {
-          'src': 'http://picsum.photos/300/200?r=0.3594335201582288',
-          'description': 'Chamonix city centre',
-        },
-        {
-          'src': 'http://picsum.photos/300/200?r=0.015965298341432232',
-          'description': 'Chamonix kindergarten',
-        },
-        {
-          'src': 'http://picsum.photos/300/200?r=0.232413129206684',
-          'description': 'Chamonix parliament building',
-        },
+        {'src': 'http://picsum.photos/300/200?r=0.45476391526901105','description': 'Chamonix embankment'},
+        {'src': 'http://picsum.photos/300/200?r=0.566758784955685','description': 'Chamonix city centre'},
+        {'src': 'http://picsum.photos/300/200?r=0.3594335201582288','description': 'Chamonix city centre'},
+        {'src': 'http://picsum.photos/300/200?r=0.015965298341432232','description': 'Chamonix kindergarten'},
+        {'src': 'http://picsum.photos/300/200?r=0.232413129206684','description': 'Chamonix parliament building'},
       ],
     },
     'hasCityName': true,
@@ -110,6 +89,28 @@ export const POINTS = [
     'basePrice': 55,
     'dateFrom': '2021-09-03T18:07:05.740Z',
     'dateTo': '2021-09-03T18:07:05.740Z',
+    'isFavorite': false,
+  },{
+    'type': 'taxi',
+    'offers': [
+      {'title': 'Upgrade to a business class','price': 190},
+      {'title': 'Drive quickly, I\'m in a hurry','price': 100},
+    ],
+    'destination': {
+      'name': 'Chamonix',
+      'description': 'Chamonix, for those who value comfort and coziness, with an embankment of a mighty river as a centre of attraction, full of of cozy canteens where you can try the best coffee in the Middle East.',
+      'pictures': [
+        {'src': 'http://picsum.photos/300/200?r=0.45476391526901105','description': 'Chamonix embankment'},
+        {'src': 'http://picsum.photos/300/200?r=0.566758784955685','description': 'Chamonix city centre'},
+        {'src': 'http://picsum.photos/300/200?r=0.3594335201582288','description': 'Chamonix city centre'},
+        {'src': 'http://picsum.photos/300/200?r=0.015965298341432232','description': 'Chamonix kindergarten'},
+        {'src': 'http://picsum.photos/300/200?r=0.232413129206684','description': 'Chamonix parliament building'},
+      ],
+    },
+    'id': '45',
+    'basePrice': 500,
+    'dateFrom': '2021-09-03T18:36:28.963Z',
+    'dateTo': '2021-09-03T18:51:00.000Z',
     'isFavorite': false,
   },
 ];
