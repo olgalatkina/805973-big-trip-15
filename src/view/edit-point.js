@@ -35,10 +35,7 @@ const createIconList = (type, types) => (
 );
 
 const createOptionTemplate = (city) => `<option value="${city}"></option>`;
-const createDestinationsTemplate = (dest) => {
-  const Destinations = dest.map((item) => item.name).reduce((acc, city) => ({...acc, [city.toUpperCase()]: city}), {});
-  return Object.values(Destinations).map(createOptionTemplate).join('');
-};
+const createDestinationsTemplate = (dest) => dest.map((item) => item.name).map(createOptionTemplate).join('');
 
 const createOfferTemplate = (type, offers, OFFERS) => {
   const allOffers = getOffersByType(type, OFFERS);

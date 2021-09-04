@@ -40,9 +40,8 @@ export default class Api {
       this.getOffers(),
       this.getDestinations(),
       this.getPoints(),
-    ]).catch((err) => {
-      throw new Error(err);
-    });
+    ])
+      .catch(Api.catchError);
   }
 
   updatePoint(point) {
