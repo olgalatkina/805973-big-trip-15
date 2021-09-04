@@ -4,10 +4,12 @@ import { remove, render, RenderPosition, replace } from '../utils/render';
 import { Mode, UserAction, UpdateType } from '../const';
 
 export default class Point {
-  constructor(pointList, changeData, changeMode) {
+  constructor(pointList, changeData, changeMode, offersModel, destinationsModel) {
     this._pointListContainer = pointList;
     this._changeData = changeData;
     this._changeMode = changeMode;
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
 
     this._pointComponent = null;
     this._editPointComponent = null;
@@ -27,8 +29,11 @@ export default class Point {
     const prevPointComponent = this._pointComponent;
     const prevEditPointComponent = this._pointComponent;
 
+    const offers = this._offersModel.getOffers();
+    const destinations = this._destinationsModel.getDestinations();
+
     this._pointComponent = new PointView(point);
-    this._editPointComponent = new EditPointView(point, true);
+    this._editPointComponent = new EditPointView(offers, destinations, point, true);
 
     this._pointComponent.setRollDownClickHandler(this._handleRollDownClick);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);

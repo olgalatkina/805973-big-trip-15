@@ -37,7 +37,7 @@ const infoPresenter = new InfoPresenter(headerContainer, pointsModel);
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
-const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel, api);
+const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel, api, offersModel, destinationsModel);
 
 const handleEventNewFormClose = () => {
   btnNewEventComponent.getElement().disabled = false;
@@ -73,19 +73,19 @@ const handleSiteMenuClick = (menuItem) => {
 infoPresenter.init();
 tripPresenter.init();
 
-api.getOffers().then((offers) => offersModel.setOffers(offers)).catch((err) => console.log(err));
-api.getDestinations().then((dest) => destinationsModel.setDestinations(dest)).catch((err) => console.log(err));
-
-api.getPoints()
-  .then((points) => {
+api.getData()
+  .then(([offers, dest, points]) => {
+    offersModel.setOffers(offers);
+    destinationsModel.setDestinations(dest);
     pointsModel.setPoints(UpdateType.INIT, points);
+  })
+  .then(() => {
     filterPresenter.init();
     btnNewEventComponent.getElement().disabled = false;
     render(controls, menuComponent, RenderPosition.AFTERBEGIN);
     menuComponent.setMenuClickHandler(handleSiteMenuClick);
   })
   .catch(() => {
-    pointsModel.setPoints(UpdateType.INIT, []);
     filterPresenter.init();
     btnNewEventComponent.getElement().disabled = false;
     render(controls, menuComponent, RenderPosition.AFTERBEGIN);

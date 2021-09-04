@@ -11,8 +11,10 @@ import PointPresenter from './point';
 import PointNewPresenter from './point-new';
 
 export default class Trip {
-  constructor(bodyContainer, pointsModel, filterModel, api) {
+  constructor(bodyContainer, pointsModel, filterModel, api, offersModel, destinationsModel) {
     this._container = bodyContainer;
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._filterType = FilterType.EVERYTHING;
@@ -32,7 +34,7 @@ export default class Trip {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._pointNewPresenter = new PointNewPresenter(this._pointListComponent, this._handleViewAction);
+    this._pointNewPresenter = new PointNewPresenter(this._pointListComponent, this._handleViewAction, offersModel, destinationsModel);
   }
 
   init() {
@@ -110,7 +112,13 @@ export default class Trip {
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._pointListComponent, this._handleViewAction, this._handleModeChange);
+    const pointPresenter = new PointPresenter(
+      this._pointListComponent,
+      this._handleViewAction,
+      this._handleModeChange,
+      this._offersModel,
+      this._destinationsModel);
+
     pointPresenter.init(point);
     this._pointPresenters.set(point.id, pointPresenter);
   }

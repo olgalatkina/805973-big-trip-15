@@ -35,6 +35,16 @@ export default class Api {
       .then((points) => points.map(PointsModel.adaptToClient));
   }
 
+  getData() {
+    return Promise.all([
+      this.getOffers(),
+      this.getDestinations(),
+      this.getPoints(),
+    ]).catch((err) => {
+      throw new Error(err);
+    });
+  }
+
   updatePoint(point) {
     return this._load({
       url: `points/${point.id}`,

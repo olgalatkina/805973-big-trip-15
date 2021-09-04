@@ -3,13 +3,9 @@ import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { nanoid } from 'nanoid';
 import { Types, CALENDAR_SETTINGS } from '../const';
-import { OFFERS } from '../mock/offers';
-import { DESTINATIONS } from '../mock/dest';
 import { formatDate, getActualDate } from '../utils/date';
 import { getDestination, getOffersByType, getIsDescription, getIsPictures, getIsOffers } from '../utils/common';
 import SmartView from './smart';
-
-const Destinations = DESTINATIONS.map((item) => item.name).reduce((acc, city) => ({...acc, [city.toUpperCase()]: city}), {});
 
 const BLANK_POINT = {
   type: Types.FLIGHT.toLowerCase(),
@@ -39,9 +35,12 @@ const createIconList = (type, types) => (
 );
 
 const createOptionTemplate = (city) => `<option value="${city}"></option>`;
-const createDestinationsTemplate = () => Object.values(Destinations).map(createOptionTemplate).join('');
+const createDestinationsTemplate = (dest) => {
+  const Destinations = dest.map((item) => item.name).reduce((acc, city) => ({...acc, [city.toUpperCase()]: city}), {});
+  return Object.values(Destinations).map(createOptionTemplate).join('');
+};
 
-const createOfferTemplate = (type, offers) => {
+const createOfferTemplate = (type, offers, OFFERS) => {
   const allOffers = getOffersByType(type, OFFERS);
 
   return allOffers.map((offer, idx) => {
@@ -76,7 +75,7 @@ const createPhotoContainerTemplate = ({pictures}) => (
   </div>`
 );
 
-const createEditPointTemplate = ({
+const createEditPointTemplate = (OFFERS, DESTINATIONS, {
   type,
   destination,
   dateFrom,
@@ -111,7 +110,7 @@ const createEditPointTemplate = ({
           </label>
           <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(destination.name)}" list="destination-list-1">
           <datalist id="destination-list-1">
-            ${createDestinationsTemplate()}
+            ${createDestinationsTemplate(DESTINATIONS)}
           </datalist>
         </div>
 
@@ -141,7 +140,7 @@ const createEditPointTemplate = ({
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers ${isOffers ? '' : 'visually-hidden'}">Offers</h3>
           <div class="event__available-offers">
-            ${createOfferTemplate(type, offers)}
+            ${createOfferTemplate(type, offers, OFFERS)}
           </div>
         </section>
 
@@ -156,9 +155,11 @@ const createEditPointTemplate = ({
 );
 
 export default class EditPoint extends SmartView {
-  constructor(point = BLANK_POINT, isEdit = false) {
+  constructor(OFFERS, DESTINATIONS, point = BLANK_POINT, isEdit = false) {
     super();
-    this._state = EditPoint.parsePointToState(point);
+    this._offers = OFFERS;
+    this._destinations = DESTINATIONS;
+    this._state = EditPoint.parsePointToState(this, point);
     this._isEdit = isEdit;
     this._datepickerStart = null;
     this._datepickerEnd = null;
@@ -180,7 +181,7 @@ export default class EditPoint extends SmartView {
   }
 
   getTemplate() {
-    return createEditPointTemplate(this._state, this._isEdit);
+    return createEditPointTemplate(this._offers, this._destinations, this._state, this._isEdit);
   }
 
   reset(point) {
@@ -264,9 +265,9 @@ export default class EditPoint extends SmartView {
   _changeCityHandler(evt) {
     evt.preventDefault();
     this.updateState({
-      destination: getDestination(evt.target.value, DESTINATIONS),
-      isDescription: getIsDescription(evt.target.value, DESTINATIONS),
-      isPictures: getIsPictures(evt.target.value, DESTINATIONS),
+      destination: getDestination(evt.target.value, this._destinations),
+      isDescription: getIsDescription(evt.target.value, this._destinations),
+      isPictures: getIsPictures(evt.target.value, this._destinations),
     });
   }
 
@@ -275,7 +276,7 @@ export default class EditPoint extends SmartView {
     this.updateState({
       type: evt.target.value,
       offers: [],
-      isOffers: getIsOffers(evt.target.value, OFFERS),
+      isOffers: getIsOffers(evt.target.value, this._offers),
     });
   }
 
@@ -323,12 +324,12 @@ export default class EditPoint extends SmartView {
     this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler);
   }
 
-  static parsePointToState(point) {
+  static parsePointToState(instance, point) {
     return {
       ...point,
       isDescription: Boolean(point.destination.description),
       isPictures: Boolean(point.destination.pictures.length),
-      isOffers: Boolean(getOffersByType(point.type, OFFERS).length),
+      isOffers: Boolean(getOffersByType(point.type, instance._offers).length),
     };
   }
 
