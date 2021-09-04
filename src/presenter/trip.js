@@ -1,4 +1,4 @@
-import { SortType, UserAction, UpdateType, FilterType } from '../const';
+import { SortType, UserAction, UpdateType, FilterType, State as PointPresenterViewState } from '../const';
 import { render, RenderPosition, remove } from '../utils/render';
 import { compareByPrice, compareByStartTime, compareByDuration } from '../utils/common';
 import { filter } from '../utils/date';
@@ -151,16 +151,19 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch(actionType) {
       case UserAction.UPDATE_POINT:
+        this._pointPresenters.get(update.id).setViewState(PointPresenterViewState.SAVING);
         this._api.updatePoint(update).then((response) => {
           this._pointsModel.updatePoint(updateType, response);
         });
         break;
       case UserAction.ADD_POINT:
+        this._pointNewPresenter.setSaving();
         this._api.addPoint(update).then((response) => {
           this._pointsModel.addPoint(updateType, response);
         });
         break;
       case UserAction.DELETE_POINT:
+        this._pointPresenters.get(update.id).setViewState(PointPresenterViewState.DELETING);
         this._api.deletePoint(update).then(() => {
           this._pointsModel.deletePoint(updateType, update);
         });

@@ -70,13 +70,13 @@ export default class Point {
 
     switch (state) {
       case State.SAVING:
-        this._editPointComponent.updateData({
+        this._editPointComponent.updateState({
           isDisabled: true,
           isSaving: true,
         });
         break;
       case State.DELETING:
-        this._editPointComponent.updateData({
+        this._editPointComponent.updateState({
           isDisabled: true,
           isDeleting: true,
         });
