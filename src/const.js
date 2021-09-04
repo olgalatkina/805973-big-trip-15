@@ -15,6 +15,11 @@ export const Mode = {
   EDITING: 'EDITING',
 };
 
+export const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+};
+
 export const SortType = {
   DAY: 'day',
   EVENT: 'event',

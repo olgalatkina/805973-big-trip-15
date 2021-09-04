@@ -22,6 +22,8 @@ const BLANK_POINT = {
   id: nanoid(),
 };
 
+const getFlagValue = (bool) => bool ? 'Deleting' : 'Delete';
+
 const createIconList = (type, types, isDisabled) => (
   Object.values(types).map((eventType, index) => {
     const currentType = eventType.toLowerCase();
@@ -184,7 +186,7 @@ const createEditPointTemplate = (OFFERS, DESTINATIONS, {
         </button>
         <button
           class="event__reset-btn" type="reset"
-          ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}${isEdit ? 'Delete' : 'Cancel'}
+          ${isDisabled ? 'disabled' : ''}>${isEdit ? getFlagValue(isDeleting) : 'Cancel'}
         </button>
         ${isEdit ? `<button
           class="event__rollup-btn"
