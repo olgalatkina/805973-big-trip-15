@@ -5,15 +5,28 @@ const Method = {
   PUT: 'PUT',
 };
 
-// const SuccessHTTPStatusRange = {
-//   MIN: 200,
-//   MAX: 299,
-// };
-
 export default class Api {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
+  }
+
+  getDestinations() {
+    return this._load({
+      url: 'destinations',
+      method: Method.GET,
+    })
+      .then(Api.toJSON)
+      .then((destinations) => [...destinations]);
+  }
+
+  getOffers() {
+    return this._load({
+      url: 'offers',
+      method: Method.GET,
+    })
+      .then(Api.toJSON)
+      .then((offers) => [...offers]);
   }
 
   getPoints() {
@@ -26,10 +39,11 @@ export default class Api {
     return this._load({
       url: `points/${point.id}`,
       method: Method.PUT,
-      body: JSON.stringify(PointsModel.adaptToServer),
+      body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
     })
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then(PointsModel.adaptToClient);
   }
 
   _load({

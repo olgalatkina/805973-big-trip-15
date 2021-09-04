@@ -827,7 +827,7 @@ export const DESTINATIONS = [
   },
 ];
 
-export const Destinations = DESTINATIONS.map((item) => item.name).reduce((acc, city) => ({...acc, [city.toUpperCase()]: city}), {});
+const Destinations = DESTINATIONS.map((item) => item.name).reduce((acc, city) => ({...acc, [city.toUpperCase()]: city}), {});
 
 const generateDescription = () => {
   const descriptions = [

@@ -4,10 +4,12 @@ import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import { nanoid } from 'nanoid';
 import { Types, CALENDAR_SETTINGS } from '../const';
 import { OFFERS } from '../mock/offers';
-import { DESTINATIONS, Destinations } from '../mock/dest';
+import { DESTINATIONS } from '../mock/dest';
 import { formatDate, getActualDate } from '../utils/date';
 import { getDestination, getOffersByType, getIsDescription, getIsPictures, getIsOffers } from '../utils/common';
 import SmartView from './smart';
+
+const Destinations = DESTINATIONS.map((item) => item.name).reduce((acc, city) => ({...acc, [city.toUpperCase()]: city}), {});
 
 const BLANK_POINT = {
   type: Types.FLIGHT.toLowerCase(),
@@ -126,7 +128,7 @@ const createEditPointTemplate = ({
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" min="0" step="10" name="event-price" value="${basePrice}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" min="0" step="1" name="event-price" value="${basePrice}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
