@@ -18,6 +18,7 @@ export const Mode = {
 export const State = {
   SAVING: 'SAVING',
   DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
 };
 
 export const SortType = {
@@ -53,6 +54,8 @@ export const MenuItem = {
 };
 
 export const MAX_NUMBER_OF_CITIES = 3;
+
+export const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export const CALENDAR_SETTINGS = {
   altInput: true,
