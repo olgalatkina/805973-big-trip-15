@@ -82,8 +82,6 @@ export default class PointNew {
       UpdateType.MINOR,
       point,
     );
-
-    this.destroy();
   }
 
   _handleDeleteClick() {
