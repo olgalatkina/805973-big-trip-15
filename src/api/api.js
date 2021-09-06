@@ -1,5 +1,5 @@
 import { Sources } from './const';
-import PointsModel from './model/points';
+import PointsModel from '../model/points';
 
 const Method = {
   GET: 'GET',

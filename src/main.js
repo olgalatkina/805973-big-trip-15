@@ -1,4 +1,4 @@
-import Api from './api.js';
+import Api from './api/api';
 import { render, RenderPosition, remove } from './utils/render';
 import { MenuItem, UpdateType } from './const';
 import ControlsView from './view/controls';
