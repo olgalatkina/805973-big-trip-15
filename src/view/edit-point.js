@@ -1,7 +1,6 @@
 import he from 'he';
 import flatpickr from 'flatpickr';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-import { nanoid } from 'nanoid';
 import { Types, CALENDAR_SETTINGS } from '../const';
 import { formatDate, getActualDate } from '../utils/date';
 import { getDestination, getOffersByType, getIsDescription, getIsPictures, getIsOffers } from '../utils/common';
@@ -10,16 +9,28 @@ import SmartView from './smart';
 const BLANK_POINT = {
   type: Types.FLIGHT.toLowerCase(),
   destination: {
-    name: '',
-    description: '',
-    pictures: [],
+    name: 'Chamonix',
+    description: 'Chamonix, with crowded streets, middle-eastern paradise, with an embankment of a mighty river as a centre of attraction, a perfect place to stay with a family, famous for its crowded street markets with the best street food in Asia.',
+    pictures: [
+      {
+        'src': 'http://picsum.photos/300/200?r=0.961477384126419',
+        'description': 'Chamonix kindergarten',
+      },
+      {
+        'src': 'http://picsum.photos/300/200?r=0.8186866271526865',
+        'description': 'Chamonix parliament building',
+      },
+      {
+        'src': 'http://picsum.photos/300/200?r=0.46713149742733173',
+        'description': 'Chamonix central station',
+      },
+    ],
   },
   offers: [],
   dateFrom: getActualDate(),
   dateTo: getActualDate(),
   basePrice: 0,
   isFavorite: false,
-  id: nanoid(),
 };
 
 const getFlagValue = (bool) => bool ? 'Deleting' : 'Delete';
