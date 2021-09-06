@@ -1,4 +1,3 @@
-import Api from './api/api';
 import { render, RenderPosition, remove } from './utils/render';
 import { MenuItem, UpdateType } from './const';
 import ControlsView from './view/controls';
@@ -12,13 +11,21 @@ import PointsModel from './model/points';
 import FilterModel from './model/filter';
 import OffersModel from './model/offers';
 import DestinationsModel from './model/destinations';
+import Api from './api/api';
+import Store from './api/store';
+import Provider from './api/provider';
 
-// const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
-const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
-// const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
-const AUTHORIZATION = 'Basic b2xhbGE6VGVtcF8xMjM=';
+const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
+// const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
+// const AUTHORIZATION = 'Basic b2xhbGE6VGVtcF8xMjM=';
+const STORE_PREFIX = 'big-trip-localstorage';
+const STORE_VER = 'v15';
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
-const api = new Api(END_POINT, AUTHORIZATION);
+const apiServer = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const api = new Provider(apiServer, store);
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
 const offersModel = new OffersModel();
@@ -82,7 +89,11 @@ const initApp = () => {
   menuComponent.setMenuClickHandler(handleSiteMenuClick);
 };
 
-api.getData()
+Promise.all([
+  api.getOffers(),
+  api.getDestinations(),
+  api.getPoints(),
+])
   .then(([offers, dest, points]) => {
     offersModel.setOffers(offers);
     destinationsModel.setDestinations(dest);
@@ -90,12 +101,21 @@ api.getData()
     initApp();
   })
   .catch(() => {
-    // api.getDestinations().then((dest) => destinationsModel.setDestinations(dest));
-    // api.getOffers().then((offers) => offersModel.setOffers(offers));
+    offersModel.setOffers([]);
+    destinationsModel.setDestinations([]);
     pointsModel.setPoints(UpdateType.INIT, []);
     initApp();
   });
 
 window.addEventListener('load', () => {
   navigator.serviceWorker.register('/sw.js');
+});
+
+window.addEventListener('online', () => {
+  document.title = document.title.replace(' [offline]', '');
+  api.sync();
+});
+
+window.addEventListener('offline', () => {
+  document.title += ' [offline]';
 });
