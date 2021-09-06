@@ -95,3 +95,7 @@ api.getData()
     pointsModel.setPoints(UpdateType.INIT, []);
     initApp();
   });
+
+window.addEventListener('load', () => {
+  navigator.serviceWorker.register('/sw.js');
+});
