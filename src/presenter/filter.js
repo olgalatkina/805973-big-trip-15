@@ -1,6 +1,7 @@
 import FilterView from '../view/filters';
 import { render, RenderPosition, replace, remove } from '../utils/render';
 import { FilterType, UpdateType } from '../const';
+import { filter } from '../utils/date';
 
 export default class Filter {
   constructor(filterContainer, filterModel, pointsModel) {
@@ -33,7 +34,24 @@ export default class Filter {
   }
 
   _getFiltersType() {
-    return Object.values(FilterType);
+    const points = this._pointsModel.getPoints();
+    return [
+      {
+        type: FilterType.EVERYTHING,
+        name: 'everything',
+        count: filter[FilterType.EVERYTHING](points).length,
+      },
+      {
+        type: FilterType.FUTURE,
+        name: 'future',
+        count: filter[FilterType.FUTURE](points).length,
+      },
+      {
+        type: FilterType.PAST,
+        name: 'past',
+        count: filter[FilterType.PAST](points).length,
+      },
+    ];
   }
 
   _handleModelEvent() {
@@ -50,11 +68,11 @@ export default class Filter {
 
   setDisabled() {
     const filters = document.querySelectorAll('.trip-filters__filter-input');
-    filters.forEach((filter) => filter.setAttribute('disabled', 'disabled'));
+    filters.forEach((item) => item.setAttribute('disabled', 'disabled'));
   }
 
   removeDisabled() {
     const filters = document.querySelectorAll('.trip-filters__filter-input');
-    filters.forEach((filter) => filter.removeAttribute('disabled'));
+    filters.forEach((item) => item.removeAttribute('disabled'));
   }
 }

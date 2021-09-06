@@ -1,3 +1,4 @@
+import { Sources } from './const';
 import PointsModel from './model/points';
 
 const Method = {
@@ -15,24 +16,22 @@ export default class Api {
 
   getDestinations() {
     return this._load({
-      url: 'destinations',
+      url: Sources.DESTINATIONS,
       method: Method.GET,
     })
-      .then(Api.toJSON)
-      .then((destinations) => [...destinations]);
+      .then(Api.toJSON);
   }
 
   getOffers() {
     return this._load({
-      url: 'offers',
+      url: Sources.OFFERS,
       method: Method.GET,
     })
-      .then(Api.toJSON)
-      .then((offers) => [...offers]);
+      .then(Api.toJSON);
   }
 
   getPoints() {
-    return this._load({url: 'points'})
+    return this._load({url: Sources.POINTS})
       .then(Api.toJSON)
       .then((points) => points.map(PointsModel.adaptToClient));
   }
@@ -48,7 +47,7 @@ export default class Api {
 
   updatePoint(point) {
     return this._load({
-      url: `points/${point.id}`,
+      url: `${Sources.POINTS}/${point.id}`,
       method: Method.PUT,
       body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
@@ -59,7 +58,7 @@ export default class Api {
 
   addPoint(point) {
     return this._load({
-      url: 'points',
+      url: Sources.POINTS,
       method: Method.POST,
       body: JSON.stringify(PointsModel.adaptToServer(point)),
       headers: new Headers({'Content-Type': 'application/json'}),
@@ -70,7 +69,7 @@ export default class Api {
 
   deletePoint(point) {
     return this._load({
-      url: `points/${point.id}`,
+      url: `${Sources.POINTS}/${point.id}`,
       method: Method.DELETE,
     });
   }

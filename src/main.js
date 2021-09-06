@@ -73,21 +73,23 @@ const handleSiteMenuClick = (menuItem) => {
 infoPresenter.init();
 tripPresenter.init();
 
+const initApp = () => {
+  filterPresenter.init();
+  btnNewEventComponent.getElement().disabled = false;
+  render(controls, menuComponent, RenderPosition.AFTERBEGIN);
+  menuComponent.setMenuClickHandler(handleSiteMenuClick);
+};
+
 api.getData()
   .then(([offers, dest, points]) => {
     offersModel.setOffers(offers);
     destinationsModel.setDestinations(dest);
     pointsModel.setPoints(UpdateType.INIT, points);
-  })
-  .then(() => {
-    filterPresenter.init();
-    btnNewEventComponent.getElement().disabled = false;
-    render(controls, menuComponent, RenderPosition.AFTERBEGIN);
-    menuComponent.setMenuClickHandler(handleSiteMenuClick);
+    initApp();
   })
   .catch(() => {
-    filterPresenter.init();
-    btnNewEventComponent.getElement().disabled = false;
-    render(controls, menuComponent, RenderPosition.AFTERBEGIN);
-    menuComponent.setMenuClickHandler(handleSiteMenuClick);
+    // api.getDestinations().then((dest) => destinationsModel.setDestinations(dest));
+    // api.getOffers().then((offers) => offersModel.setOffers(offers));
+    pointsModel.setPoints(UpdateType.INIT, []);
+    initApp();
   });

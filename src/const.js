@@ -53,6 +53,12 @@ export const MenuItem = {
   STATS: 'Stats',
 };
 
+export const Sources = {
+  POINTS: 'points',
+  OFFERS: 'offers',
+  DESTINATIONS: 'destinations',
+};
+
 export const MAX_NUMBER_OF_CITIES = 3;
 
 export const SHAKE_ANIMATION_TIMEOUT = 600;

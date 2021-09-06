@@ -217,7 +217,7 @@ export default class EditPoint extends SmartView {
     super();
     this._offers = OFFERS;
     this._destinations = DESTINATIONS;
-    this._state = EditPoint.parsePointToState(this, point);
+    this._state = EditPoint.parsePointToState(point);
     this._isEdit = isEdit;
     this._datepickerStart = null;
     this._datepickerEnd = null;
@@ -296,13 +296,13 @@ export default class EditPoint extends SmartView {
   _timeFromHandler([userDate]) {
     this.updateState({
       dateFrom: userDate,
-    });
+    }, true);
   }
 
   _timeToHandler([userDate]) {
     this.updateState({
       dateTo: userDate,
-    });
+    }, true);
   }
 
   _setInnerHandlers() {
@@ -382,12 +382,12 @@ export default class EditPoint extends SmartView {
     this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler);
   }
 
-  static parsePointToState(instance, point) {
+  static parsePointToState(point) {
     return {
       ...point,
       isDescription: Boolean(point.destination.description),
       isPictures: Boolean(point.destination.pictures.length),
-      isOffers: Boolean(getOffersByType(point.type, instance._offers).length),
+      isOffers: Boolean(point.offers.length),
       isDisabled: false,
       isSaving: false,
       isDeleting: false,
