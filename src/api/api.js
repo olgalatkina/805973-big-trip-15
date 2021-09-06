@@ -1,4 +1,4 @@
-import { Sources } from './const';
+import { Sources } from '../const';
 import PointsModel from '../model/points';
 
 const Method = {
