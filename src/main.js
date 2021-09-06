@@ -1,7 +1,6 @@
-
-import { generateEvent } from './mock/event';
+import Api from './api.js';
 import { render, RenderPosition, remove } from './utils/render';
-import { MenuItem } from './const';
+import { MenuItem, UpdateType } from './const';
 import ControlsView from './view/controls';
 import MenuView from './view/menu';
 import ButtonNewEventView from './view/btn-new-point';
@@ -11,44 +10,34 @@ import FilterPresenter from './presenter/filter';
 import InfoPresenter from './presenter/info';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
+import OffersModel from './model/offers';
+import DestinationsModel from './model/destinations';
 
-// import { calculateMoney, calculateType, calculateTime } from './utils/stats';
+const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
+const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
 
-const EVENT_COUNT = 10;
-const data = new Array(EVENT_COUNT).fill().map(generateEvent);
-// console.log(data);
-// console.log(calculateMoney(data));
-// console.log(calculateType(data));
-// console.log(calculateTime(data));
-
+const api = new Api(END_POINT, AUTHORIZATION);
 const pointsModel = new PointsModel();
-pointsModel.setPoints(data);
-
 const filterModel = new FilterModel();
+const offersModel = new OffersModel();
+const destinationsModel = new DestinationsModel();
 
 // HEADER
 const siteHeaderElement = document.querySelector('.page-header');
 const headerContainer = siteHeaderElement.querySelector('.trip-main');
 const controls = new ControlsView();
 render(headerContainer, controls, RenderPosition.BEFOREEND);
-
 const menuComponent = new MenuView();
-render(controls, menuComponent, RenderPosition.AFTERBEGIN);
-
 const filterPresenter = new FilterPresenter(controls, filterModel, pointsModel);
-filterPresenter.init();
-
 const btnNewEventComponent = new ButtonNewEventView();
+btnNewEventComponent.getElement().disabled = true;
 render(headerContainer, btnNewEventComponent, RenderPosition.BEFOREEND);
-
 const infoPresenter = new InfoPresenter(headerContainer, pointsModel);
-infoPresenter.init();
 
 //MAIN
 const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
-const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel);
-tripPresenter.init();
+const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel, api, offersModel, destinationsModel);
 
 const handleEventNewFormClose = () => {
   btnNewEventComponent.getElement().disabled = false;
@@ -65,7 +54,7 @@ let statisticsComponent = null;
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
     case MenuItem.TABLE:
-      tripPresenter.destroy(); // иначе размножается сортировка
+      tripPresenter.destroy();
       tripPresenter.init();
       remove(statisticsComponent);
       filterPresenter.removeDisabled();
@@ -81,4 +70,24 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-menuComponent.setMenuClickHandler(handleSiteMenuClick);
+infoPresenter.init();
+tripPresenter.init();
+
+api.getData()
+  .then(([offers, dest, points]) => {
+    offersModel.setOffers(offers);
+    destinationsModel.setDestinations(dest);
+    pointsModel.setPoints(UpdateType.INIT, points);
+  })
+  .then(() => {
+    filterPresenter.init();
+    btnNewEventComponent.getElement().disabled = false;
+    render(controls, menuComponent, RenderPosition.AFTERBEGIN);
+    menuComponent.setMenuClickHandler(handleSiteMenuClick);
+  })
+  .catch(() => {
+    filterPresenter.init();
+    btnNewEventComponent.getElement().disabled = false;
+    render(controls, menuComponent, RenderPosition.AFTERBEGIN);
+    menuComponent.setMenuClickHandler(handleSiteMenuClick);
+  });
