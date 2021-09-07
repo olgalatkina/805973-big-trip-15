@@ -1,7 +1,6 @@
-const CACHE_PREFIX = 'big-trip-cache';
-const CACHE_VER = 'v15';
-const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VER}`;
-
+const VERSION = 'v15';
+const CACHE_PREFIX = 'bigtrip-cache';
+const CACHE_NAME = `${CACHE_PREFIX}-${VERSION}`;
 const HTTP_STATUS_OK = 200;
 const RESPONSE_SAFE_TYPE = 'basic';
 

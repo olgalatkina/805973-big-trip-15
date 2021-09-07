@@ -1,5 +1,5 @@
 import { render, RenderPosition, remove } from './utils/render';
-import { MenuItem, UpdateType } from './const';
+import { MenuItem, UpdateType, VERSION } from './const';
 import ControlsView from './view/controls';
 import MenuView from './view/menu';
 import ButtonNewEventView from './view/btn-new-point';
@@ -15,13 +15,12 @@ import Api from './api/api';
 import Store from './api/store';
 import Provider from './api/provider';
 
-const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
-// const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+const END_POINT = 'https://13.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
+// const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 // const AUTHORIZATION = 'Basic b2xhbGE6VGVtcF8xMjM=';
-const STORE_PREFIX = 'big-trip-localstorage';
-const STORE_VER = 'v15';
-const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+const STORE_PREFIX = 'bigtrip-localstorage';
+const STORE_NAME = `${STORE_PREFIX}-${VERSION}`;
 
 const apiServer = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
@@ -72,7 +71,7 @@ const handleSiteMenuClick = (menuItem) => {
     case MenuItem.STATS:
       tripPresenter.destroy();
       statisticsComponent = new StatisticsView(pointsModel.getPoints());
-      render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
+      render(bodyContainer, statisticsComponent, RenderPosition.BEFOREEND);
       filterPresenter.setDisabled();
       btnNewEventComponent.getElement().disabled = true;
       break;
@@ -101,8 +100,8 @@ Promise.all([
     initApp();
   })
   .catch(() => {
-    offersModel.setOffers([]);
-    destinationsModel.setDestinations([]);
+    // offersModel.setOffers([]);
+    // destinationsModel.setDestinations([]);
     pointsModel.setPoints(UpdateType.INIT, []);
     initApp();
   });

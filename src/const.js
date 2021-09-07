@@ -70,3 +70,5 @@ export const CALENDAR_SETTINGS = {
   enableTime: true,
   'time_24hr': true,
 };
+
+export const VERSION = 'v15';

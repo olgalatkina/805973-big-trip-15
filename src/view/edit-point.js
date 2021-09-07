@@ -307,13 +307,13 @@ export default class EditPoint extends SmartView {
   _timeFromHandler([userDate]) {
     this.updateState({
       dateFrom: userDate,
-    }, true);
+    });
   }
 
   _timeToHandler([userDate]) {
     this.updateState({
       dateTo: userDate,
-    }, true);
+    });
   }
 
   _setInnerHandlers() {

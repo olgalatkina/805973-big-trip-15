@@ -126,7 +126,7 @@ export default class Point {
 
   _handleRollDownClick() {
     if (!isOnline()) {
-      toast('You can\'t edit task offline');
+      toast('You can\'t edit point offline');
       return;
     }
 
@@ -148,7 +148,7 @@ export default class Point {
 
   _handleDeleteClick(point) {
     if (!isOnline()) {
-      toast('You can\'t edit task offline');
+      toast('You can\'t edit point offline');
       return;
     }
 
@@ -161,7 +161,7 @@ export default class Point {
 
   _handleSubmitClick(point) {
     if (!isOnline()) {
-      toast('You can\'t edit task offline');
+      toast('You can\'t edit point offline');
       return;
     }
 
