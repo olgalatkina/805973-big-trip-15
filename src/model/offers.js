@@ -8,7 +8,6 @@ export default class Offers extends AbstractObserver {
 
   setOffers(offers) {
     this._offers = [...offers];
-    this._notify();
   }
 
   getOffers() {

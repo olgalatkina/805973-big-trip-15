@@ -1,5 +1,4 @@
 import EditPointView from '../view/edit-point';
-import { nanoid } from 'nanoid';
 import { remove, render, RenderPosition } from '../utils/render';
 import { UserAction, UpdateType } from '../const';
 
@@ -51,6 +50,25 @@ export default class PointNew {
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
+  setSaving() {
+    this._editPointComponent.updateState({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._editPointComponent.updateState({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this._editPointComponent.shake(resetFormState);
+  }
+
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
@@ -62,10 +80,8 @@ export default class PointNew {
     this._changeData(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      {id: nanoid(),...point},
+      point,
     );
-
-    this.destroy();
   }
 
   _handleDeleteClick() {

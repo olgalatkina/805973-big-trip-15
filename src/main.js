@@ -13,8 +13,10 @@ import FilterModel from './model/filter';
 import OffersModel from './model/offers';
 import DestinationsModel from './model/destinations';
 
-const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
-const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
+// const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
+const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+// const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
+const AUTHORIZATION = 'Basic b2xhbGE6VGVtcF8xMjM=';
 
 const api = new Api(END_POINT, AUTHORIZATION);
 const pointsModel = new PointsModel();
@@ -73,21 +75,23 @@ const handleSiteMenuClick = (menuItem) => {
 infoPresenter.init();
 tripPresenter.init();
 
+const initApp = () => {
+  filterPresenter.init();
+  btnNewEventComponent.getElement().disabled = false;
+  render(controls, menuComponent, RenderPosition.AFTERBEGIN);
+  menuComponent.setMenuClickHandler(handleSiteMenuClick);
+};
+
 api.getData()
   .then(([offers, dest, points]) => {
     offersModel.setOffers(offers);
     destinationsModel.setDestinations(dest);
     pointsModel.setPoints(UpdateType.INIT, points);
-  })
-  .then(() => {
-    filterPresenter.init();
-    btnNewEventComponent.getElement().disabled = false;
-    render(controls, menuComponent, RenderPosition.AFTERBEGIN);
-    menuComponent.setMenuClickHandler(handleSiteMenuClick);
+    initApp();
   })
   .catch(() => {
-    filterPresenter.init();
-    btnNewEventComponent.getElement().disabled = false;
-    render(controls, menuComponent, RenderPosition.AFTERBEGIN);
-    menuComponent.setMenuClickHandler(handleSiteMenuClick);
+    // api.getDestinations().then((dest) => destinationsModel.setDestinations(dest));
+    // api.getOffers().then((offers) => offersModel.setOffers(offers));
+    pointsModel.setPoints(UpdateType.INIT, []);
+    initApp();
   });

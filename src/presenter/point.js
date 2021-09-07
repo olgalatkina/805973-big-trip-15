@@ -1,7 +1,7 @@
 import PointView from '../view/point';
 import EditPointView from '../view/edit-point';
 import { remove, render, RenderPosition, replace } from '../utils/render';
-import { Mode, UserAction, UpdateType } from '../const';
+import { Mode, State, UserAction, UpdateType } from '../const';
 
 export default class Point {
   constructor(pointList, changeData, changeMode, offersModel, destinationsModel) {
@@ -51,13 +51,48 @@ export default class Point {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._editPointComponent, prevEditPointComponent);
+      // replace(this._editPointComponent, prevEditPointComponent);
+      replace(this._pointComponent, prevEditPointComponent);
+      this._mode = Mode.DEFAULT;
     }
   }
 
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToPoint();
+    }
+  }
+
+  setViewState(state) {
+    if (this._mode === Mode.DEFAULT) {
+      return;
+    }
+
+    const resetFormState = () => {
+      this._editPointComponent.updateState({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._editPointComponent.updateState({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._editPointComponent.updateState({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this._pointComponent.shake(resetFormState);
+        this._editPointComponent.shake(resetFormState);
+        break;
     }
   }
 
@@ -118,6 +153,5 @@ export default class Point {
       UpdateType.MINOR,
       point,
     );
-    this._replaceFormToPoint();
   }
 }
