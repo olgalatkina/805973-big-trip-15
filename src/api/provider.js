@@ -7,10 +7,9 @@ const getSyncedPoints = (items) =>
     .filter(({success}) => success)
     .map(({payload}) => payload.point);
 
-const createStoreStructure = (items) =>
+const createStoreStructure = (items, key) =>
   items
-    .reduce((acc, current) => ({...acc, [current.id]: current}), {});
-
+    .reduce((acc, current) => ({...acc, [current[key]]: current}), {});
 
 export default class Provider {
   constructor(api, store) {
@@ -22,7 +21,8 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getDestinations()
         .then((destinations) => {
-          this._store.setItems(destinations, Sources.DESTINATIONS);
+          const items = createStoreStructure(destinations, 'name');
+          this._store.setItems(items, Sources.DESTINATIONS);
           return destinations;
         });
     }
@@ -36,7 +36,8 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getOffers()
         .then((offers) => {
-          this._store.setItems(offers, Sources.OFFERS);
+          const items = createStoreStructure(offers, 'type');
+          this._store.setItems(items, Sources.OFFERS);
           return offers;
         });
     }
@@ -50,7 +51,7 @@ export default class Provider {
     if (isOnline()) {
       return this._api.getPoints()
         .then((points) => {
-          const items = createStoreStructure(points.map(PointsModel.adaptToServer));
+          const items = createStoreStructure(points.map(PointsModel.adaptToServer), 'id');
           this._store.setItems(items, Sources.POINTS);
           return points;
         });
@@ -62,7 +63,13 @@ export default class Provider {
   }
 
   updatePoint(point) {
+    const store = this._store.getItems();
+    const points = store.points;
+    points[point.id] = point;
+    console.log(points[point.id]);
+
     if (isOnline()) {
+      console.log('---provider update---');
       return this._api.updatePoint(point)
         .then((updatedPoint) => {
           this._store.setItem(updatedPoint.id, PointsModel.adaptToServer(updatedPoint));
@@ -97,8 +104,10 @@ export default class Provider {
   }
 
   sync() {
+    console.log('---provider sync---');
+
     if (isOnline()) {
-      const storePoints = Object.values(this._store.getItems());
+      const storePoints = Object.values(this._store.getItems(Sources.POINTS));
 
       return this._api.sync(storePoints)
         .then((response) => {
