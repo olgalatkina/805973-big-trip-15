@@ -78,16 +78,22 @@ export default class Provider {
         });
     }
 
-    this._store.setStoreItem(point.id, PointsModel.adaptToServer({...point}));
+    this._store.setStoreItems(storePoints, Sources.POINTS);
+    // this._store.setStoreItem(point.id, PointsModel.adaptToServer({...point}));
 
     return Promise.resolve(point);
   }
 
   addPoint(point) {
     if (isOnline()) {
+      console.log('---provider add---');
       return this._api.addPoint(point)
         .then((newPoint) => {
-          this._store.setStoreItem(newPoint.id, PointsModel.adaptToServer(newPoint));
+          console.log( newPoint);
+          const storePoints = this._store.getStoreItems(Sources.POINTS);
+          storePoints[newPoint.id] = PointsModel.adaptToServer(newPoint);
+          this._store.setStoreItems(storePoints, Sources.POINTS);
+          // this._store.setStoreItem(newPoint.id, PointsModel.adaptToServer(newPoint));
           return newPoint;
         });
     }
@@ -97,8 +103,16 @@ export default class Provider {
 
   deletePoint(point) {
     if (isOnline()) {
+      console.log('---provider delete---');
       return this._api.deletePoint(point)
-        .then(() => this._store.removeStoreItem(point.id));
+        .then(() => {
+          const storePoints = this._store.getStoreItems(Sources.POINTS);
+          console.log(storePoints);
+          delete storePoints[point.id];
+          console.log(storePoints);
+          this._store.setStoreItems(storePoints, Sources.POINTS);
+          // this._store.removeStoreItem(point.id);
+        });
     }
 
     return Promise.reject(new Error('Delete point failed'));
@@ -116,7 +130,7 @@ export default class Provider {
           const updatedPoints = getSyncedPoints(response.updated);
 
           const items = createStoreStructure([...createdPoints, ...updatedPoints]);
-          this._store.setStoreItems(items);
+          this._store.setStoreItems(items, Sources.POINTS);
         });
     }
 
