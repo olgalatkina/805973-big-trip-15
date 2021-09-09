@@ -57,6 +57,7 @@ export const Sources = {
   POINTS: 'points',
   OFFERS: 'offers',
   DESTINATIONS: 'destinations',
+  SYNC: 'sync',
 };
 
 export const MAX_NUMBER_OF_CITIES = 3;

@@ -64,12 +64,9 @@ export default class Provider {
 
   updatePoint(point) {
     const storePoints = this._store.getStoreItems(Sources.POINTS);
-    console.log(storePoints);
     storePoints[point.id] = PointsModel.adaptToServer(point);
-    console.log(storePoints[point.id]);
 
     if (isOnline()) {
-      console.log('---provider update---');
       return this._api.updatePoint(point)
         .then((updatedPoint) => {
           this._store.setStoreItems(storePoints, Sources.POINTS);
@@ -86,10 +83,8 @@ export default class Provider {
 
   addPoint(point) {
     if (isOnline()) {
-      console.log('---provider add---');
       return this._api.addPoint(point)
         .then((newPoint) => {
-          console.log( newPoint);
           const storePoints = this._store.getStoreItems(Sources.POINTS);
           storePoints[newPoint.id] = PointsModel.adaptToServer(newPoint);
           this._store.setStoreItems(storePoints, Sources.POINTS);
@@ -103,13 +98,10 @@ export default class Provider {
 
   deletePoint(point) {
     if (isOnline()) {
-      console.log('---provider delete---');
       return this._api.deletePoint(point)
         .then(() => {
           const storePoints = this._store.getStoreItems(Sources.POINTS);
-          console.log(storePoints);
           delete storePoints[point.id];
-          console.log(storePoints);
           this._store.setStoreItems(storePoints, Sources.POINTS);
           // this._store.removeStoreItem(point.id);
         });
@@ -119,8 +111,6 @@ export default class Provider {
   }
 
   sync() {
-    console.log('---provider sync---');
-
     if (isOnline()) {
       const storePoints = Object.values(this._store.getStoreItems(Sources.POINTS));
 
@@ -128,8 +118,7 @@ export default class Provider {
         .then((response) => {
           const createdPoints = getSyncedPoints(response.created);
           const updatedPoints = getSyncedPoints(response.updated);
-
-          const items = createStoreStructure([...createdPoints, ...updatedPoints]);
+          const items = createStoreStructure([...createdPoints, ...updatedPoints], 'id');
           this._store.setStoreItems(items, Sources.POINTS);
         });
     }
