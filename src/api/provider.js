@@ -22,12 +22,12 @@ export default class Provider {
       return this._api.getDestinations()
         .then((destinations) => {
           const items = createStoreStructure(destinations, 'name');
-          this._store.setItems(items, Sources.DESTINATIONS);
+          this._store.setStoreItems(items, Sources.DESTINATIONS);
           return destinations;
         });
     }
 
-    const storeDestinations = Object.values(this._store.getItems(Sources.DESTINATIONS));
+    const storeDestinations = Object.values(this._store.getStoreItems(Sources.DESTINATIONS));
 
     return Promise.resolve(storeDestinations);
   }
@@ -37,12 +37,12 @@ export default class Provider {
       return this._api.getOffers()
         .then((offers) => {
           const items = createStoreStructure(offers, 'type');
-          this._store.setItems(items, Sources.OFFERS);
+          this._store.setStoreItems(items, Sources.OFFERS);
           return offers;
         });
     }
 
-    const storeOffers = Object.values(this._store.getItems(Sources.OFFERS));
+    const storeOffers = Object.values(this._store.getStoreItems(Sources.OFFERS));
 
     return Promise.resolve(storeOffers);
   }
@@ -52,32 +52,33 @@ export default class Provider {
       return this._api.getPoints()
         .then((points) => {
           const items = createStoreStructure(points.map(PointsModel.adaptToServer), 'id');
-          this._store.setItems(items, Sources.POINTS);
+          this._store.setStoreItems(items, Sources.POINTS);
           return points;
         });
     }
 
-    const storePoints = Object.values(this._store.getItems(Sources.POINTS));
+    const storePoints = Object.values(this._store.getStoreItems(Sources.POINTS));
 
     return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
   }
 
   updatePoint(point) {
-    const store = this._store.getItems();
-    const points = store.points;
-    points[point.id] = point;
-    console.log(points[point.id]);
+    const storePoints = this._store.getStoreItems(Sources.POINTS);
+    console.log(storePoints);
+    storePoints[point.id] = PointsModel.adaptToServer(point);
+    console.log(storePoints[point.id]);
 
     if (isOnline()) {
       console.log('---provider update---');
       return this._api.updatePoint(point)
         .then((updatedPoint) => {
-          this._store.setItem(updatedPoint.id, PointsModel.adaptToServer(updatedPoint));
+          this._store.setStoreItems(storePoints, Sources.POINTS);
+          // this._store.setStoreItem(updatedPoint.id, PointsModel.adaptToServer(updatedPoint));
           return updatedPoint;
         });
     }
 
-    this._store.setItem(point.id, PointsModel.adaptToServer({...point}));
+    this._store.setStoreItem(point.id, PointsModel.adaptToServer({...point}));
 
     return Promise.resolve(point);
   }
@@ -86,7 +87,7 @@ export default class Provider {
     if (isOnline()) {
       return this._api.addPoint(point)
         .then((newPoint) => {
-          this._store.setItem(newPoint.id, PointsModel.adaptToServer(newPoint));
+          this._store.setStoreItem(newPoint.id, PointsModel.adaptToServer(newPoint));
           return newPoint;
         });
     }
@@ -97,7 +98,7 @@ export default class Provider {
   deletePoint(point) {
     if (isOnline()) {
       return this._api.deletePoint(point)
-        .then(() => this._store.removeItem(point.id));
+        .then(() => this._store.removeStoreItem(point.id));
     }
 
     return Promise.reject(new Error('Delete point failed'));
@@ -107,7 +108,7 @@ export default class Provider {
     console.log('---provider sync---');
 
     if (isOnline()) {
-      const storePoints = Object.values(this._store.getItems(Sources.POINTS));
+      const storePoints = Object.values(this._store.getStoreItems(Sources.POINTS));
 
       return this._api.sync(storePoints)
         .then((response) => {
@@ -115,7 +116,7 @@ export default class Provider {
           const updatedPoints = getSyncedPoints(response.updated);
 
           const items = createStoreStructure([...createdPoints, ...updatedPoints]);
-          this._store.setItems(items);
+          this._store.setStoreItems(items);
         });
     }
 

@@ -4,7 +4,7 @@ export default class Store {
     this._storeKey = key;
   }
 
-  getItems(sourceKey) {
+  getStoreItems(sourceKey) {
     if (!sourceKey) {
       try {
         return JSON.parse(this._storage.getItem(this._storeKey)) || {};
@@ -21,8 +21,8 @@ export default class Store {
     }
   }
 
-  setItems(items, key) {
-    const prevStorage = this.getItems();
+  setStoreItems(items, key) {
+    const prevStorage = this.getStoreItems();
 
     this._storage.setItem(
       this._storeKey,
@@ -30,8 +30,8 @@ export default class Store {
     );
   }
 
-  setItem(key, value) {
-    const store = this.getItems();
+  setStoreItem(key, value) {
+    const store = this.getStoreItems();
 
     this._storage.setItem(
       this._storeKey,
@@ -39,8 +39,8 @@ export default class Store {
     );
   }
 
-  removeItem(key) {
-    const store = this.getItems();
+  removeStoreItem(key) {
+    const store = this.getStoreItems();
 
     delete store[key];
 
