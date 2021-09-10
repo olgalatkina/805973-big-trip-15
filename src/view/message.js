@@ -8,11 +8,11 @@ const NoPointsTextType = {
 };
 
 const createMessageTemplate = (filterType) => {
-  const noPointTextValue = NoPointsTextType[filterType];
+  const message = NoPointsTextType[filterType];
 
   return (
     `<p class="trip-events__msg">
-      ${noPointTextValue}
+      ${message}
     </p>`);
 };
 

@@ -33,6 +33,16 @@ export default class Filter {
     remove(prevFilterComponent);
   }
 
+  setDisabled() {
+    const filters = document.querySelectorAll('.trip-filters__filter-input');
+    filters.forEach((item) => item.setAttribute('disabled', 'disabled'));
+  }
+
+  removeDisabled() {
+    const filters = document.querySelectorAll('.trip-filters__filter-input');
+    filters.forEach((item) => item.removeAttribute('disabled'));
+  }
+
   _getFiltersType() {
     const points = this._pointsModel.getPoints();
     return [
@@ -64,15 +74,5 @@ export default class Filter {
     }
 
     this._filterModel.setFilter(UpdateType.MAJOR, filterType);
-  }
-
-  setDisabled() {
-    const filters = document.querySelectorAll('.trip-filters__filter-input');
-    filters.forEach((item) => item.setAttribute('disabled', 'disabled'));
-  }
-
-  removeDisabled() {
-    const filters = document.querySelectorAll('.trip-filters__filter-input');
-    filters.forEach((item) => item.removeAttribute('disabled'));
   }
 }

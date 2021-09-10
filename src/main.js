@@ -1,6 +1,6 @@
 import { render, RenderPosition, remove } from './utils/render';
 import { toast } from './utils/toast';
-import { MenuItem, UpdateType, VERSION } from './const';
+import { MenuItem, UpdateType, Background, VERSION } from './const';
 import ControlsView from './view/controls';
 import MenuView from './view/menu';
 import ButtonNewEventView from './view/btn-new-point';
@@ -23,6 +23,11 @@ const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
 const STORE_PREFIX = 'bigtrip-localstorage';
 const STORE_NAME = `${STORE_PREFIX}-${VERSION}`;
 
+const siteHeaderElement = document.querySelector('.page-header');
+const headerContainer = siteHeaderElement.querySelector('.trip-main');
+const siteMainElement = document.querySelector('.page-main');
+const bodyContainer = siteMainElement.querySelector('.page-body__container');
+
 const apiServer = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
 const api = new Provider(apiServer, store);
@@ -31,9 +36,6 @@ const filterModel = new FilterModel();
 const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 
-// HEADER
-const siteHeaderElement = document.querySelector('.page-header');
-const headerContainer = siteHeaderElement.querySelector('.trip-main');
 const controls = new ControlsView();
 render(headerContainer, controls, RenderPosition.BEFOREEND);
 const menuComponent = new MenuView();
@@ -42,10 +44,6 @@ const btnNewEventComponent = new ButtonNewEventView();
 btnNewEventComponent.getElement().disabled = true;
 render(headerContainer, btnNewEventComponent, RenderPosition.BEFOREEND);
 const infoPresenter = new InfoPresenter(headerContainer, pointsModel);
-
-// MAIN
-const siteMainElement = document.querySelector('.page-main');
-const bodyContainer = siteMainElement.querySelector('.page-body__container');
 const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel, api, offersModel, destinationsModel);
 
 const handleEventNewFormClose = () => {
@@ -110,15 +108,15 @@ window.addEventListener('load', () => {
 window.addEventListener('online', () => {
   document.title = document.title.replace(' [offline]', '');
   btnNewEventComponent.getElement().disabled = false;
-  siteHeaderElement.style.backgroundColor = '#078ff0';
-  siteHeaderElement.style.backgroundImage = 'url("../img/header-bg.png")';
+  siteHeaderElement.style.backgroundColor = `${Background.ONLINE_COLOR}`;
+  siteHeaderElement.style.backgroundImage = `${Background.ONLINE_IMAGE}`;
   toast(' ONLINE ');
   api.sync();
 });
 
 window.addEventListener('offline', () => {
   document.title += ' [offline]';
-  siteHeaderElement.style.backgroundColor = '#006ED3';
-  siteHeaderElement.style.backgroundImage = 'none';
+  siteHeaderElement.style.backgroundColor = `${Background.OFFLINE_COLOR}`;
+  siteHeaderElement.style.backgroundImage = `${Background.OFFLINE_IMAGE}`;
   toast(' OFFLINE ');
 });

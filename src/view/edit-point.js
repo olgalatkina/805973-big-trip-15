@@ -273,6 +273,30 @@ export default class EditPoint extends SmartView {
     this._resetDatePicker();
   }
 
+  setRollUpClickHandler(callback) {
+    this._callback.rollUpClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollUpClickHandler);
+  }
+
+  setSubmitClickHandler(callback) {
+    this._callback.submitClick = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler);
+  }
+
+  _setInnerHandlers() {
+    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._changeCityHandler);
+    this.getElement().querySelector('.event__type-group').addEventListener('change', this._changeTypeHandler);
+    this.getElement().querySelector('.event__input--price').addEventListener('input', this._changePriceHandler);
+    this.getElement().querySelector('.event__input--destination').addEventListener('focus', this._focusCitySelectionHandler);
+    this.getElement().querySelector('.event__section--offers').addEventListener('change', this._changeOffersHandler);
+    this._setDatePicker();
+  }
+
   _resetDatePicker() {
     if (this._datepickerStart) {
       this._datepickerStart.destroy();
@@ -314,15 +338,6 @@ export default class EditPoint extends SmartView {
     this.updateState({
       dateTo: userDate,
     });
-  }
-
-  _setInnerHandlers() {
-    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._changeCityHandler);
-    this.getElement().querySelector('.event__type-group').addEventListener('change', this._changeTypeHandler);
-    this.getElement().querySelector('.event__input--price').addEventListener('input', this._changePriceHandler);
-    this.getElement().querySelector('.event__input--destination').addEventListener('focus', this._focusCitySelectionHandler);
-    this.getElement().querySelector('.event__section--offers').addEventListener('change', this._changeOffersHandler);
-    this._setDatePicker();
   }
 
   _focusCitySelectionHandler(evt) {
@@ -368,29 +383,14 @@ export default class EditPoint extends SmartView {
     this._callback.rollUpClick();
   }
 
-  setRollUpClickHandler(callback) {
-    this._callback.rollUpClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._rollUpClickHandler);
-  }
-
   _submitClickHandler(evt) {
     evt.preventDefault();
     this._callback.submitClick(EditPoint.parseStateToPoint(this._state));
   }
 
-  setSubmitClickHandler(callback) {
-    this._callback.submitClick = callback;
-    this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
-  }
-
   _deleteClickHandler(evt) {
     evt.preventDefault();
     this._callback.deleteClick(EditPoint.parseStateToPoint(this._state));
-  }
-
-  setDeleteClickHandler(callback) {
-    this._callback.deleteClick = callback;
-    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._deleteClickHandler);
   }
 
   static parsePointToState(point) {

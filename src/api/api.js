@@ -1,12 +1,5 @@
-import { Sources } from '../const';
+import { Sources, Method } from '../const';
 import PointsModel from '../model/points';
-
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
-  POST: 'POST',
-  DELETE: 'DELETE',
-};
 
 export default class Api {
   constructor(endPoint, authorization) {
