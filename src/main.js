@@ -16,8 +16,10 @@ import Api from './api/api';
 import Store from './api/store';
 import Provider from './api/provider';
 
-const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
+const END_POINT = 'https://13.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
+// const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
+// const AUTHORIZATION = 'Basic b2xhbGE6VGVtcF8xMjM=';
 const STORE_PREFIX = 'bigtrip-localstorage';
 const STORE_NAME = `${STORE_PREFIX}-${VERSION}`;
 
