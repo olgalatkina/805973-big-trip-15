@@ -1,6 +1,8 @@
 import PointView from '../view/point';
 import EditPointView from '../view/edit-point';
 import { remove, render, RenderPosition, replace } from '../utils/render';
+import { isOnline } from '../utils/common';
+import { toast } from '../utils/toast';
 import { Mode, State, UserAction, UpdateType } from '../const';
 
 export default class Point {
@@ -123,6 +125,11 @@ export default class Point {
   }
 
   _handleRollDownClick() {
+    if (!isOnline()) {
+      toast('You can\'t edit point offline');
+      return;
+    }
+
     this._replacePointToForm();
   }
 
@@ -140,6 +147,11 @@ export default class Point {
   }
 
   _handleDeleteClick(point) {
+    if (!isOnline()) {
+      toast('You can\'t edit point offline');
+      return;
+    }
+
     this._changeData(
       UserAction.DELETE_POINT,
       UpdateType.MAJOR,
@@ -148,6 +160,11 @@ export default class Point {
   }
 
   _handleSubmitClick(point) {
+    if (!isOnline()) {
+      toast('You can\'t edit point offline');
+      return;
+    }
+
     this._changeData(
       UserAction.UPDATE_POINT,
       UpdateType.MINOR,

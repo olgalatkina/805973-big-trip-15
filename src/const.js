@@ -57,6 +57,7 @@ export const Sources = {
   POINTS: 'points',
   OFFERS: 'offers',
   DESTINATIONS: 'destinations',
+  SYNC: 'sync',
 };
 
 export const MAX_NUMBER_OF_CITIES = 3;
@@ -70,3 +71,5 @@ export const CALENDAR_SETTINGS = {
   enableTime: true,
   'time_24hr': true,
 };
+
+export const VERSION = 'v15';

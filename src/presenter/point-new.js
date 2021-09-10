@@ -1,5 +1,7 @@
 import EditPointView from '../view/edit-point';
 import { remove, render, RenderPosition } from '../utils/render';
+import { isOnline } from '../utils/common';
+import { toast } from '../utils/toast';
 import { UserAction, UpdateType } from '../const';
 
 export default class PointNew {
@@ -18,6 +20,11 @@ export default class PointNew {
   }
 
   init(callback) {
+    if (!isOnline()) {
+      toast('You can\'t create point offline');
+      return;
+    }
+
     this._destroyCallback = callback;
 
     if (this._editPointComponent !== null) {

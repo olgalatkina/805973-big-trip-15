@@ -38,3 +38,5 @@ export const getIsOffers = (type, offers) => Boolean(getOffersByType(type, offer
 export const compareByPrice = (pointA, pointB) => pointB.basePrice - pointA.basePrice;
 export const compareByStartTime = (eventA, eventB) => eventA.dateFrom - eventB.dateFrom;
 export const compareByDuration = (pointA, pointB) => (pointB.dateTo - pointB.dateFrom) - (pointA.dateTo - pointA.dateFrom);
+
+export const isOnline = () => window.navigator.onLine;
