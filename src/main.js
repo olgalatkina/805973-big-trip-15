@@ -18,8 +18,6 @@ import Provider from './api/provider';
 
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
-// const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
-// const AUTHORIZATION = 'Basic b2xhbGE6VGVtcF8xMjM=';
 const STORE_PREFIX = 'bigtrip-localstorage';
 const STORE_NAME = `${STORE_PREFIX}-${VERSION}`;
 
@@ -43,7 +41,7 @@ btnNewEventComponent.getElement().disabled = true;
 render(headerContainer, btnNewEventComponent, RenderPosition.BEFOREEND);
 const infoPresenter = new InfoPresenter(headerContainer, pointsModel);
 
-//MAIN
+// MAIN
 const siteMainElement = document.querySelector('.page-main');
 const bodyContainer = siteMainElement.querySelector('.page-body__container');
 const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel, api, offersModel, destinationsModel);
@@ -91,11 +89,7 @@ const initApp = () => {
   menuComponent.setMenuClickHandler(handleSiteMenuClick);
 };
 
-Promise.all([
-  api.getOffers(),
-  api.getDestinations(),
-  api.getPoints(),
-])
+api.getData()
   .then(([offers, dest, points]) => {
     offersModel.setOffers(offers);
     destinationsModel.setDestinations(dest);
@@ -103,8 +97,6 @@ Promise.all([
     initApp();
   })
   .catch(() => {
-    // offersModel.setOffers([]);
-    // destinationsModel.setDestinations([]);
     pointsModel.setPoints(UpdateType.INIT, []);
     initApp();
   });
@@ -118,7 +110,7 @@ window.addEventListener('online', () => {
   btnNewEventComponent.getElement().disabled = false;
   siteHeaderElement.style.backgroundColor = '#078ff0';
   siteHeaderElement.style.backgroundImage = 'url("../img/header-bg.png")';
-  toast('-- online --');
+  toast(' ONLINE ');
   api.sync();
 });
 
@@ -126,5 +118,5 @@ window.addEventListener('offline', () => {
   document.title += ' [offline]';
   siteHeaderElement.style.backgroundColor = '#006ED3';
   siteHeaderElement.style.backgroundImage = 'none';
-  toast('-- offline --');
+  toast(' OFFLINE ');
 });

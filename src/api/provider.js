@@ -62,6 +62,15 @@ export default class Provider {
     return Promise.resolve(storePoints.map(PointsModel.adaptToClient));
   }
 
+  getData() {
+    return Promise.all([
+      this.getOffers(),
+      this.getDestinations(),
+      this.getPoints(),
+    ])
+      .catch(this._api.catchError);
+  }
+
   updatePoint(point) {
     const storePoints = this._store.getStoreItems(Sources.POINTS);
     storePoints[point.id] = PointsModel.adaptToServer(point);
@@ -70,13 +79,11 @@ export default class Provider {
       return this._api.updatePoint(point)
         .then((updatedPoint) => {
           this._store.setStoreItems(storePoints, Sources.POINTS);
-          // this._store.setStoreItem(updatedPoint.id, PointsModel.adaptToServer(updatedPoint));
           return updatedPoint;
         });
     }
 
     this._store.setStoreItems(storePoints, Sources.POINTS);
-    // this._store.setStoreItem(point.id, PointsModel.adaptToServer({...point}));
 
     return Promise.resolve(point);
   }
@@ -88,7 +95,7 @@ export default class Provider {
           const storePoints = this._store.getStoreItems(Sources.POINTS);
           storePoints[newPoint.id] = PointsModel.adaptToServer(newPoint);
           this._store.setStoreItems(storePoints, Sources.POINTS);
-          // this._store.setStoreItem(newPoint.id, PointsModel.adaptToServer(newPoint));
+
           return newPoint;
         });
     }
@@ -103,7 +110,6 @@ export default class Provider {
           const storePoints = this._store.getStoreItems(Sources.POINTS);
           delete storePoints[point.id];
           this._store.setStoreItems(storePoints, Sources.POINTS);
-          // this._store.removeStoreItem(point.id);
         });
     }
 
