@@ -53,11 +53,25 @@ export const MenuItem = {
   STATS: 'Stats',
 };
 
+export const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
+
 export const Sources = {
   POINTS: 'points',
   OFFERS: 'offers',
   DESTINATIONS: 'destinations',
   SYNC: 'sync',
+};
+
+export const Background = {
+  ONLINE_COLOR: '#078ff0',
+  OFFLINE_COLOR: '#006ED3',
+  ONLINE_IMAGE: 'url("../img/header-bg.png")',
+  OFFLINE_IMAGE: 'none',
 };
 
 export const MAX_NUMBER_OF_CITIES = 3;

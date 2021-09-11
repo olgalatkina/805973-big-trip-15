@@ -1,6 +1,6 @@
 import { render, RenderPosition, remove } from './utils/render';
 import { toast } from './utils/toast';
-import { MenuItem, UpdateType, VERSION } from './const';
+import { MenuItem, UpdateType, Background, VERSION } from './const';
 import ControlsView from './view/controls';
 import MenuView from './view/menu';
 import ButtonNewEventView from './view/btn-new-point';
@@ -16,12 +16,17 @@ import Api from './api/api';
 import Store from './api/store';
 import Provider from './api/provider';
 
-const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
+const END_POINT = 'https://13.ecmascript.pages.academy/big-trip';
 const AUTHORIZATION = 'Basic dHJvbHlhOnF3ZXJUeV8xMjMu';
 // const END_POINT = 'https://14.ecmascript.pages.academy/big-trip';
 // const AUTHORIZATION = 'Basic b2xhbGE6VGVtcF8xMjM=';
 const STORE_PREFIX = 'bigtrip-localstorage';
 const STORE_NAME = `${STORE_PREFIX}-${VERSION}`;
+
+const siteHeaderElement = document.querySelector('.page-header');
+const headerContainer = siteHeaderElement.querySelector('.trip-main');
+const siteMainElement = document.querySelector('.page-main');
+const bodyContainer = siteMainElement.querySelector('.page-body__container');
 
 const apiServer = new Api(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_NAME, window.localStorage);
@@ -31,9 +36,6 @@ const filterModel = new FilterModel();
 const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 
-// HEADER
-const siteHeaderElement = document.querySelector('.page-header');
-const headerContainer = siteHeaderElement.querySelector('.trip-main');
 const controls = new ControlsView();
 render(headerContainer, controls, RenderPosition.BEFOREEND);
 const menuComponent = new MenuView();
@@ -42,10 +44,6 @@ const btnNewEventComponent = new ButtonNewEventView();
 btnNewEventComponent.getElement().disabled = true;
 render(headerContainer, btnNewEventComponent, RenderPosition.BEFOREEND);
 const infoPresenter = new InfoPresenter(headerContainer, pointsModel);
-
-//MAIN
-const siteMainElement = document.querySelector('.page-main');
-const bodyContainer = siteMainElement.querySelector('.page-body__container');
 const tripPresenter = new TripPresenter(bodyContainer, pointsModel, filterModel, api, offersModel, destinationsModel);
 
 const handleEventNewFormClose = () => {
@@ -66,6 +64,7 @@ const handleSiteMenuClick = (menuItem) => {
       tripPresenter.destroy();
       tripPresenter.init();
       remove(statisticsComponent);
+      bodyContainer.classList.remove('no-after');
       filterPresenter.removeDisabled();
       btnNewEventComponent.getElement().disabled = false;
       break;
@@ -73,6 +72,7 @@ const handleSiteMenuClick = (menuItem) => {
       tripPresenter.destroy();
       statisticsComponent = new StatisticsView(pointsModel.getPoints());
       render(bodyContainer, statisticsComponent, RenderPosition.BEFOREEND);
+      bodyContainer.classList.add('no-after');
       filterPresenter.setDisabled();
       btnNewEventComponent.getElement().disabled = true;
       break;
@@ -89,11 +89,7 @@ const initApp = () => {
   menuComponent.setMenuClickHandler(handleSiteMenuClick);
 };
 
-Promise.all([
-  api.getOffers(),
-  api.getDestinations(),
-  api.getPoints(),
-])
+api.getData()
   .then(([offers, dest, points]) => {
     offersModel.setOffers(offers);
     destinationsModel.setDestinations(dest);
@@ -101,8 +97,6 @@ Promise.all([
     initApp();
   })
   .catch(() => {
-    // offersModel.setOffers([]);
-    // destinationsModel.setDestinations([]);
     pointsModel.setPoints(UpdateType.INIT, []);
     initApp();
   });
@@ -114,15 +108,15 @@ window.addEventListener('load', () => {
 window.addEventListener('online', () => {
   document.title = document.title.replace(' [offline]', '');
   btnNewEventComponent.getElement().disabled = false;
-  siteHeaderElement.style.backgroundColor = '#078ff0';
-  siteHeaderElement.style.backgroundImage = 'url("../img/header-bg.png")';
-  toast('online');
+  siteHeaderElement.style.backgroundColor = `${Background.ONLINE_COLOR}`;
+  siteHeaderElement.style.backgroundImage = `${Background.ONLINE_IMAGE}`;
+  toast(' ONLINE ');
   api.sync();
 });
 
 window.addEventListener('offline', () => {
   document.title += ' [offline]';
-  siteHeaderElement.style.backgroundColor = '#006ED3';
-  siteHeaderElement.style.backgroundImage = 'none';
-  toast('offline');
+  siteHeaderElement.style.backgroundColor = `${Background.OFFLINE_COLOR}`;
+  siteHeaderElement.style.backgroundImage = `${Background.OFFLINE_IMAGE}`;
+  toast(' OFFLINE ');
 });

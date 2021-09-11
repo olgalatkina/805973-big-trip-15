@@ -20,15 +20,15 @@ export default class SiteMenu extends AbstractView {
     return createMenuTemplate();
   }
 
+  setMenuClickHandler(callback) {
+    this._callback.menuClick = callback;
+    this.getElement().addEventListener('click', this._menuClickHandler);
+  }
+
   _menuClickHandler(evt) {
     evt.preventDefault();
     this._setActiveMenuItem(evt.target);
     this._callback.menuClick(evt.target.dataset.value);
-  }
-
-  setMenuClickHandler(callback) {
-    this._callback.menuClick = callback;
-    this.getElement().addEventListener('click', this._menuClickHandler);
   }
 
   _setActiveMenuItem(menuItem) {

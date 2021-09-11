@@ -1,12 +1,5 @@
-import { Sources } from '../const';
+import { Sources, Method } from '../const';
 import PointsModel from '../model/points';
-
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
-  POST: 'POST',
-  DELETE: 'DELETE',
-};
 
 export default class Api {
   constructor(endPoint, authorization) {
@@ -34,6 +27,15 @@ export default class Api {
     return this._load({url: Sources.POINTS})
       .then(Api.toJSON)
       .then((points) => points.map(PointsModel.adaptToClient));
+  }
+
+  getData() {
+    return Promise.all([
+      this.getOffers(),
+      this.getDestinations(),
+      this.getPoints(),
+    ])
+      .catch(Api.catchError);
   }
 
   updatePoint(point) {
