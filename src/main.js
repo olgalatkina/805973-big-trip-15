@@ -81,22 +81,19 @@ infoPresenter.init();
 filterPresenter.init();
 tripPresenter.init();
 
-const unlockInterface = () => {
-  btnNewEventComponent.getElement().disabled = false;
-  render(controls, menuComponent, RenderPosition.AFTERBEGIN);
-  menuComponent.setMenuClickHandler(handleSiteMenuClick);
-};
-
 api.getData()
   .then(([offers, dest, points]) => {
     offersModel.setOffers(offers);
     destinationsModel.setDestinations(dest);
     pointsModel.setPoints(UpdateType.INIT, points);
-    unlockInterface();
   })
   .catch(() => {
     pointsModel.setPoints(UpdateType.INIT, []);
-    unlockInterface();
+  })
+  .finally(() => {
+    btnNewEventComponent.getElement().disabled = false;
+    render(controls, menuComponent, RenderPosition.AFTERBEGIN);
+    menuComponent.setMenuClickHandler(handleSiteMenuClick);
   });
 
 window.addEventListener('load', () => {
