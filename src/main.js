@@ -78,10 +78,10 @@ const handleSiteMenuClick = (menuItem) => {
 };
 
 infoPresenter.init();
+filterPresenter.init();
 tripPresenter.init();
 
-const initApp = () => {
-  filterPresenter.init();
+const unlockInterface = () => {
   btnNewEventComponent.getElement().disabled = false;
   render(controls, menuComponent, RenderPosition.AFTERBEGIN);
   menuComponent.setMenuClickHandler(handleSiteMenuClick);
@@ -92,11 +92,11 @@ api.getData()
     offersModel.setOffers(offers);
     destinationsModel.setDestinations(dest);
     pointsModel.setPoints(UpdateType.INIT, points);
-    initApp();
+    unlockInterface();
   })
   .catch(() => {
     pointsModel.setPoints(UpdateType.INIT, []);
-    initApp();
+    unlockInterface();
   });
 
 window.addEventListener('load', () => {

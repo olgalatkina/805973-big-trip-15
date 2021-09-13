@@ -9,22 +9,9 @@ import SmartView from './smart';
 const BLANK_POINT = {
   type: Types.FLIGHT.toLowerCase(),
   destination: {
-    name: 'Chamonix',
-    description: 'Chamonix, with crowded streets, middle-eastern paradise, with an embankment of a mighty river as a centre of attraction, a perfect place to stay with a family, famous for its crowded street markets with the best street food in Asia.',
-    pictures: [
-      {
-        'src': 'http://picsum.photos/300/200?r=0.961477384126419',
-        'description': 'Chamonix kindergarten',
-      },
-      {
-        'src': 'http://picsum.photos/300/200?r=0.8186866271526865',
-        'description': 'Chamonix parliament building',
-      },
-      {
-        'src': 'http://picsum.photos/300/200?r=0.46713149742733173',
-        'description': 'Chamonix central station',
-      },
-    ],
+    description: '',
+    name: '',
+    pictures: [],
   },
   offers: [],
   dateFrom: getActualDate(),
