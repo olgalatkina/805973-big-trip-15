@@ -240,7 +240,7 @@ const createStatsTemplate = () => (
   </section>`
 );
 
-export default class Statistic extends SmartView {
+export default class Stats extends SmartView {
   constructor(points) {
     super();
     this._points = points;

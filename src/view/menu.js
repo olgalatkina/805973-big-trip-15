@@ -10,7 +10,7 @@ const createMenuTemplate = () => (
     </nav>
   </div>`
 );
-export default class SiteMenu extends AbstractView {
+export default class Menu extends AbstractView {
   constructor() {
     super();
     this._menuClickHandler = this._menuClickHandler.bind(this);
