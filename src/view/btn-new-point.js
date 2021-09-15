@@ -1,9 +1,9 @@
 import Abstract from './abstract';
 
-const createBtnTemplate = () => '<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>';
+const createBtnNewPointTemplate = () => '<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>';
 
-export default class ButtonNewEvent extends Abstract {
+export default class BtnNewPoint extends Abstract {
   getTemplate() {
-    return createBtnTemplate();
+    return createBtnNewPointTemplate();
   }
 }
